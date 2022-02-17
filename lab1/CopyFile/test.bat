@@ -32,6 +32,9 @@ rem ожидаем ненулевой код ошибки при невозможности записи в выходной файл (в исп
 %PROGRAM% multiline.txt %PROGRAM% > %TEMP%\output.txt
 if NOT ERRORLEVEL 1 goto err
 
+%PROGRAM% multiline.txt > %TEMP%\output.txt
+if NOT ERRORLEVEL 1 goto err
+
 echo Program testing succeeded
 exit 0
 
