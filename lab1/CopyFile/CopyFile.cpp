@@ -37,37 +37,69 @@ bool CopyStreams(istream& input, ostream& output)
 	return true;
 }
 
+bool OpenStreamsErrorHandling(ifstream& input, ofstream& output)
+{
+
+	if (!input.is_open())
+	{
+		cout << "Failed to open file for reading\n";
+		return false;
+	}
+	if (!output.is_open())
+	{
+		cout << "Failed to open file for writing\n";
+		return false;
+	}
+	return true;
+}
+
+bool SaveErrorHandling(ofstream& output)
+{
+	if (!output.flush())
+	{
+		cout << "Failed to save data on disk\n";
+		return false;
+	}
+	return true;
+}
+
+bool ProcessArgError(const optional<Args> & args)
+{
+	if (!args.has_value())
+	{
+		cout << "Invalid arguments count\n";
+		cout << "Usage: copyfile.exe <input file> <output file>\n";
+		return false;
+	}
+	return true;
+}
+
 int main(int argc, char* argv[])
 {
 	auto args = ParseArgs(argc, argv);
 
-	if (!args)
+	if (!ProcessArgError(args))
 	{
-		cout << "Invalid arguments count\n";
-		cout << "Usage: copyfile.exe <input file> <output file>\n";
 		return 1;
 	}
 
 	ifstream input(args->inputFileName);
-	if (!input.is_open())
-	{
-		cout << "Failed to open " << args->inputFileName << " for reading\n";
-		return 1;
-	}
 
 	ofstream output(args->outputFileName);
-	if (!output.is_open())
+
+	if (!OpenStreamsErrorHandling(input, output))
 	{
-		cout << "Failed to open " << args->outputFileName << " for writing\n";
+		return 1;
+	}
+		
+
+	if (!CopyStreams(input, output))
+	{
 		return 1;
 	}
 
-	if (!CopyStreams(input, output))
-		return 1;
-
-	if (!output.flush()) 
+	if (!SaveErrorHandling(output))
 	{
-		cout << "Failed to save data on disk\n";
 		return 1;
 	}
 
