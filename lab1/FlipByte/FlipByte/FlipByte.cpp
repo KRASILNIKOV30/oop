@@ -54,21 +54,14 @@ bool ParseInput(const std::string stringByte, short &byte)
 	}
 }
 
-int ReversByte(int dec) 
+int ReversByte(int byte) 
 {
-	vector<int> bin = { 0, 0, 0, 0, 0, 0, 0, 0 };
-	for (int i = 7; i >= 0; i--)
-	{
-		bin[i] = dec % 2;
-		dec /= 2;
-	}
-	int res = 0;
-	for (int i = 0; i < 8; i++)
-	{
-		res += bin[i] * pow(2, i);
-	}
-	return res;
+	byte = (byte & 0b01010101) << 1 | (byte & 0b10101010) >> 1;
+	byte = (byte & 0b00110011) << 2 | (byte & 0b11001100) >> 2;
+	byte = (byte & 0b00001111) << 4 | (byte & 0b11110000) >> 4;
+	return byte;
 }
+
 
 int main(int argc, char* argv[])
 {
