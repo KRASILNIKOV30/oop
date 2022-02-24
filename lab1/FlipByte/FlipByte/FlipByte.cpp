@@ -79,8 +79,6 @@ int main(int argc, char* argv[])
 		return 1;
 	};
 
-	std::cout << byte << endl;
-
 	std::cout << ReversByte(byte) << endl;
 
 	return 0;
