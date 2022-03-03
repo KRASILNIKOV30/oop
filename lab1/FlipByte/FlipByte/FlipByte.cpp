@@ -33,18 +33,28 @@ bool ProcessArgError(const optional<Args>& args)
 	return true;
 }
 
-bool ParseInput(const std::string stringByte, short &byte)
+bool ProcessInputError(const int byte)
+{
+	if (byte < 0 || byte > 255)
+	{
+		std::cout << "Invalid input\n";
+		std::cout << "Value must be between 0 and 255\n";
+		return false;
+	}
+	return true;
+}
+
+bool ParseInput(const std::string stringByte, unsigned char &byte)
 {
 	try
 	{
 		size_t* idx = 0;
-		byte = std::stoi(stringByte, idx, 10);
-		if (byte < 0 || byte > 255)
+		int bytei = std::stoi(stringByte, idx, 10);
+		if (!ProcessInputError(bytei))
 		{
-			std::cout << "Invalid input\n";
-			std::cout << "Value must be between 0 and 255\n";
 			return false;
 		}
+		byte = bytei;
 		return true;
 	}
 	catch (const std::exception& e)
@@ -53,6 +63,8 @@ bool ParseInput(const std::string stringByte, short &byte)
 		return false;
 	}
 }
+
+
 
 int ReversByte(int byte) 
 {
@@ -72,7 +84,7 @@ int main(int argc, char* argv[])
 		return 1;
 	};
 
-	short byte = 0;
+	unsigned char byte = 0;
 
 	if (!ParseInput(args->inputByte, byte))
 	{
