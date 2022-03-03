@@ -4,69 +4,44 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 struct Args
 {
-	string inputByte;
+	std::uint8_t inputByte;
 };
 
-optional<Args> ParseArgs(int argc, char* argv[])
+std::optional<Args> ParseArgs(int argc, char* argv[])
 {
 	if (argc != 2)
 	{
-		return nullopt;
+		std::cout << "Invalid arguments count\n";
+		std::cout << "Usage: copyfile.exe <input byte>\n";
+		return std::nullopt;
 	}
-	Args args;
-	args.inputByte = argv[1];
-	return args;
-}
+	int byte;
 
-bool ProcessArgError(const optional<Args>& args)
-{
-	if (!args)
-	{
-		cout << "Invalid arguments count\n";
-		cout << "Usage: copyfile.exe <input byte>\n";
-		return false;
-	}
-	return true;
-}
-
-bool ProcessInputError(const int byte)
-{
-	if (byte < 0 || byte > 255)
-	{
-		std::cout << "Invalid input\n";
-		std::cout << "Value must be between 0 and 255\n";
-		return false;
-	}
-	return true;
-}
-
-bool ParseInput(const std::string stringByte, unsigned char &byte)
-{
 	try
 	{
 		size_t* idx = 0;
-		int bytei = std::stoi(stringByte, idx, 10);
-		if (!ProcessInputError(bytei))
-		{
-			return false;
-		}
-		byte = bytei;
-		return true;
+		byte = std::stoi(argv[1], idx, 10);
 	}
 	catch (const std::exception& e)
 	{
 		std::cout << e.what();
-		return false;
+		return std::nullopt;
 	}
+
+	if (byte < 0 || byte > 255)
+	{
+		std::cout << "Invalid input\n";
+		std::cout << "Value must be between 0 and 255\n";
+		return std::nullopt;
+	}
+	Args args;
+	args.inputByte = byte;
+	return args;
 }
 
-
-
-int ReversByte(int byte) 
+int ReversByte(uint8_t byte) 
 {
 	byte = (byte & 0b01010101) << 1 | (byte & 0b10101010) >> 1;
 	byte = (byte & 0b00110011) << 2 | (byte & 0b11001100) >> 2;
@@ -74,24 +49,16 @@ int ReversByte(int byte)
 	return byte;
 }
 
-
 int main(int argc, char* argv[])
 {
 	auto args = ParseArgs(argc, argv);
 
-	if (!ProcessArgError(args))
+	if (!args)
 	{
 		return 1;
-	};
+	}
 
-	unsigned char byte = 0;
-
-	if (!ParseInput(args->inputByte, byte))
-	{
-		return 1;
-	};
-
-	std::cout << ReversByte(byte) << endl;
+	std::cout << ReversByte(args->inputByte) << std::endl;
 
 	return 0;
 }
