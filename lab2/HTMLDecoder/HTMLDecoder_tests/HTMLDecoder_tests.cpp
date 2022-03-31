@@ -2,12 +2,22 @@
 #include "../HTMLDecoder/HTMLDecode.h"
 #include "../../../external/catch2/catch.hpp"
 
-TEST_CASE("Correct input")
+TEST_CASE("Text with html-entities")
 {
-	REQUIRE(HtmlDecode("Cat &lt; says &gt; &quot; Meow &quot;.M &amp; M &apos; s") == "Cat <says> ""Meow"". M&M’s ");
+	REQUIRE(HtmlDecode("Cat &lt;says&gt; &quot;Meow&quot;. M&amp;M&apos;s") == "Cat <says> \"Meow\". M&M’s");
 }
 
-//TEST_CASE("Input without html-entities")
-//{
-//	REQUIRE(HtmlDecode("Cat <says> ""Meow"". M&M’s ") == "HTML-entity was not found");
-//}
+TEST_CASE("Text without html-entities")
+{
+	REQUIRE(HtmlDecode("Cat <says> ""Meow"". M&M’s ") == "Cat <says> ""Meow"". M&M’s ");
+}
+
+TEST_CASE("Only html-entities")
+{
+	REQUIRE(HtmlDecode("&quot;&apos;&lt;&gt;&amp;") == "\"’<>&");
+}
+
+TEST_CASE("Empty input")
+{
+	REQUIRE(HtmlDecode("") == "");
+}
