@@ -4,6 +4,7 @@
 
 std::string SpecialChDef(std::string htmlEntity)
 {
+//запихнуть пары в структуру ключ=>значение и проходить циклом
 	if (htmlEntity == "&quot") { return "\""; }
 	if (htmlEntity == "&apos") { return "Т"; }
 	if (htmlEntity == "&lt") { return "<"; }
@@ -16,14 +17,15 @@ std::string HtmlDecode(std::string const& html)
 {
 	std::string text = html;
 	std::string specialCh = "";
-	for (int index = 0; index != -1; index++)
+	for (int index = 0; index != -1; index++)// дл€ того, чтобы код лучше читалс€ лучше запухнуть "index != -1" в переменную или флаг и провер€ть его с помощью while
 	{
 		index = text.find("&", index);
 		if (index != -1)
 		{
+
 			int i = index;
 			std::string htmlEntity = "";
-			while (text[i] != ';' && text[i] != '\0')
+			while (text[i] != ';' && text[i] != '\0')//в тесте &&...&&& парсер будет кждый раз ходить в конец строки, надо его ограничить
 			{
 				htmlEntity.push_back(text[i]);
 				i++;

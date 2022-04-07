@@ -6,11 +6,10 @@
 
 int main()
 {
-    std::string html = "";
-    char ch;
-    while (std::cin >> ch)
+    std::string html;
+    while (!std::cin.eof())
     {
-        html.push_back(ch);
+        getline(std::cin, html);
+        std::cout << HtmlDecode(html) << std::endl;
     }
-    std::cout << html << std::endl;
 }
