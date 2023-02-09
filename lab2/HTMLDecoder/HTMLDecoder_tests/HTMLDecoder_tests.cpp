@@ -7,7 +7,7 @@ TEST_CASE("Text with html-entities")
 	REQUIRE(HtmlDecode("Cat &lt;says&gt; &quot;Meow&quot;. M&amp;M&apos;s") == "Cat <says> \"Meow\". M&M’s");
 }
 
-TEST_CASE("Text without html-entities")//incorrct html entity
+TEST_CASE("Incorrect html-entities")
 {
 	REQUIRE(HtmlDecode("Cat <says> ""Meow"". M&M’s ") == "Cat <says> ""Meow"". M&M’s ");
 }
