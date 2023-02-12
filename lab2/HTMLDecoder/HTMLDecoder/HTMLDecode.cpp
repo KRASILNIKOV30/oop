@@ -1,67 +1,59 @@
 #include <string>
-#include <iostream>
 #include "HTMLDecode.h"
 #include <map>
+const int HTML_ENTITY_MAX_LENGTH = 6;
 
-//именование с загл буквы
-//передавать по константной ссылке строку и map
-//заменить цикл на метод find
-std::string getSpecialChDef(std::string htmlEntity, std::map<std::string, std::string> htmlEntities)
+short GetHtmlEntityLength(size_t startIndex, const std::string& text)
 {
-	for (auto& item: htmlEntities)
-	{
-		if (item.first == htmlEntity)
-		{
-			return item.second;
-		}
-	}
-	//другой способ сообщения not found
-	return "not found";
+    size_t i = startIndex;
+    short result = 0;
+    while (text[i] != ';' and result <= HTML_ENTITY_MAX_LENGTH)
+    {
+        result = i - startIndex + 1;
+        i++;
+    }
+    return result;
 }
 
-std::string HtmlDecode(std::string const& html)
+std::string HtmlDecode(std::string const& text)
 {
-	std::map<std::string, std::string> htmlEntities = 
+	std::map<std::string, std::string> htmlEntities =
 	{
 		{"&quot", "\""},
-		{"&apos", "’"},
+		{"&apos", "вЂ™"},
 		{"&lt", "<"},
 		{"&gt", ">"},
 		{"&amp", "&"}
 	};
-	std::string text = html;
-	std::string specialCh = "";
-	bool isTextContainsHtmlEntities = true;
-	//int мало надо size_t
-	int index = 0;
-	//код сложный
-	//textContainsHtmlEntities
-	while (isTextContainsHtmlEntities)
-	{
-		index = text.find("&", index);
-		isTextContainsHtmlEntities = index != -1;
-		if (isTextContainsHtmlEntities)
-		{
-			int i = index;
-			std::string htmlEntity = "";
-			//использовать string_view
-			//по другому проверять конец строки
-			while (text[i] != ';' && text[i] != '\0')
-			{
-				htmlEntity.push_back(text[i]);
-				i++;
-			};
-			if (text[i] == ';')
-			{
-				specialCh = getSpecialChDef(htmlEntity, htmlEntities);
-				if (specialCh != "not found")
-				{
-					//не использовать replace
-					text.replace(index, htmlEntity.size() + 1, specialCh);
-				}
-			}
-		};
-		index++;
-	}
-	return text;
+    std::string_view htmlEntity;
+    std::map<std::string, std::string>::iterator iterator;
+	size_t index = 0;
+    size_t i;
+    std::string result;
+
+    while (index < text.length())
+    {
+        if (text[index] == '&')
+        {
+            htmlEntity = text.substr(index, GetHtmlEntityLength(index, text));
+            iterator = htmlEntities.find({htmlEntity.begin(), htmlEntity.end()});
+            if (iterator != htmlEntities.end())
+            {
+                result.append(iterator->second);
+                index += htmlEntity.length() + 1;
+            }
+            else
+            {
+                result.append(htmlEntity);
+                index += htmlEntity.length();
+            }
+        }
+        else
+        {
+            result.push_back(text[index]);
+            index++;
+        }
+    }
+
+	return result;
 }

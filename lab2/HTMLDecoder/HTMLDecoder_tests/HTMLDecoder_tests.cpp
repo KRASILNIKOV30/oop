@@ -19,5 +19,16 @@ TEST_CASE("Only html-entities")
 
 TEST_CASE("Empty input")
 {
-	REQUIRE(HtmlDecode("") == "");
+	REQUIRE(HtmlDecode("").empty());
+}
+
+
+TEST_CASE("composite html entity")
+{
+    REQUIRE(HtmlDecode(" &amp;lt;&hello ") == " &lt;&hello ");
+}
+
+TEST_CASE("Long html entity")
+{
+    REQUIRE(HtmlDecode("hello&hello;hello") == "hello&hello;hello");
 }
