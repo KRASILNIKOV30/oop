@@ -4,17 +4,17 @@
 
 TEST_CASE("Text with html-entities")
 {
-	REQUIRE(HtmlDecode("Cat &lt;says&gt; &quot;Meow&quot;. M&amp;M&apos;s") == "Cat <says> \"Meow\". M&M’s");
+	REQUIRE(HtmlDecode("Cat &lt;says&gt; &quot;Meow&quot;. M&amp;M&apos;s") == "Cat <says> \"Meow\". M&M's");
 }
 
 TEST_CASE("Incorrect html-entities")
 {
-	REQUIRE(HtmlDecode("Cat <says> ""Meow"". M&M’s ") == "Cat <says> ""Meow"". M&M’s ");
+	REQUIRE(HtmlDecode("Cat <says> ""Meow"". M&M's ") == "Cat <says> ""Meow"". M&M's ");
 }
 
 TEST_CASE("Only html-entities")
 {
-	REQUIRE(HtmlDecode("&quot;&apos;&lt;&gt;&amp;") == "\"’<>&");
+	REQUIRE(HtmlDecode("&quot;&apos;&lt;&gt;&amp;") == "\"'<>&");
 }
 
 TEST_CASE("Empty input")
@@ -22,7 +22,8 @@ TEST_CASE("Empty input")
 	REQUIRE(HtmlDecode("").empty());
 }
 
-
+//&amp&lt; => &amp<
+// abc&lt => abc&lt
 TEST_CASE("composite html entity")
 {
     REQUIRE(HtmlDecode(" &amp;lt;&hello ") == " &lt;&hello ");

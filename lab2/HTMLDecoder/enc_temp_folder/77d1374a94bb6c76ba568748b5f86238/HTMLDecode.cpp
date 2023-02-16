@@ -6,11 +6,9 @@
 namespace {
 	const int HTML_ENTITY_MAX_LENGTH = 4;
 
-	size_t GetHtmlEntityLength(size_t startIndex, std::string_view text)
+	size_t GetHtmlEntityLength(size_t startIndex, const std::string_view& text)
 	{
 		size_t i = startIndex;
-		//добавить ()
-		// посмотреть на find_first_of
 		while (i - startIndex <= HTML_ENTITY_MAX_LENGTH && i < text.length() && text[i] != ';')
 		{
 			i++;
@@ -41,7 +39,6 @@ std::string HtmlDecode(std::string_view text)
 		if (text[index] == '&')
 		{
 			htmlEntity = text.substr(index, GetHtmlEntityLength(index, text));
-			// храните мап sting_view => string_view,
 			iterator = htmlEntities.find({ htmlEntity.begin(), htmlEntity.end() });
 			if (iterator != htmlEntities.end())
 			{
