@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{01897be2-bd1e-47e7-9e69-e5d2047eb5cc}</ProjectGuid>
-    <RootNamespace>Dictionary</RootNamespace>
+    <ProjectGuid>{00a244ab-6db9-45cf-b98e-4c1fe4d26ec1}</ProjectGuid>
+    <RootNamespace>TextAnalysis</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,7 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Dictionary.cpp" />
+    <ClCompile Include="TextAnalysisMain.cpp" />
+    <ClCompile Include="TextAnalysis.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TextAnalysis.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
