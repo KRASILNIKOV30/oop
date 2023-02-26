@@ -9,31 +9,37 @@ namespace {
 		}
 		vector[0] = vector[1] = false;
 	}
-}
 
-std::set<int> GeneratePrimeNumbersSet(int upperBound) {
-	std::set<int> primesSet = {};
-
-	if (upperBound < 2) {
-		return primesSet;
-	}
-
-	std::vector<bool> vector;
-	initVector(vector, upperBound);
-	int j;
-	for (int i = 2; i * i < upperBound; i++) {
-		if (vector[i]) {
-			for (j = i * 2; j <= upperBound; j += i) {
-				vector[j] = false;
+	void siftVector(std::vector<bool>& vector, const int upperBound) {
+		int j;
+		for (int i = 2; i * i < upperBound; i++) {
+			if (vector[i]) {
+				for (j = i * 2; j <= upperBound; j += i) {
+					vector[j] = false;
+				}
 			}
 		}
 	}
 
-	for (int i = 2; i <= upperBound; i++) {
-		if (vector[i]) {
-			primesSet.insert(i);
+	std::set<int> GetPrimesSetFromVector(std::vector<bool>& vector, const int upperBound) {
+		std::set<int> primesSet = {};
+		for (int i = 2; i <= upperBound; i++) {
+			if (vector[i]) {
+				primesSet.insert(i);
+			}
 		}
+		return primesSet;
 	}
+}
 
+std::set<int> GeneratePrimeNumbersSet(int upperBound) {
+	std::set<int> primesSet = {};
+	if (upperBound < 2) {
+		return primesSet;
+	}
+	std::vector<bool> vector;
+	initVector(vector, upperBound);
+	siftVector(vector, upperBound);
+	primesSet = GetPrimesSetFromVector(vector, upperBound);
 	return primesSet;
 }
