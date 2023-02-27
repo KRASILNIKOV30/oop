@@ -9,6 +9,13 @@ namespace {
         );
         return str;
     }
+
+    void printMap(std::map<std::string, int> map) {
+        std::map<std::string, int>::iterator iterator;
+        for (iterator = map.begin(); iterator != map.end(); ++iterator) {
+            std::cout << iterator->first << ' ' << iterator->second << std::endl;
+        }
+    }
 }
 
 void TextAnalysis(std::istream &input) {
@@ -27,10 +34,7 @@ void TextAnalysis(std::istream &input) {
             break;
         }
     }
-
-    for (iterator = wordsMap.begin(); iterator != wordsMap.end(); ++iterator) {
-        std::cout << iterator->first << ' ' << iterator->second << std::endl;
-    }
+    printMap(wordsMap);
 }
 
 
