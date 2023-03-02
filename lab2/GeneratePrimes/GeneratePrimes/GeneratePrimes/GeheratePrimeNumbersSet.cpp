@@ -3,18 +3,17 @@
 #include <vector>
 
 namespace {
-	void initVector(std::vector<bool>& vector, const int upperBound) {
+	void InitVector(std::vector<bool>& vector, const int upperBound) {
 		for (int i = 0; i <= upperBound; i++) {
 			vector.push_back(true);
 		}
 		vector[0] = vector[1] = false;
 	}
-
-	void siftVector(std::vector<bool>& vector, const int upperBound) {
-		int j;
+	
+	void SiftVector(std::vector<bool>& vector, const int upperBound) {
 		for (int i = 2; i * i < upperBound; i++) {
 			if (vector[i]) {
-				for (j = i * 2; j <= upperBound; j += i) {
+				for (int j = i * 2; j <= upperBound; j += i) {
 					vector[j] = false;
 				}
 			}
@@ -38,8 +37,8 @@ std::set<int> GeneratePrimeNumbersSet(int upperBound) {
 		return primesSet;
 	}
 	std::vector<bool> vector;
-	initVector(vector, upperBound);
-	siftVector(vector, upperBound);
+	InitVector(vector, upperBound);
+	SiftVector(vector, upperBound);
 	primesSet = GetPrimesSetFromVector(vector, upperBound);
 	return primesSet;
 }

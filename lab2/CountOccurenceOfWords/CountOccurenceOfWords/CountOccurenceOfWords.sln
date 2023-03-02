@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CountOccurenceOfWords", "CountOccurenceOfWords\CountOccurenceOfWords.vcxproj", "{C99D795A-5C85-437D-9407-EF7547BA68AF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CountOccurenceOfWords_tests", "CountOccurenceOfWords_tests\CountOccurenceOfWords_tests.vcxproj", "{9F6A877F-83A9-4669-91D2-8AABB902872B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C99D795A-5C85-437D-9407-EF7547BA68AF}.Debug|x64.ActiveCfg = Debug|x64
+		{C99D795A-5C85-437D-9407-EF7547BA68AF}.Debug|x64.Build.0 = Debug|x64
+		{C99D795A-5C85-437D-9407-EF7547BA68AF}.Debug|x86.ActiveCfg = Debug|Win32
+		{C99D795A-5C85-437D-9407-EF7547BA68AF}.Debug|x86.Build.0 = Debug|Win32
+		{C99D795A-5C85-437D-9407-EF7547BA68AF}.Release|x64.ActiveCfg = Release|x64
+		{C99D795A-5C85-437D-9407-EF7547BA68AF}.Release|x64.Build.0 = Release|x64
+		{C99D795A-5C85-437D-9407-EF7547BA68AF}.Release|x86.ActiveCfg = Release|Win32
+		{C99D795A-5C85-437D-9407-EF7547BA68AF}.Release|x86.Build.0 = Release|Win32
+		{9F6A877F-83A9-4669-91D2-8AABB902872B}.Debug|x64.ActiveCfg = Debug|x64
+		{9F6A877F-83A9-4669-91D2-8AABB902872B}.Debug|x64.Build.0 = Debug|x64
+		{9F6A877F-83A9-4669-91D2-8AABB902872B}.Debug|x86.ActiveCfg = Debug|Win32
+		{9F6A877F-83A9-4669-91D2-8AABB902872B}.Debug|x86.Build.0 = Debug|Win32
+		{9F6A877F-83A9-4669-91D2-8AABB902872B}.Release|x64.ActiveCfg = Release|x64
+		{9F6A877F-83A9-4669-91D2-8AABB902872B}.Release|x64.Build.0 = Release|x64
+		{9F6A877F-83A9-4669-91D2-8AABB902872B}.Release|x86.ActiveCfg = Release|Win32
+		{9F6A877F-83A9-4669-91D2-8AABB902872B}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CDB9C964-887E-4C75-B627-9CD0005A0CE9}
+	EndGlobalSection
+EndGlobal

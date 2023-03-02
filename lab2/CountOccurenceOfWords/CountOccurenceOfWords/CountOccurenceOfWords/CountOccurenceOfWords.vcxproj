@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{00a244ab-6db9-45cf-b98e-4c1fe4d26ec1}</ProjectGuid>
-    <RootNamespace>TextAnalysis</RootNamespace>
+    <ProjectGuid>{c99d795a-5c85-437d-9407-ef7547ba68af}</ProjectGuid>
+    <RootNamespace>CountOccurenceOfWords</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,11 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="TextAnalysisMain.cpp" />
-    <ClCompile Include="TextAnalysis.cpp" />
+    <ClCompile Include="CountOccurenceOfWords.cpp" />
+    <ClCompile Include="CountOccurenceOfWordsMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TextAnalysis.h" />
+    <ClInclude Include="CountOccurenceOfWords.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,22 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TextAnalysis_tests.cpp">
+    <ClCompile Include="CountOccurenceOfWords_tests.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\TextAnalysis\TextAnalysis.cpp">
+    <ClCompile Include="..\CountOccurenceOfWords\CountOccurenceOfWords.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\TextAnalysis\TextAnalysis.h">
+    <ClInclude Include="..\CountOccurenceOfWords\CountOccurenceOfWords.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
+    <None Include="..\..\CountOccurenceOfWords_tests\cpp.hint">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
 </Project>
