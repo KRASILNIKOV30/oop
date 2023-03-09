@@ -2,13 +2,6 @@
 #include "../URLParser/ParseURL.h"
 #include <string>
 
-enum class Protocol
-{
-	HTTP,
-	HTTPS,
-	FTP
-};
-
 namespace
 {
 	Protocol protocol;
@@ -27,13 +20,25 @@ TEST_CASE("common url") {
 }
 
 TEST_CASE("without port") {
-	REQUIRE(ParseURL("http://www.mysite.com/docs/document1.html?page=30&lang=en#title", protocol, port, host, document));
-	REQUIRE(protocol == Protocol::HTTP);
+	REQUIRE(ParseURL("ftp://www.mysite.com/docs/document1.html?page=30&lang=en#title", protocol, port, host, document));
+	REQUIRE(protocol == Protocol::FTP);
 	REQUIRE(host == "www.mysite.com");
-	REQUIRE(port == 80);
+	REQUIRE(port == 21);
 	REQUIRE(document == "docs/document1.html?page=30&lang=en#title");
 }
 
-TEST_CASE("Invalid port") {
+TEST_CASE("find url in line") {
+	REQUIRE(ParseURL("some text HTTPS://www.mysite.com/docs/document1.html?page=30&lang=en#title http//:", protocol, port, host, document));
+	REQUIRE(protocol == Protocol::HTTPS);
+	REQUIRE(host == "www.mysite.com");
+	REQUIRE(port == 443);
+	REQUIRE(document == "docs/document1.html?page=30&lang=en#title");
+}
+
+TEST_CASE("invalid url") {
+	REQUIRE(!ParseURL("http:///www.mysite.com/docs/document1.html?page=30&lang=en#title", protocol, port, host, document));
+}
+
+TEST_CASE("invalid port") {
 	REQUIRE(!ParseURL("ftp://localhost:65536", protocol, port, host, document));
 }

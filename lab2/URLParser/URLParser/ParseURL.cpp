@@ -1,13 +1,7 @@
 #include <string>
 #include <regex>
 #include <iostream>
-
-enum class Protocol 
-{
-	HTTP,
-	HTTPS,
-	FTP
-};
+#include "../URLParser/ParseURL.h"
 
 namespace
 {
@@ -16,6 +10,7 @@ namespace
 		std::transform(str.begin(), str.end(), str.begin(),
 			[](unsigned char c) { return std::tolower(c); }
 		);
+
 		return str;
 	}
 
@@ -32,26 +27,27 @@ namespace
 		else {
 			return false;
 		}
+
 		return true;
 	}
 
 	bool SetDefaultPort(int& port, const Protocol protocol)
 	{
 		switch (protocol) {
-		case Protocol::HTTP: {
-			port = 80;
-			return true;
-		}
-		case Protocol::HTTPS: {
-			port = 443;
-			return true;
-		}
-		case Protocol::FTP: {
-			port = 21;
-			return true;
-		}
-		default:
-			return false;
+			case Protocol::HTTP: {
+				port = 80;
+				return true;
+			}
+			case Protocol::HTTPS: {
+				port = 443;
+				return true;
+			}
+			case Protocol::FTP: {
+				port = 21;
+				return true;
+			}
+			default:
+				return false;
 		}
 	}
 
@@ -61,28 +57,32 @@ namespace
 			return SetDefaultPort(port, protocol);
 		}
 		if (port = stoi(value)) {
-			return port >= 1 && port <= 65535;
+			return port >= 1 && port < 65535;
 		}
+
 		return false;
 	}
 }
 
 bool ParseURL(std::string const& url, Protocol& protocol, int& port, std::string& host, std::string& document) 
 {
-	const std::regex reg(R"((http|https|ftp)://([\w.]+)(:(\d+))?(/(.*))?)", std::regex_constants::icase);
-	std::smatch what;
-	if (!std::regex_match(url, what, reg)) {
+	const std::regex reg(R"((http|https|ftp)://([\w.]+)(:(\d+))?(/([^\s]+))?)", std::regex_constants::icase);
+	std::smatch searchResult;
+	if (!std::regex_search(url, searchResult, reg)) {
 		return false;
 	}
-	if (!SetProtocol(protocol, StrToLower(what[1]))) {
+	if (!SetProtocol(protocol, StrToLower(searchResult[1]))) {
 		return false;
 	}
-	host = what[2];
-	if (!SetPort(port, what[4], protocol)) {
+	if (!SetPort(port, searchResult[4], protocol)) {
 		return false;
 	}
-	document = what[6];
+	host = searchResult[2];
+	document = searchResult[6];
 
 	return true;
-	
 }
+
+// http://google.com:/abc:
+// abchttps://localhost:88/abc
+//
