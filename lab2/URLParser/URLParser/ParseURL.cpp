@@ -57,7 +57,7 @@ namespace
 			return SetDefaultPort(port, protocol);
 		}
 		if (port = stoi(value)) {
-			return port >= 1 && port < 65535;
+			return port >= 1 && port <= 65535; // Ќе провер€ютс€ граничные услови€
 		}
 
 		return false;
@@ -85,4 +85,4 @@ bool ParseURL(std::string const& url, Protocol& protocol, int& port, std::string
 
 // http://google.com:/abc:
 // abchttps://localhost:88/abc
-//
+//заменить regex_search на regex_match
