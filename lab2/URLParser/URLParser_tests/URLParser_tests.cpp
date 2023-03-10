@@ -27,18 +27,21 @@ TEST_CASE("without port") {
 	REQUIRE(document == "docs/document1.html?page=30&lang=en#title");
 }
 
-TEST_CASE("find url in line") {
-	REQUIRE(ParseURL("some text HTTPS://www.mysite.com/docs/document1.html?page=30&lang=en#title http//:", protocol, port, host, document));
-	REQUIRE(protocol == Protocol::HTTPS);
-	REQUIRE(host == "www.mysite.com");
-	REQUIRE(port == 443);
-	REQUIRE(document == "docs/document1.html?page=30&lang=en#title");
+TEST_CASE("url with some text") {
+	REQUIRE(!ParseURL("some text HTTPS://www.mysite.com/docs/document1.html?page=30&lang=en#title", protocol, port, host, document));
+}
+
+TEST_CASE("with empty port") {
+	REQUIRE(!ParseURL("http:///www.mysite.com:/docs", protocol, port, host, document));
 }
 
 TEST_CASE("invalid url") {
 	REQUIRE(!ParseURL("http:///www.mysite.com/docs/document1.html?page=30&lang=en#title", protocol, port, host, document));
 }
 
-TEST_CASE("invalid port") {
+TEST_CASE("test port boundary values") {
 	REQUIRE(!ParseURL("ftp://localhost:65536", protocol, port, host, document));
+	REQUIRE(ParseURL("ftp://localhost:65535", protocol, port, host, document));
+	REQUIRE(!ParseURL("ftp://localhost:0", protocol, port, host, document));
+	REQUIRE(ParseURL("ftp://localhost:1", protocol, port, host, document));
 }

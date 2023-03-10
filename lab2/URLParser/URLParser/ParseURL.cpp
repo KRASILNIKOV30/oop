@@ -57,7 +57,7 @@ namespace
 			return SetDefaultPort(port, protocol);
 		}
 		if (port = stoi(value)) {
-			return port >= 1 && port <= 65535; // Не проверяются граничные условия
+			return port >= 1 && port <= 65535; // Не проверяются граничные условия (Исправлено)
 		}
 
 		return false;
@@ -67,22 +67,21 @@ namespace
 bool ParseURL(std::string const& url, Protocol& protocol, int& port, std::string& host, std::string& document) 
 {
 	const std::regex reg(R"((http|https|ftp)://([\w.]+)(:(\d+))?(/([^\s]+))?)", std::regex_constants::icase);
-	std::smatch searchResult;
-	if (!std::regex_search(url, searchResult, reg)) {
+	std::smatch matchResutl;
+	if (!std::regex_match(url, matchResutl, reg)) {
 		return false;
 	}
-	if (!SetProtocol(protocol, StrToLower(searchResult[1]))) {
+	if (!SetProtocol(protocol, StrToLower(matchResutl[1]))) {
 		return false;
 	}
-	if (!SetPort(port, searchResult[4], protocol)) {
+	if (!SetPort(port, matchResutl[4], protocol)) {
 		return false;
 	}
-	host = searchResult[2];
-	document = searchResult[6];
+	host = matchResutl[2];
+	document = matchResutl[6];
 
 	return true;
 }
 
-// http://google.com:/abc:
-// abchttps://localhost:88/abc
-//заменить regex_search на regex_match
+// http://google.com:/abc: (Исправлено)
+// abchttps://localhost:88/abc (Исправлено)
