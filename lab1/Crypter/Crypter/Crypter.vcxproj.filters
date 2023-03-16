@@ -23,4 +23,9 @@
     <Text Include="in.txt" />
     <Text Include="out.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test.bat">
+      <Filter>Исходные файлы</Filter>
+    </None>
+  </ItemGroup>
 </Project>
