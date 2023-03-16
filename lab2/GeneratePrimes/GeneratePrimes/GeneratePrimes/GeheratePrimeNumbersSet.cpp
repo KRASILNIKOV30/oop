@@ -37,6 +37,7 @@ std::set<int> GeneratePrimeNumbersSet(int upperBound) {
 		return primesSet;
 	}
 	std::vector<bool> vector;
+	vector.reserve(upperBound);
 	InitVector(vector, upperBound);
 	SiftVector(vector, upperBound);
 	primesSet = GetPrimesSetFromVector(vector, upperBound);
