@@ -22,19 +22,19 @@ optional<Args> ParseArgs(int argc, char* argv[])
 	int key;
 	try
 	{
-		size_t* idx = 0;
+		size_t* idx = 0;//TODO: выяснить, зачем эта переменная нужна
 		key = std::stoi(argv[3], idx, 10);
 	}
 	catch (const std::exception& e)
 	{
-		std::cout << e.what();
+		std::cout << e.what(); //TODO: лучше логироовать ошибку понятным языком
 		return std::nullopt;
 	}
-
+	//TODO: вынести в константу
 	if (key < 0 || key > 255)
 	{
-		std::cout << "Invalid input\n";
-		std::cout << "Key must be between 0 and 255\n";
+		std::cout << "Invalid input\n";//TODO: use const EOLN
+		std::cout << "Key must be between 0 and 255\n"; //TODO: выводить логи тоже с помощью констант
 		return std::nullopt;
 	}
 	Args args;
@@ -57,8 +57,6 @@ char CryptChar(char ch, uint8_t key)
 	return result;
 }
 
-
-
 bool CryptStreams(ifstream& input, ofstream& output, const uint8_t key)
 {
 	char ch;
@@ -75,7 +73,6 @@ bool CryptStreams(ifstream& input, ofstream& output, const uint8_t key)
 
 bool OpenStreamsErrorHandling(ifstream& input, ofstream& output)
 {
-
 	if (!input.is_open())
 	{
 		cout << "Failed to open file for reading\n";
@@ -101,6 +98,7 @@ bool SaveErrorHandling(ofstream& output)
 
 bool ProcessArgError(const optional<Args>& args)
 {
+	//TODO: убрать дублирование логов
 	if (!args.has_value())
 	{
 		cout << "Invalid arguments count\n";
@@ -114,6 +112,7 @@ int main(int argc, char* argv[])
 {
 	auto args = ParseArgs(argc, argv);
 
+	//TODO: непонятно, что возвращает метод.
 	if (!ProcessArgError(args))
 	{
 		return 1;
@@ -123,6 +122,7 @@ int main(int argc, char* argv[])
 
 	ofstream output(args->outputFileName, ios::binary | ios::out);
 
+	//TODO: не хватает глагола в названии
 	if (!OpenStreamsErrorHandling(input, output))
 	{
 		return 1;
@@ -132,7 +132,7 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-
+	//TODO: не хватает глагола в названии
 	if (!SaveErrorHandling(output))
 	{
 		return 1;
