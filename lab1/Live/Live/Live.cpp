@@ -10,6 +10,7 @@ namespace {
 	const char LIVE_CELL = '#';
 	const char BOUND = '*';
 	const char DEAD_CELL = ' ';
+	const int MAX_FIELD_SIZE = 20;
 	struct Coordinates {
 		int x;
 		int y;
@@ -71,7 +72,7 @@ bool ProcessArgError(const optional<Args>& args)
 	return true;
 }
 
-int GetCellNeighboursNumber(char matrix[256][256], Coordinates coords)
+int GetCellNeighboursNumber(char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], Coordinates coords)
 {
 	int result = 0;
 	for (int x = coords.x - 1; x <= coords.x + 1; x++)
@@ -88,7 +89,7 @@ int GetCellNeighboursNumber(char matrix[256][256], Coordinates coords)
 	return result;
 }
 
-void GenerateNextGeneration(char inMatrix[256][256], char outMatrix[256][256], size_t fieldWidth, size_t fieldHeight)
+void GenerateNextGeneration(char inMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], char outMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], size_t fieldWidth, size_t fieldHeight)
 {
 	int neighboursNumber;
 	for (int x = 0; x < fieldHeight; x++)
@@ -130,7 +131,7 @@ void GenerateNextGeneration(char inMatrix[256][256], char outMatrix[256][256], s
 	}
 }
 
-void ReadMatrix(ifstream& input, char matrix[256][256], size_t& fieldWidth, size_t& fieldHeight)
+void ReadMatrix(ifstream& input, char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], size_t& fieldWidth, size_t& fieldHeight)
 {
 	string str;
 	int i = 0;
@@ -140,12 +141,17 @@ void ReadMatrix(ifstream& input, char matrix[256][256], size_t& fieldWidth, size
 		{
 			break;
 		}
-		fieldWidth = str.length();
-		for (int j = 0; j < str.length() && j < 256; j++)
+		fieldWidth = str.length() < MAX_FIELD_SIZE ? str.length() : MAX_FIELD_SIZE;
+		for (int j = 0; j < str.length() && j < MAX_FIELD_SIZE; j++)
 		{
 			matrix[i][j] = str[j];
 		}
 		i++;
+		if (i == MAX_FIELD_SIZE)
+		{
+			fieldHeight = MAX_FIELD_SIZE;
+			return;
+		}
 	}
 	fieldHeight = i;
 }
@@ -155,7 +161,7 @@ bool IsRightBoundAchieved(char currentChar, int x, int y)
 	return currentChar == BOUND && x != 0 && y != 0;
 }
 
-void WriteMatrix(ofstream& output, const char matrix[256][256], const size_t fieldWidth, const size_t fieldHeight)
+void WriteMatrix(ostream& output, const char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], const size_t fieldWidth, const size_t fieldHeight)
 {
 	for (int i = 0; i < fieldHeight; i++)
 	{
@@ -177,25 +183,33 @@ int main(int argc, char* argv[])
 	}
 
 	ifstream input(args->inputFileName, ios::in);
-	ofstream output(args->outputFileName, ios::out);
-
+	
 	if (!IsInputOpen(input))
 	{
 		return 1;
 	}
 
-	char inMatrix[256][256];
-	char outMatrix[256][256];
+	char inMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE];
+	char outMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE];
 	size_t fieldWidth = 0;
 	size_t fieldHeight = 0;
 
 	ReadMatrix(input, inMatrix, fieldWidth, fieldHeight);
+
 	GenerateNextGeneration(inMatrix, outMatrix, fieldWidth, fieldHeight);
-	WriteMatrix(output, outMatrix, fieldWidth, fieldHeight);
-	
-	if (!SaveErrorHandling(output))
+
+	if (args->outputFileName == "")
 	{
-		return 1;
+		WriteMatrix(cout, outMatrix, fieldWidth, fieldHeight);
+	}
+	else
+	{
+		ofstream output(args->outputFileName, ios::out);
+		WriteMatrix(output, outMatrix, fieldWidth, fieldHeight);
+		if (!SaveErrorHandling(output))
+		{
+			return 1;
+		}
 	}
 
 	return 0;
