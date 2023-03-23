@@ -44,7 +44,7 @@ bool IsInputOpen(ifstream& input)
 
 	if (!input.is_open())
 	{
-		cout << "Failed to open file for reading\n";
+		cout << "Failed to open file for reading" << endl;
 		return false;
 	}
 	
@@ -55,7 +55,7 @@ bool SaveErrorHandling(ostream& output)
 {
 	if (!output.flush())
 	{
-		cout << "Failed to save data on disk\n";
+		cout << "Failed to save data on disk" << endl;
 		return false;
 	}
 	return true;
@@ -65,8 +65,8 @@ bool ProcessArgError(const optional<Args>& args)
 {
 	if (!args.has_value())
 	{
-		cout << "Invalid arguments count\n";
-		cout << "Usage: live.exe <input file> <output file>\n";
+		cout << "Invalid arguments count" << endl;
+		cout << "Usage: live.exe <input file> <output file>" << endl;
 		return false;
 	}
 	return true;
@@ -89,6 +89,30 @@ int GetCellNeighboursNumber(char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], Coordin
 	return result;
 }
 
+char GetLiveCellNextState(int neighboursNumber)
+{
+	if (neighboursNumber == 2 || neighboursNumber == 3)
+	{
+		return LIVE_CELL;
+	}
+	else
+	{
+		return DEAD_CELL;
+	}
+}
+
+char GetDeadCellNextState(int neighboursNumber)
+{
+	if (neighboursNumber == 3)
+	{
+		return LIVE_CELL;
+	}
+	else
+	{
+		return DEAD_CELL;
+	}
+}
+
 void GenerateNextGeneration(char inMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], char outMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], size_t fieldWidth, size_t fieldHeight)
 {
 	int neighboursNumber;
@@ -96,78 +120,73 @@ void GenerateNextGeneration(char inMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], char 
 	{
 		for (int y = 0; y < fieldWidth; y++)
 		{
-			if (inMatrix[x][y] == BOUND)
+			neighboursNumber = GetCellNeighboursNumber(inMatrix, { x, y });
+			switch (inMatrix[x][y])
 			{
-				outMatrix[x][y] = BOUND;
+				case BOUND:
+					outMatrix[x][y] = BOUND;
+					break;
+				case LIVE_CELL:
+					outMatrix[x][y] = GetLiveCellNextState(neighboursNumber);
+					break;
+				case DEAD_CELL:
+					outMatrix[x][y] = GetDeadCellNextState(neighboursNumber);
+					break;
+				default:
+					outMatrix[x][y] = DEAD_CELL;
+					break;
 			}
-			else
-			{
-				neighboursNumber = GetCellNeighboursNumber(inMatrix, { x, y });
-				if (inMatrix[x][y] == LIVE_CELL)
-				{
-					if (neighboursNumber == 2 || neighboursNumber == 3)
-					{
-						outMatrix[x][y] = LIVE_CELL;
-					}
-					else
-					{
-						outMatrix[x][y] = DEAD_CELL;
-					}
-				}
-				else
-				{
-					if (neighboursNumber == 3)
-					{
-						outMatrix[x][y] = LIVE_CELL;
-					}
-					else
-					{
-						outMatrix[x][y] = DEAD_CELL;
-					}
-				}
-			}
-		}
-		
+		}	
 	}
 }
 
-void ReadMatrix(ifstream& input, char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], size_t& fieldWidth, size_t& fieldHeight)
+int GetFieldWidth(size_t rowLength)
+{
+	if (rowLength < MAX_FIELD_SIZE)
+	{
+		return rowLength;
+	}
+	return MAX_FIELD_SIZE;
+}
+
+bool NoFieldInRow(char firstRowElement)
+{
+	return firstRowElement != BOUND;
+}
+
+void ReadMatrix(ifstream& input, char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], int& fieldWidth, int& fieldHeight)
 {
 	string str;
-	int i = 0;
+	Coordinates coords = { 0, 0 };
 	while (getline(input, str))
 	{
-		if (str[0] != BOUND)
+		if (NoFieldInRow(str[0]))
 		{
 			break;
 		}
-		fieldWidth = str.length() < MAX_FIELD_SIZE ? str.length() : MAX_FIELD_SIZE;
-		for (int j = 0; j < str.length() && j < MAX_FIELD_SIZE; j++)
+		fieldWidth = GetFieldWidth(str.length());
+		for (coords.y = 0; coords.y < str.length() && coords.y < MAX_FIELD_SIZE; coords.y++)
 		{
-			matrix[i][j] = str[j];
+			matrix[coords.x][coords.y] = str[coords.y];
 		}
-		i++;
-		if (i == MAX_FIELD_SIZE)
+		coords.x++;
+		if (coords.x == MAX_FIELD_SIZE)
 		{
 			fieldHeight = MAX_FIELD_SIZE;
 			return;
 		}
 	}
-	fieldHeight = i;
+	fieldHeight = coords.x;
 }
 
-bool IsRightBoundAchieved(char currentChar, int x, int y)
+void WriteMatrix(ostream& output, const char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], int fieldWidth, int fieldHeight)
 {
-	return currentChar == BOUND && x != 0 && y != 0;
-}
-
-void WriteMatrix(ostream& output, const char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], const size_t fieldWidth, const size_t fieldHeight)
-{
-	for (int i = 0; i < fieldHeight; i++)
+	Coordinates coords = { 0, 0 };
+	for (coords.x; coords.x < fieldHeight; coords.x++)
 	{
-		for (int j = 0; j < fieldWidth; j++)
+		for (coords.y = 0; coords.y < fieldWidth; coords.y++)
 		{
-			output << matrix[i][j];
+			output << matrix[coords.x][coords.y];
 		}
 		output << endl;
 	}
@@ -191,11 +210,10 @@ int main(int argc, char* argv[])
 
 	char inMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE];
 	char outMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE];
-	size_t fieldWidth = 0;
-	size_t fieldHeight = 0;
+	int fieldWidth = 0;
+	int fieldHeight = 0;
 
 	ReadMatrix(input, inMatrix, fieldWidth, fieldHeight);
-
 	GenerateNextGeneration(inMatrix, outMatrix, fieldWidth, fieldHeight);
 
 	if (args->outputFileName == "")
