@@ -39,6 +39,7 @@ optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
+//поменять название: не ожидпется вывод
 bool IsInputOpen(ifstream& input)
 {
 
@@ -113,14 +114,21 @@ char GetDeadCellNextState(int neighboursNumber)
 	}
 }
 
+#if 0
+Generation GenerateNext(const Generation& generation)
+{
+
+}
+#endif
+
 void GenerateNextGeneration(char inMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], char outMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], size_t fieldWidth, size_t fieldHeight)
 {
-	int neighboursNumber;
 	for (int x = 0; x < fieldHeight; x++)
 	{
 		for (int y = 0; y < fieldWidth; y++)
 		{
-			neighboursNumber = GetCellNeighboursNumber(inMatrix, { x, y });
+			
+			int neighboursNumber = GetCellNeighboursNumber(inMatrix, { x, y });
 			switch (inMatrix[x][y])
 			{
 				case BOUND:
@@ -149,11 +157,13 @@ int GetFieldWidth(size_t rowLength)
 	return MAX_FIELD_SIZE;
 }
 
+//можно не выделять в функцию
 bool NoFieldInRow(char firstRowElement)
 {
 	return firstRowElement != BOUND;
 }
 
+//поменять x y
 void ReadMatrix(ifstream& input, char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], int& fieldWidth, int& fieldHeight)
 {
 	string str;
