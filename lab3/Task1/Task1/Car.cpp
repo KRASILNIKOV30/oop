@@ -18,7 +18,8 @@ const Range THIRD_GEAR_SPEED_RANGE = { 30, 60 };
 const Range FOURTH_GEAR_SPEED_RANGE = { 40, 90 };
 const Range FIFTH_GEAR_SPEED_RANGE = { 50, 150 };
 
-
+//вынести класс в .h
+//методы класса, не изменяющие состояние должны быть константными
 class Car
 {
 public:
@@ -32,11 +33,14 @@ public:
 	bool SetSpeed(int speed);
 
 private:
+	// m_
 	bool isTurnedOn = false;
 	Direction direction = Direction::StandingStill;
 	int speed = 0;
+	//избавиться от direction, хранить скорость со знаком
 	int gear = 0;
 	bool IsSpeedInRange(Range range);
+	bool TryToSetGear(int gear, Range speedRange, Direction availableDirection);
 };
 
 bool Car::IsSpeedInRange(Range range)
@@ -80,8 +84,18 @@ bool Car::TurnOffEngine()
 	return false;
 }
 
-bool Car::SetGear(int gear)
+bool Car::TryToSetGear(int newGear, Range speedRange, Direction availableDirection)
 {
+	if (direction == availableDirection && IsSpeedInRange(speedRange))
+	{
+		gear = newGear;
+		return true;
+	}
+	return false;
+}
+
+bool Car::SetGear(int gear)
+{//упростить код
 	if (!isTurnedOn)
 	{
 		return false;
@@ -105,44 +119,20 @@ bool Car::SetGear(int gear)
 				gear = 1;
 				return true;
 			}
+			return false;
 		}
 		else
 		{
-			if (IsSpeedInRange(FIFTH_GEAR_SPEED_RANGE))
-			{
-				gear = 1;
-				return true;
-			}
+			return TryToSetGear(1, FIRST_GEAR_SPEED_RANGE, Direction::Forward);
 		}
-		return false;
 	case 2:
-		if (direction == Direction::Forward && IsSpeedInRange(SECOND_GEAR_SPEED_RANGE))
-		{
-			gear = 2;
-			return true;
-		}
-		return false;
+		return TryToSetGear(2, SECOND_GEAR_SPEED_RANGE, Direction::Forward);
 	case 3:
-		if (direction == Direction::Forward && IsSpeedInRange(THIRD_GEAR_SPEED_RANGE))
-		{
-			gear = 2;
-			return true;
-		}
-		return false;
+		return TryToSetGear(3, THIRD_GEAR_SPEED_RANGE, Direction::Forward);
 	case 4:
-		if (direction == Direction::Forward && IsSpeedInRange(FOURTH_GEAR_SPEED_RANGE))
-		{
-			gear = 2;
-			return true;
-		}
-		return false;
+		return TryToSetGear(4, FOURTH_GEAR_SPEED_RANGE, Direction::Forward);
 	case 5:
-		if (direction == Direction::Forward && IsSpeedInRange(FIFTH_GEAR_SPEED_RANGE))
-		{
-			gear = 2;
-			return true;
-		}
-		return false;
+		return TryToSetGear(5, FIFTH_GEAR_SPEED_RANGE, Direction::Forward);
 	}
 }
 
