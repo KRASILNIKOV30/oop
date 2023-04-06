@@ -21,23 +21,26 @@ namespace
 	{
 		if (argc != 4)
 		{
+			cout << "Invalid arguments count" << endl;
 			return nullopt;
 		}
 
 		int key;
 		try
 		{
-			//size_t* idx = 0;//(выяснил) TODO: выяснить, зачем эта переменная нужна
+			//(выяснил) TODO: выяснить, зачем эта переменная (size_t* idx = 0;) нужна 
 			key = std::stoi(argv[3], 0, 10);
 		}
 		catch (const std::exception& e)
 		{
 			//(Исправлено) TODO: лучше логироовать ошибку понятным языком 
+			cout << "key must be number" << endl;
 			return std::nullopt;
 		}
 		//(Исправлено) TODO: вынести в константу 
 		if (key < MIN_KEY_VALUE || key > MAX_KEY_VALUE)
 		{
+			cout << "key must be number between " << MIN_KEY_VALUE << " and " << MAX_KEY_VALUE << endl;
 			return std::nullopt;
 		}
 		Args args;
@@ -67,45 +70,33 @@ namespace
 		{
 			if (!output.put(CryptChar(ch, key)))
 			{
-				cout << "Failed to save data on disk\n";
+				cout << "Failed to save data on disk" << endl;
 				return false;
 			}
 		}
 		return true;
 	}
 
-	bool OpenStreamsErrorHandling(ifstream& input, ofstream& output)
+	bool AreStreamsOpen(ifstream& input, ofstream& output)
 	{
 		if (!input.is_open())
 		{
-			cout << "Failed to open file for reading\n";
+			cout << "Failed to open file for reading" << endl;
 			return false;
 		}
 		if (!output.is_open())
 		{
-			cout << "Failed to open file for writing\n";
+			cout << "Failed to open file for writing" << endl;
 			return false;
 		}
 		return true;
 	}
 
-	bool SaveErrorHandling(ofstream& output)
+	bool TrySave(ofstream& output)
 	{
 		if (!output.flush())
 		{
-			cout << "Failed to save data on disk\n";
-			return false;
-		}
-		return true;
-	}
-
-	bool ProcessArgError(const optional<Args>& args)
-	{
-		//(Исправлено) TODO: убрать дублирование логов
-		if (!args.has_value())
-		{
-			cout << "Invalid arguments count\n";
-			cout << "Usage: crypt.exe <input file> <output file> <key between " << MAX_KEY_VALUE << "and" << MIN_KEY_VALUE;
+			cout << "Failed to save data on disk" << endl;
 			return false;
 		}
 		return true;
@@ -118,8 +109,9 @@ int main(int argc, char* argv[])
 {
 	auto args = ParseArgs(argc, argv);
 
-	//TODO: непонятно, что возвращает метод.
-	if (!ProcessArgError(args))
+	//(Исправлено) TODO: непонятно, что возвращает метод.
+	//(Исправлено) TODO: убрать дублирование логов
+	if (!args)
 	{
 		return 1;
 	}
@@ -128,8 +120,8 @@ int main(int argc, char* argv[])
 
 	ofstream output(args->outputFileName, ios::binary | ios::out);
 
-	//TODO: не хватает глагола в названии
-	if (!OpenStreamsErrorHandling(input, output))
+	//(Исправлено) TODO: не хватает глагола в названии
+	if (!AreStreamsOpen(input, output))
 	{
 		return 1;
 	}
@@ -138,8 +130,8 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-	//TODO: не хватает глагола в названии
-	if (!SaveErrorHandling(output))
+	//(Исправлено) TODO: не хватает глагола в названии
+	if (!TrySave(output))
 	{
 		return 1;
 	}

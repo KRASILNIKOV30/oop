@@ -1,1 +1,1 @@
-invalid stoi argument
+byte must be a number
