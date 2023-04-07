@@ -1,3 +1,4 @@
+#include <math.h>
 enum class Direction
 {
 	Forward,
@@ -11,128 +12,144 @@ struct Range
 	int max;
 };
 
-const Range REVERSE_GEAR_SPEED_RANGE = { 0, 20 };
+const Range REVERSE_GEAR_SPEED_RANGE = { -20, 0 };
 const Range FIRST_GEAR_SPEED_RANGE = { 0, 30 };
 const Range SECOND_GEAR_SPEED_RANGE = { 20, 50 };
 const Range THIRD_GEAR_SPEED_RANGE = { 30, 60 };
 const Range FOURTH_GEAR_SPEED_RANGE = { 40, 90 };
 const Range FIFTH_GEAR_SPEED_RANGE = { 50, 150 };
+const Range CAR_SPEED_RANGE = { REVERSE_GEAR_SPEED_RANGE.min, FIFTH_GEAR_SPEED_RANGE.max };
 
 //вынести класс в .h
-//методы класса, не изменяющие состояние должны быть константными
+//методы класса, не изменяющие состояние должны быть константными (Исправлено)
 class Car
 {
 public:
-	bool IsTurnedOn();
-	Direction GetDirection();
-	int GetSpeed();
-	int GetGear();
+	const bool IsTurnedOn();
+	const Direction GetDirection();
+	const int GetSpeed();
+	const int GetGear();
 	bool TurnOnEngine();
 	bool TurnOffEngine();
 	bool SetGear(int gear);
 	bool SetSpeed(int speed);
 
 private:
-	// m_
-	bool isTurnedOn = false;
-	Direction direction = Direction::StandingStill;
-	int speed = 0;
-	//избавиться от direction, хранить скорость со знаком
-	int gear = 0;
-	bool IsSpeedInRange(Range range);
-	bool TryToSetGear(int gear, Range speedRange, Direction availableDirection);
+	// m_ (Исправлено)
+	bool m_isTurnedOn = false;
+	int m_speed = 0;
+	//избавиться от direction, хранить скорость со знаком (Исправлено)
+	int m_gear = 0;
+	bool m_IsInRange(int speed, Range range);
+	bool m_TryToSetGear(int gear, Range speedRange);
+	const Range m_GetGearSpeedRange(int gear);
 };
 
-bool Car::IsSpeedInRange(Range range)
+bool Car::m_IsInRange(int speed, Range range)
 {
 	return speed >= range.min && speed <= range.max;
 }
 
-bool Car::IsTurnedOn()
+const bool Car::IsTurnedOn()
 {
-	return isTurnedOn;
+	return m_isTurnedOn;
 }
 
-Direction Car::GetDirection()
+const Direction Car::GetDirection()
 {
-	return direction;
+	if (m_speed > 0)
+	{
+		return Direction::Forward;
+	}
+	if (m_speed < 0)
+	{
+		return Direction::Backward;
+	}
+	return Direction::StandingStill;
 }
 
-int Car::GetSpeed()
+const int Car::GetSpeed()
 {
-	return speed;
+	return abs(m_speed);
 }
 
-int Car::GetGear()
+const int Car::GetGear()
 {
-	return gear;
+	return m_gear;
 }
 
 bool Car::TurnOnEngine()
 {
-	isTurnedOn = true;
-	return isTurnedOn;
+	m_isTurnedOn = true;
+	return m_isTurnedOn;
 }
 
 bool Car::TurnOffEngine()
 {
-	if (speed == 0 && gear == 0)
+	if (m_speed == 0 && m_gear == 0)
 	{
-		isTurnedOn = false;
+		m_isTurnedOn = false;
 		return true;
 	}
 	return false;
 }
 
-bool Car::TryToSetGear(int newGear, Range speedRange, Direction availableDirection)
+const Range Car::m_GetGearSpeedRange(int gear)
 {
-	if (direction == availableDirection && IsSpeedInRange(speedRange))
+	switch (gear)
 	{
-		gear = newGear;
+	case -1:
+		return REVERSE_GEAR_SPEED_RANGE;
+	case 0:
+		return CAR_SPEED_RANGE;
+	case 1:
+		return FIRST_GEAR_SPEED_RANGE;
+	case 2:
+		return SECOND_GEAR_SPEED_RANGE;
+	case 3:
+		return THIRD_GEAR_SPEED_RANGE;
+	case 4:
+		return FOURTH_GEAR_SPEED_RANGE;
+	case 5:
+		return FIFTH_GEAR_SPEED_RANGE;
+	}
+}
+
+bool Car::m_TryToSetGear(int gear, Range speedRange)
+{
+	if (m_IsInRange(m_speed, speedRange))
+	{
+		m_gear = gear;
 		return true;
 	}
 	return false;
 }
 
 bool Car::SetGear(int gear)
-{//упростить код
-	if (!isTurnedOn)
+{//упростить код (Исправлено)
+	if (m_isTurnedOn && m_IsInRange(m_speed, m_GetGearSpeedRange(gear)))
 	{
-		return false;
+		m_gear = gear;
+		return true;
 	}
-	switch (gear)
-	{
-	case -1:
-		if (speed == 0)
-		{
-			gear = -1;
-			return true;
-		}
-		return false;
-	case 0:
-		gear = 0;
-	case 1:
-		if (direction == Direction::Backward)
-		{
-			if (speed == 0)
-			{
-				gear = 1;
-				return true;
-			}
-			return false;
-		}
-		else
-		{
-			return TryToSetGear(1, FIRST_GEAR_SPEED_RANGE, Direction::Forward);
-		}
-	case 2:
-		return TryToSetGear(2, SECOND_GEAR_SPEED_RANGE, Direction::Forward);
-	case 3:
-		return TryToSetGear(3, THIRD_GEAR_SPEED_RANGE, Direction::Forward);
-	case 4:
-		return TryToSetGear(4, FOURTH_GEAR_SPEED_RANGE, Direction::Forward);
-	case 5:
-		return TryToSetGear(5, FIFTH_GEAR_SPEED_RANGE, Direction::Forward);
-	}
+	return false;
 }
 
+bool Car::SetSpeed(int speed)
+{
+	if (!m_isTurnedOn or !m_IsInRange(speed, m_GetGearSpeedRange(m_gear)))
+	{
+		return false;
+	}
+	if (m_gear == 0 && speed <= abs(m_speed))
+	{
+		m_speed = speed;
+		return true;
+	}
+	if (m_gear == -1)
+	{
+		m_speed = -speed;
+		return true;
+	}
+	return false;
+}
