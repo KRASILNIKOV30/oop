@@ -42,7 +42,7 @@ private:
 	int m_speed = 0;
 	//избавиться от direction, хранить скорость со знаком (Исправлено)
 	int m_gear = 0;
-	bool m_IsInRange(int speed, std::optional<Range> range);
+	const bool m_IsInRange(int speed, std::optional<Range> range);
 	bool m_TryToSetGear(int gear, Range speedRange);
 	const std::optional<Range> m_GetGearSpeedRange(int gear);
 };

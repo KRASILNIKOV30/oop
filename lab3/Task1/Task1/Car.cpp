@@ -1,7 +1,7 @@
 #include <math.h>
 #include "Car.h"
 
-bool Car::m_IsInRange(int speed, std::optional<Range> range)
+const bool Car::m_IsInRange(int speed, std::optional<Range> range)
 {
 	if (!range.has_value())
 	{
