@@ -87,9 +87,26 @@ bool Car::m_TryToSetGear(int gear, Range speedRange)
 	return false;
 }
 
+const bool Car::m_IsCarMovementAllowsSetGear(int gear)
+{
+	const Direction direction = Car::GetDirection();
+	if (gear == 1)
+	{
+		return direction == Direction::Forward || direction == Direction::StandingStill;
+	} 
+	if (gear == -1)
+	{
+		return m_speed == 0;
+	} 
+	return true;
+}
+
 bool Car::SetGear(int gear)
 {//упростить код (Исправлено)
-	if (m_isTurnedOn && m_IsInRange(m_speed, m_GetGearSpeedRange(gear)))
+	std::optional speedRange = m_GetGearSpeedRange(gear);
+	bool isSpeedInGearRange = m_IsInRange(m_speed, speedRange);
+	bool isCarMovementAllowsSetGear = m_IsCarMovementAllowsSetGear(gear);
+	if ((m_isTurnedOn or gear == 0) && isSpeedInGearRange && isCarMovementAllowsSetGear)
 	{
 		m_gear = gear;
 		return true;

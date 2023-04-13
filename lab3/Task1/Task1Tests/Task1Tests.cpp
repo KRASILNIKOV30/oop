@@ -91,3 +91,50 @@ TEST_CASE("Во время движения вперед нельзя включ
 	REQUIRE(!car.SetGear(-1));
 	REQUIRE(car.GetGear() == 0);
 }
+
+TEST_CASE("Задний ход можно включить на нулевой скорости")
+{
+	REQUIRE(car.SetSpeed(0));
+	REQUIRE(car.SetGear(-1));
+	REQUIRE(car.GetDirection() == Direction::StandingStill);
+}
+
+TEST_CASE("Машина может ехать назад")
+{
+	REQUIRE(car.SetSpeed(20));
+	REQUIRE(!car.SetSpeed(21));
+	REQUIRE(car.GetSpeed() == 20);
+	REQUIRE(car.GetDirection() == Direction::Backward);
+}
+
+TEST_CASE("С задней передачи можно переключиться только на нейтральную")
+{
+	REQUIRE(!car.SetGear(1));
+	REQUIRE(!car.SetGear(2));
+	REQUIRE(car.SetGear(0));
+	REQUIRE(car.GetGear() == 0);
+	REQUIRE(car.GetDirection() == Direction::Backward);
+}
+
+TEST_CASE("В движении нельзя снова переключиться на заднюю передачу")
+{
+	REQUIRE(!car.SetGear(-1));
+}
+
+TEST_CASE("Двигатель можно выключить только при нулевой скорости на нейтральной передаче")
+{
+	REQUIRE(!car.TurnOffEngine());
+	REQUIRE(car.SetSpeed(0));
+	REQUIRE(car.SetGear(1));
+	REQUIRE(!car.TurnOffEngine());
+	REQUIRE(car.SetGear(0));
+	REQUIRE(car.TurnOffEngine());
+	REQUIRE(!car.IsTurnedOn());
+}
+
+TEST_CASE("При выключенном двигателе можно переключиться только на нейтральную передачу")
+{
+	REQUIRE(!car.SetGear(1));
+	REQUIRE(car.SetGear(0));
+	REQUIRE(car.GetDirection() == Direction::StandingStill);
+}

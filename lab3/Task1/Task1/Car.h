@@ -45,4 +45,5 @@ private:
 	const bool m_IsInRange(int speed, std::optional<Range> range);
 	bool m_TryToSetGear(int gear, Range speedRange);
 	const std::optional<Range> m_GetGearSpeedRange(int gear);
+	const bool m_IsCarMovementAllowsSetGear(int gear);
 };
