@@ -3,8 +3,9 @@
 #include <sstream>
 
 namespace
-{
-	std::string parseDirectionToString(Direction direction)
+{//Именование в PascalCase (Исправлено) %%% 
+	//Метод ToString (Исправлено) %%%
+	std::string ToString(Direction direction)
 	{
 		switch (direction)
 		{
@@ -22,12 +23,13 @@ namespace
 	void WriteCarInfo(Car& car)
 	{
 		std::cout << "Engine: " << (car.IsTurnedOn() ? "on" : "off") << std::endl;
-		std::cout << "Direction: " << parseDirectionToString(car.GetDirection()) << std::endl;
+		std::cout << "Direction: " << ToString(car.GetDirection()) << std::endl;
 		std::cout << "Speed: " << car.GetSpeed() << std::endl;
 		std::cout << "Gear: " << car.GetGear() << std::endl;
 	}
 
-	void TurnOnEngineErrorHandling(const bool wasTurnedOnSuccessfully)
+	//Убрать const из параметров методов (Исправлено)
+	void TurnOnEngineErrorHandling(bool wasTurnedOnSuccessfully)
 	{
 		if (wasTurnedOnSuccessfully)
 		{
@@ -39,7 +41,7 @@ namespace
 		}
 	}
 
-	void TurnOffEngineErrorHandling(const bool wasTurnedOffSuccessfully)
+	void TurnOffEngineErrorHandling(bool wasTurnedOffSuccessfully)
 	{
 		if (wasTurnedOffSuccessfully)
 		{
@@ -51,7 +53,7 @@ namespace
 		}
 	}
 
-	void SetGearErrorHandling(const bool wasSettedSuccessfully)
+	void SetGearErrorHandling(bool wasSettedSuccessfully)
 	{
 		if (wasSettedSuccessfully)
 		{
@@ -63,7 +65,7 @@ namespace
 		}
 	}
 
-	void SetSpeedErrorHandling(const bool wasSettedSuccessfully)
+	void SetSpeedErrorHandling(bool wasSettedSuccessfully)
 	{
 		if (wasSettedSuccessfully)
 		{
@@ -75,8 +77,6 @@ namespace
 		}
 	}
 }
-
-
 
 int main()
 {

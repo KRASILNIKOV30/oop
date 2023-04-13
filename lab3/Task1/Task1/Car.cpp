@@ -1,21 +1,29 @@
 #include <math.h>
 #include "Car.h"
 
-const bool Car::IsInRange(int speed, std::optional<Range> range)
+const int REVERSE_GEAR = -1;
+const int NEUTRAL_GEAR = 0;
+const int FIRST_GEAR = 1;
+const int SECOND_GEAR = 2;
+const int THIRD_GEAR = 3;
+const int FOURTH_GEAR = 4;
+const int FIFTH_GEAR = 5;
+
+//спр€тать в cpp (»справлено) %%%
+
+
+//TODO: speed Speed: 858993460 Gear: -858993460 is not normal (fixed)
+bool Car::IsInRange(int value, Range range) const
 {
-	if (!range.has_value())
-	{
-		return false;
-	}
-	return speed >= range.value().min && speed <= range.value().max;
+	return value >= range.min && value <= range.max;
 }
 
-const bool Car::IsTurnedOn()
+bool Car::IsTurnedOn() const
 {
 	return m_isTurnedOn;
 }
 
-const Direction Car::GetDirection()
+Direction Car::GetDirection() const
 {
 	if (m_speed > 0)
 	{
@@ -28,12 +36,12 @@ const Direction Car::GetDirection()
 	return Direction::StandingStill;
 }
 
-const int Car::GetSpeed()
+int Car::GetSpeed() const
 {
 	return abs(m_speed);
 }
 
-const int Car::GetGear()
+int Car::GetGear() const
 {
 	return m_gear;
 }
@@ -46,7 +54,7 @@ bool Car::TurnOnEngine()
 
 bool Car::TurnOffEngine()
 {
-	if (m_speed == 0 && m_gear == 0)
+	if (m_speed == 0 && m_gear == NEUTRAL_GEAR)
 	{
 		m_isTurnedOn = false;
 		return true;
@@ -54,73 +62,91 @@ bool Car::TurnOffEngine()
 	return false;
 }
 
-const std::optional<Range> Car::GetGearSpeedRange(int gear)
+std::optional<Car::Range> Car::GetGearSpeedRange(int gear) const
 {
 	switch (gear)
 	{
-	case -1:
+	case REVERSE_GEAR://TODO: use const to gear (fixed)
 		return REVERSE_GEAR_SPEED_RANGE;
-	case 0:
+	case NEUTRAL_GEAR:
 		return CAR_SPEED_RANGE;
-	case 1:
+	case FIRST_GEAR:
 		return FIRST_GEAR_SPEED_RANGE;
-	case 2:
+	case SECOND_GEAR:
 		return SECOND_GEAR_SPEED_RANGE;
-	case 3:
+	case THIRD_GEAR:
 		return THIRD_GEAR_SPEED_RANGE;
-	case 4:
+	case FOURTH_GEAR:
 		return FOURTH_GEAR_SPEED_RANGE;
-	case 5:
+	case FIFTH_GEAR:
 		return FIFTH_GEAR_SPEED_RANGE;
 	default:
 		return std::nullopt;
 	}
 }
 
-const bool Car::IsCarMovementAllowsSetGear(int gear)
+bool Car::IsCarDirectionAllowsSetGear(int gear) const
 {
 	const Direction direction = Car::GetDirection();
-	if (gear == 1)
+	if (gear >= FIRST_GEAR)
 	{
-		return direction == Direction::Forward || direction == Direction::StandingStill;
+		return direction != Direction::Backward;
 	} 
-	if (gear == -1)
+	if (gear == REVERSE_GEAR)
 	{
-		return m_speed == 0;
+		return direction == Direction::StandingStill;
 	} 
+	//TODO: сосредоточить проверку сущностей в разных методах(fixed)
 
 	return true;
 }
 
 bool Car::SetGear(int gear)
 {//упростить код (»справлено)
-	std::optional speedRange = GetGearSpeedRange(gear);
-	bool isSpeedInGearRange = IsInRange(m_speed, speedRange);
-	bool isCarMovementAllowsSetGear = IsCarMovementAllowsSetGear(gear);
-	if ((m_isTurnedOn || gear == 0) && isSpeedInGearRange && isCarMovementAllowsSetGear)
+	if (gear == m_gear)
 	{
-		m_gear = gear;
 		return true;
 	}
-	return false;
+	std::optional gearSpeedRange = GetGearSpeedRange(gear);
+	if (!gearSpeedRange.has_value())
+	{
+		return false;
+	}
+	if (!IsInRange(m_speed, gearSpeedRange.value())) //TODO: сделать преждевременный выход из ф-ии при ошибке (fixed)
+	{
+		return false;
+	}
+	if (!IsCarDirectionAllowsSetGear(gear))
+	{
+		return false;
+	}
+	if (!m_isTurnedOn)
+	{
+		return false;
+	}
+
+	m_gear = gear;
+	return true;
 }
 
 bool Car::SetSpeed(int speed)
 {
-	if (!m_isTurnedOn or !IsInRange(speed, GetGearSpeedRange(m_gear)))
+	std::optional gearSpeedRange = GetGearSpeedRange(m_gear);
+	if (!gearSpeedRange.has_value())
 	{
 		return false;
 	}
-	if (m_gear == 0)
+	if (!m_isTurnedOn or !IsInRange(speed, gearSpeedRange.value()))
 	{
-		if (speed <= abs(m_speed))
-		{
-			m_speed = m_speed > 0 ? speed : -speed;
-			return true;
-		}
 		return false;
 	}
-	m_speed = m_gear == -1 ? -speed : speed;
+	if (m_gear == NEUTRAL_GEAR && speed > abs(m_speed))
+	{
+		return false;
+	}
+	//TODO: упростить условие, чтобы speed : -speed выполн€лось один раз (fixed)
+	bool isCarWillMoveBackward = m_gear == REVERSE_GEAR || GetDirection() == Direction::Backward;
+	m_speed = isCarWillMoveBackward ? -speed : speed;
 
 	return true;
 }

@@ -8,39 +8,44 @@ enum class Direction
 	StandingStill
 };
 
-struct Range
-{
-	int min, max;
-};
 
-const Range REVERSE_GEAR_SPEED_RANGE = { 0, 20 };
-const Range FIRST_GEAR_SPEED_RANGE = { 0, 30 };
-const Range SECOND_GEAR_SPEED_RANGE = { 20, 50 };
-const Range THIRD_GEAR_SPEED_RANGE = { 30, 60 };
-const Range FOURTH_GEAR_SPEED_RANGE = { 40, 90 };
-const Range FIFTH_GEAR_SPEED_RANGE = { 50, 150 };
-const Range CAR_SPEED_RANGE = { -REVERSE_GEAR_SPEED_RANGE.max, FIFTH_GEAR_SPEED_RANGE.max };
 
 //вынести класс в .h (Исправлено)
-//методы класса, не изменяющие состояние должны быть константными (Исправлено)
+//методы класса, не изменяющие состояние должны быть константными (Исправлено) %%%
 class Car
 {
 public:
-	const bool IsTurnedOn();
-	const int GetSpeed();
-	const int GetGear();
-	const Direction GetDirection();
+	//const не нужен у методов get (Исправлено) %%%
+	bool IsTurnedOn() const;
+	int GetSpeed() const;
+	int GetGear() const;
+	Direction GetDirection() const;
 	bool TurnOnEngine();
 	bool TurnOffEngine();
 	bool SetGear(int gear);
 	bool SetSpeed(int speed);
 
 private:
+	struct Range //перенести в private (Исправлено) %%%
+	{
+		int min, max;
+	};
+	static inline const Range REVERSE_GEAR_SPEED_RANGE = { 0, 20 };
+	static inline const Range FIRST_GEAR_SPEED_RANGE = { 0, 30 };
+	static inline const Range SECOND_GEAR_SPEED_RANGE = { 20, 50 };
+	static inline const Range THIRD_GEAR_SPEED_RANGE = { 30, 60 };
+	static inline const Range FOURTH_GEAR_SPEED_RANGE = { 40, 90 };
+	static inline const Range FIFTH_GEAR_SPEED_RANGE = { 50, 150 };
+	static inline const Range CAR_SPEED_RANGE = { -REVERSE_GEAR_SPEED_RANGE.max, FIFTH_GEAR_SPEED_RANGE.max };
+
+	//избавиться от direction, хранить скорость со знаком (Исправлено)
+	bool IsInRange(int value, Range range) const;//Не принимать optional (Исправлено) %%%
+	bool IsCarDirectionAllowsSetGear(int gear) const;
+	std::optional<Range> GetGearSpeedRange(int gear) const;
+
 	// m_ (Исправлено)
 	bool m_isTurnedOn = false;
-	int m_speed, m_gear;
-	//избавиться от direction, хранить скорость со знаком (Исправлено)
-	const bool IsInRange(int speed, std::optional<Range> range);
-	const bool IsCarMovementAllowsSetGear(int gear);
-	const std::optional<Range> GetGearSpeedRange(int gear);
+	int m_speed = 0;
+	int m_gear = 0;
+
 };

@@ -6,6 +6,69 @@ namespace
 	Car car;
 }
 
+struct Fixture
+{
+	Car car;
+	Fixture()
+	{
+		car.TurnOnEngine();
+	}
+};
+
+TEST_CASE_METHOD(Fixture, "Some method")
+{
+	CHECK(car.IsTurnedOn());
+}
+
+
+SCENARIO("Car behavior on reverse gear")
+{
+	GIVEN("Car moving on reverse gear")
+	{
+		Car car;
+		car.TurnOnEngine();
+		car.SetGear(-1);
+		car.SetSpeed(20);
+
+		WHEN("switching on neutral gear")
+		{
+			car.SetGear(0);
+
+			THEN("car is moving on the same speed")
+			{
+				CHECK(car.GetSpeed() == 20);
+
+				AND_WHEN("fail to set forward gear")
+				{
+					CHECK(!car.SetGear(1));
+
+					THEN("continues moving on neutral")
+					{
+						CHECK(car.GetSpeed() == 20);
+						CHECK(car.GetGear() == 0);
+						CHECK(car.GetDirection() == Direction::Backward);
+					}
+				}
+
+				AND_WHEN("fail to select reverse gear")
+				{
+					CHECK(!car.SetGear(-1));
+
+					THEN("continues moving on neutral")
+					{
+						CHECK(car.GetSpeed() == 20);
+						CHECK(car.GetGear() == 0);
+						CHECK(car.GetDirection() == Direction::Backward);
+					}
+				}
+				
+			}
+
+		}
+	}
+
+}
+
 TEST_CASE("Изначально машина не заведена и на нейтральной скорости")
 {
 	REQUIRE(!car.IsTurnedOn());
@@ -31,7 +94,7 @@ TEST_CASE("Можно завести двигатель")
 TEST_CASE("Нельзя разогнаться на нейтральной передаче")
 {
 	REQUIRE(!car.SetSpeed(1));
-	REQUIRE(!car.SetSpeed(CAR_SPEED_RANGE.max + 1));
+	REQUIRE(!car.SetSpeed(151));
 	REQUIRE(car.GetSpeed() == 0);
 }
 
@@ -39,9 +102,9 @@ TEST_CASE("На первой передаче можно разогнаться,
 {
 	REQUIRE(car.SetGear(1));
 	REQUIRE(car.GetGear() == 1);
-	REQUIRE(car.SetSpeed(FIRST_GEAR_SPEED_RANGE.max));
-	REQUIRE(!car.SetSpeed(FIRST_GEAR_SPEED_RANGE.max + 1));
-	REQUIRE(car.GetSpeed() == FIRST_GEAR_SPEED_RANGE.max);
+	REQUIRE(car.SetSpeed(30));
+	REQUIRE(!car.SetSpeed(31));
+	REQUIRE(car.GetSpeed() == 30);
 	REQUIRE(car.GetDirection() == Direction::Forward);
 }
 
@@ -56,27 +119,27 @@ TEST_CASE("Машина может разогнаться до своей мак
 {
 	REQUIRE(car.SetGear(2));
 	REQUIRE(car.GetGear() == 2);
-	REQUIRE(car.SetSpeed(SECOND_GEAR_SPEED_RANGE.max));
+	REQUIRE(car.SetSpeed(50));
 
 	REQUIRE(car.SetGear(3));
 	REQUIRE(car.GetGear() == 3);
-	REQUIRE(car.SetSpeed(THIRD_GEAR_SPEED_RANGE.max));
+	REQUIRE(car.SetSpeed(60));
 
 	REQUIRE(car.SetGear(4));
 	REQUIRE(car.GetGear() == 4);
-	REQUIRE(car.SetSpeed(FOURTH_GEAR_SPEED_RANGE.max));
+	REQUIRE(car.SetSpeed(90));
 
 	REQUIRE(car.SetGear(5));
 	REQUIRE(car.GetGear() == 5);
-	REQUIRE(car.SetSpeed(FIFTH_GEAR_SPEED_RANGE.max));
-	REQUIRE(car.GetSpeed() == CAR_SPEED_RANGE.max);
+	REQUIRE(car.SetSpeed(150));
+	REQUIRE(car.GetSpeed() == 150);
 }
 
 TEST_CASE("На скорости можно переключится на нейтральную передачу и сбросить скорость")
 {
 	REQUIRE(car.SetGear(0));
 	REQUIRE(car.GetGear() == 0);
-	REQUIRE(car.GetSpeed() == CAR_SPEED_RANGE.max);
+	REQUIRE(car.GetSpeed() == 150);
 	REQUIRE(car.SetSpeed(10));
 	REQUIRE(car.GetSpeed() == 10);
 }
@@ -107,6 +170,7 @@ TEST_CASE("С задней передачи можно переключитьс�
 {
 	REQUIRE(!car.SetGear(1));
 	REQUIRE(!car.SetGear(2));
+	//Проверять, дествительно ли не изменилась передача
 	REQUIRE(car.SetGear(0));
 	REQUIRE(car.GetGear() == 0);
 	REQUIRE(car.GetDirection() == Direction::Backward);
