@@ -6,10 +6,6 @@ namespace
 	Car car;
 }
 
-TEST_CASE("")
-{
-}
-
 TEST_CASE("Изначально машина не заведена и на нейтральной скорости")
 {
 	REQUIRE(!car.IsTurnedOn());
@@ -113,6 +109,12 @@ TEST_CASE("С задней передачи можно переключитьс�
 	REQUIRE(!car.SetGear(2));
 	REQUIRE(car.SetGear(0));
 	REQUIRE(car.GetGear() == 0);
+	REQUIRE(car.GetDirection() == Direction::Backward);
+}
+
+TEST_CASE("Если замедлиться на нейтральной передаче, то машина продолжает ехать назад")
+{
+	REQUIRE(car.SetSpeed(10));
 	REQUIRE(car.GetDirection() == Direction::Backward);
 }
 

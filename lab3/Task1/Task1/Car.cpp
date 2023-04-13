@@ -1,7 +1,7 @@
 #include <math.h>
 #include "Car.h"
 
-const bool Car::m_IsInRange(int speed, std::optional<Range> range)
+const bool Car::IsInRange(int speed, std::optional<Range> range)
 {
 	if (!range.has_value())
 	{
@@ -54,7 +54,7 @@ bool Car::TurnOffEngine()
 	return false;
 }
 
-const std::optional<Range> Car::m_GetGearSpeedRange(int gear)
+const std::optional<Range> Car::GetGearSpeedRange(int gear)
 {
 	switch (gear)
 	{
@@ -77,17 +77,7 @@ const std::optional<Range> Car::m_GetGearSpeedRange(int gear)
 	}
 }
 
-bool Car::m_TryToSetGear(int gear, Range speedRange)
-{
-	if (m_IsInRange(m_speed, speedRange))
-	{
-		m_gear = gear;
-		return true;
-	}
-	return false;
-}
-
-const bool Car::m_IsCarMovementAllowsSetGear(int gear)
+const bool Car::IsCarMovementAllowsSetGear(int gear)
 {
 	const Direction direction = Car::GetDirection();
 	if (gear == 1)
@@ -98,15 +88,16 @@ const bool Car::m_IsCarMovementAllowsSetGear(int gear)
 	{
 		return m_speed == 0;
 	} 
+
 	return true;
 }
 
 bool Car::SetGear(int gear)
 {//упростить код (Исправлено)
-	std::optional speedRange = m_GetGearSpeedRange(gear);
-	bool isSpeedInGearRange = m_IsInRange(m_speed, speedRange);
-	bool isCarMovementAllowsSetGear = m_IsCarMovementAllowsSetGear(gear);
-	if ((m_isTurnedOn or gear == 0) && isSpeedInGearRange && isCarMovementAllowsSetGear)
+	std::optional speedRange = GetGearSpeedRange(gear);
+	bool isSpeedInGearRange = IsInRange(m_speed, speedRange);
+	bool isCarMovementAllowsSetGear = IsCarMovementAllowsSetGear(gear);
+	if ((m_isTurnedOn || gear == 0) && isSpeedInGearRange && isCarMovementAllowsSetGear)
 	{
 		m_gear = gear;
 		return true;
@@ -116,7 +107,7 @@ bool Car::SetGear(int gear)
 
 bool Car::SetSpeed(int speed)
 {
-	if (!m_isTurnedOn or !m_IsInRange(speed, m_GetGearSpeedRange(m_gear)))
+	if (!m_isTurnedOn or !IsInRange(speed, GetGearSpeedRange(m_gear)))
 	{
 		return false;
 	}
@@ -124,19 +115,12 @@ bool Car::SetSpeed(int speed)
 	{
 		if (speed <= abs(m_speed))
 		{
-			m_speed = speed;
+			m_speed = m_speed > 0 ? speed : -speed;
 			return true;
 		}
 		return false;
-	} 
-	if (m_gear == -1)
-	{
-		m_speed = -speed;
-		return true;
 	}
-	else
-	{
-		m_speed = speed;
-	}
+	m_speed = m_gear == -1 ? -speed : speed;
+
 	return true;
 }

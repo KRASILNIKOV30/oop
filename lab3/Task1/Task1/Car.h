@@ -10,8 +10,7 @@ enum class Direction
 
 struct Range
 {
-	int min;
-	int max;
+	int min, max;
 };
 
 const Range REVERSE_GEAR_SPEED_RANGE = { 0, 20 };
@@ -22,15 +21,15 @@ const Range FOURTH_GEAR_SPEED_RANGE = { 40, 90 };
 const Range FIFTH_GEAR_SPEED_RANGE = { 50, 150 };
 const Range CAR_SPEED_RANGE = { -REVERSE_GEAR_SPEED_RANGE.max, FIFTH_GEAR_SPEED_RANGE.max };
 
-//вынести класс в .h
+//вынести класс в .h (»справлено)
 //методы класса, не измен€ющие состо€ние должны быть константными (»справлено)
 class Car
 {
 public:
 	const bool IsTurnedOn();
-	const Direction GetDirection();
 	const int GetSpeed();
 	const int GetGear();
+	const Direction GetDirection();
 	bool TurnOnEngine();
 	bool TurnOffEngine();
 	bool SetGear(int gear);
@@ -39,11 +38,9 @@ public:
 private:
 	// m_ (»справлено)
 	bool m_isTurnedOn = false;
-	int m_speed = 0;
+	int m_speed, m_gear;
 	//избавитьс€ от direction, хранить скорость со знаком (»справлено)
-	int m_gear = 0;
-	const bool m_IsInRange(int speed, std::optional<Range> range);
-	bool m_TryToSetGear(int gear, Range speedRange);
-	const std::optional<Range> m_GetGearSpeedRange(int gear);
-	const bool m_IsCarMovementAllowsSetGear(int gear);
+	const bool IsInRange(int speed, std::optional<Range> range);
+	const bool IsCarMovementAllowsSetGear(int gear);
+	const std::optional<Range> GetGearSpeedRange(int gear);
 };
