@@ -36,12 +36,21 @@
     <ClCompile Include="Common.cpp">
       <Filter>Исходные файлы\Common</Filter>
     </ClCompile>
+    <ClCompile Include="FinctionTests.cpp">
+      <Filter>Исходные файлы\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Task2\Function.cpp">
+      <Filter>Исходные файлы\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Task2\Var.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Task2\Function.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
