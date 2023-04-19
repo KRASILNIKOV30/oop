@@ -16,6 +16,9 @@
     <Filter Include="Исходные файлы\Components">
       <UniqueIdentifier>{157d62ad-284c-4d2f-9011-d0d567e2dd7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\Common">
+      <UniqueIdentifier>{41c7f7b8-8a35-4dc7-8f7e-cf2dedcce8e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -30,6 +33,12 @@
     <ClCompile Include="Function.cpp">
       <Filter>Исходные файлы\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Lexeme.cpp">
+      <Filter>Исходные файлы\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>Исходные файлы\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Var.h">
@@ -39,6 +48,12 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Function.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Lexeme.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

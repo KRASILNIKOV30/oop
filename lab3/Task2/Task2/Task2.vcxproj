@@ -132,13 +132,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Calculator.cpp" />
+    <ClCompile Include="Common.cpp" />
     <ClCompile Include="Function.cpp" />
+    <ClCompile Include="Lexeme.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Var.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculator.h" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="Lexeme.h" />
     <ClInclude Include="Var.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

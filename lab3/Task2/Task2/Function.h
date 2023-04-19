@@ -1,14 +1,11 @@
 #pragma once
+#include "Var.h"
 #include <optional>
 #include <string>
+#include <vector>
+#include "Lexeme.h"
 
-enum Operations
-{
-	Addition,
-	Subtraction,
-	Multiplication,
-	Division
-};
+using FunctionBody = std::vector<Lexeme>;
 
 class Function
 {
@@ -16,13 +13,13 @@ public:
 	Function
 	(
 		std::string name,
-		double leftOperand,
-		std::optional<Operations> operation = std::nullopt,
-		std::optional<double> rightOperand = std::nullopt
+		FunctionBody body
 	);
 	std::string GetName() const;
+	FunctionBody GetBody() const;
+	double GetValue() const;
 
 private:
 	std::string m_name;
-	double m_leftOperand;
+	FunctionBody m_body;
 };

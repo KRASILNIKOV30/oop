@@ -19,9 +19,6 @@
     <Filter Include="Исходные файлы\Components">
       <UniqueIdentifier>{08df9ca3-cd4f-4e8e-8594-535e859cca8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Исходные файлы\Common">
-      <UniqueIdentifier>{18acfafc-758b-49bd-b81a-4ae65e3a7f1c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,13 +30,19 @@
     <ClCompile Include="..\Task2\Var.cpp">
       <Filter>Исходные файлы\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Common.cpp">
-      <Filter>Исходные файлы\Common</Filter>
-    </ClCompile>
     <ClCompile Include="FinctionTests.cpp">
       <Filter>Исходные файлы\Tests</Filter>
     </ClCompile>
     <ClCompile Include="..\Task2\Function.cpp">
+      <Filter>Исходные файлы\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Task2\Lexeme.cpp">
+      <Filter>Исходные файлы\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LexemeTests.cpp">
+      <Filter>Исходные файлы\Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Task2\Common.cpp">
       <Filter>Исходные файлы\Components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,10 +50,13 @@
     <ClInclude Include="..\Task2\Var.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Common.h">
+    <ClInclude Include="..\Task2\Function.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="..\Task2\Function.h">
+    <ClInclude Include="..\Task2\Lexeme.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Task2\Common.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
