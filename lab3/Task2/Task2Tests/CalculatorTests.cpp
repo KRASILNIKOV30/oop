@@ -75,6 +75,7 @@ SCENARIO("Function without operations definition")
 				auto function = calc.FindFunction("MyFunc");
 				REQUIRE(function.has_value());
 				CHECK(function.value().GetName() == "MyFunc");
+
 			}
 		}
 	}
@@ -86,5 +87,5 @@ TEST_CASE("I can get value of declared function")
 	calc.DefineVar("x");
 	CHECK(calc.DefineFunction("MyFunc", "x"));
 	Function func = calc.FindFunction("MyFunc").value();
-	CHECK(func.GetValue());
+	CHECK(isnan(func.GetValue()));
 }

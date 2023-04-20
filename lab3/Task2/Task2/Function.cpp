@@ -39,8 +39,8 @@ double CalcOperation(double leftOperand, double rightOperand, Operation operatio
 
 double Function::GetValue() const
 {
-	Var leftOperand;
-	Var rightOperand;
+	Var leftOperand("");
+	Var rightOperand("");
 	std::stack<double> stack;
 	for (auto & lexeme : m_lexemes)
 	{
