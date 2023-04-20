@@ -5,21 +5,19 @@
 #include <vector>
 #include "Lexeme.h"
 
-using FunctionBody = std::vector<Lexeme>;
-
 class Function
 {
 public:
 	Function
 	(
 		std::string name,
-		FunctionBody body
+		std::vector<Lexeme> lexemes
 	);
 	std::string GetName() const;
-	FunctionBody GetBody() const;
+	std::vector<Lexeme> GetLexemes() const;
 	double GetValue() const;
 
 private:
 	std::string m_name;
-	FunctionBody m_body;
+	std::vector<Lexeme> m_lexemes;
 };

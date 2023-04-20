@@ -4,10 +4,10 @@
 Function::Function
 (
 	std::string name,
-	FunctionBody body
+	std::vector<Lexeme> lexemes
 )
 	: m_name(name)
-	, m_body(body)
+	, m_lexemes(lexemes)
 {}
 
 std::string Function::GetName() const
@@ -15,10 +15,9 @@ std::string Function::GetName() const
 	return m_name;
 }
 
-FunctionBody Function::GetBody() const
+std::vector<Lexeme> Function::GetLexemes() const
 {
-	FunctionBody body{};
-	return body;
+	return m_lexemes;
 }
 
 double CalcOperation(double leftOperand, double rightOperand, Operation operation)
@@ -43,7 +42,7 @@ double Function::GetValue() const
 	Var leftOperand;
 	Var rightOperand;
 	std::stack<double> stack;
-	for (auto& lexeme : m_body)
+	for (auto& lexeme : m_lexemes)
 	{
 		if (lexeme.IsOperation())
 		{

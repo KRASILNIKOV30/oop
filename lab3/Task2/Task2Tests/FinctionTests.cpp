@@ -8,8 +8,8 @@ SCENARIO("Function declaration")
 {
 	GIVEN("Function named XPlusY")
 	{
-		FunctionBody body;
-		Function function("XPlusY", body);
+		std::vector<Lexeme> lexemes;
+		Function function("XPlusY", lexemes);
 		CHECK(function.GetName() == "XPlusY");
 	}
 }
@@ -21,8 +21,8 @@ SCENARIO("Function without operations can return value")
 		Var var("x");
 		var.SetValue(10.0);
 		Lexeme lexeme(Operation::NotOperation, var);
-		FunctionBody body = { lexeme };
-		Function function("XPlusY", body);
+		std::vector<Lexeme> lexemes = { lexeme };
+		Function function("XPlusY", lexemes);
 		CHECK(function.GetName() == "XPlusY");
 		CHECK(function.GetValue() == 10.0);
 
