@@ -9,13 +9,14 @@ using LexemeVarType = Var&;
 class Lexeme
 {
 public:
-	Lexeme(Operation operation, LexemeVarType var = *new Var);
+	Lexeme(Operation operation);
+	Lexeme(LexemeVarType var);
 	Var GetVar() const;
 	Operation GetOperation() const;
 	bool IsOperation() const;
 
 private:
 	LexemeVarType m_var;
-	std::optional<Operation> m_operation;
+	Operation m_operation = Operation::NotOperation;
 	bool m_isOperation = true;
 };

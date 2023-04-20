@@ -42,7 +42,7 @@ double Function::GetValue() const
 	Var leftOperand;
 	Var rightOperand;
 	std::stack<double> stack;
-	for (auto& lexeme : m_lexemes)
+	for (auto & lexeme : m_lexemes)
 	{
 		if (lexeme.IsOperation())
 		{
