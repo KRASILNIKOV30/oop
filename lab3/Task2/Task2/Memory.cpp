@@ -1,8 +1,10 @@
 #include "Memory.h"
 
-void Memory::AddVar(Var var)
+bool Memory::AddVar(std::string name)
 {
+	Var var(name);
 	m_vars.push_back(var);
+	return true;
 }
 
 bool Memory::ChangeVarValue(std::string varName, double value)
@@ -14,7 +16,7 @@ bool Memory::ChangeVarValue(std::string varName, double value)
 	}
 	DeleteVar(varName);
 	var->SetValue(value);
-	AddVar(var.value());
+	m_vars.push_back(var.value());
 	return true;
 }
 

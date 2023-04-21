@@ -16,8 +16,7 @@ SCENARIO("Adding variable to memory")
 
 		WHEN("I add var to memory")
 		{
-			Var var("x");
-			memory.AddVar(var);
+			memory.AddVar("x");
 
 			THEN("Memory has one var")
 			{
@@ -32,8 +31,7 @@ SCENARIO("Using variable from memory")
 	GIVEN("Memory with one variable named x")
 	{
 		Memory memory;
-		Var var("x");
-		memory.AddVar(var);
+		memory.AddVar("x");
 
 		WHEN("I finding var named x")
 		{

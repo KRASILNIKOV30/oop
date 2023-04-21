@@ -9,7 +9,7 @@ using OptionalVar = std::optional<Var>;
 class Memory	
 {
 public:
-	void AddVar(Var var);
+	bool AddVar(std::string name);
 	bool ChangeVarValue(std::string varName, double value);
 	OptionalVar FindVar(std::string name) const;
 	VarsVector GetVars() const;

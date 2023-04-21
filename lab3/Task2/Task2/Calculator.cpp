@@ -31,8 +31,7 @@ OptionalFunction Calculator::FindFunction(std::string name) const
 
 bool Calculator::DefineVar(std::string name)
 {
-	Var var(name);
-	m_memory.AddVar(var);
+	m_memory.AddVar(name);
 	return true;
 }
 
