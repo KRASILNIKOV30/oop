@@ -72,7 +72,7 @@ double Function::GetValue() const
 			{
 				return NAN;
 			}
-			stack.push(var.value().get().GetValue());
+			stack.push(var->GetValue());
 		}
 	}
 

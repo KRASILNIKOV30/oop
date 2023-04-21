@@ -16,19 +16,24 @@ SCENARIO("Variable definition")
 
 		WHEN("I define a variable")
 		{
-			CHECK(calc.DefineVar("x"));
+			CHECK(calc.DefineVar("t"));
+			auto var = calc.FindVar("t");
+			REQUIRE(var.has_value());
+			CHECK(var.value().GetName() == "t");
+			CHECK(isnan(var.value().GetValue()));
 
 			/*THEN("Calculator has one variable")
 			{
 				REQUIRE(calc.GetVars().size() == 1);
 			}*/
 
-			AND_THEN("Var has a name and NAN value")
+			/*AND_THEN("Var has a name and NAN value")
 			{
-				Var var = calc.GetVars();
-				//CHECK(var.GetName() == "x");
-				//CHECK(isnan(calc.GetVars()[0].get().GetValue()));
-			}
+				auto var = calc.FindVar("t");
+				CHECK(var.has_value());
+				CHECK(var.GetName() == "x");
+				CHECK(isnan(calc.GetVars()[0].get().GetValue()));
+			}*/
 
 			/*AND_THEN("I can find variable by name")
 			{

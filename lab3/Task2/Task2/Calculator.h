@@ -7,8 +7,8 @@
 #include <string>
 #include <optional>
 
-using FunctionsVector = std::vector<std::reference_wrapper<Function>>;
-using OptionalFunction = std::optional<std::reference_wrapper<Function>>;
+using FunctionsVector = std::vector<Function>;
+using OptionalFunction = std::optional<Function>;
 
 class Calculator
 {

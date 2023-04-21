@@ -1,8 +1,21 @@
 #include "Memory.h"
 
-void Memory::AddVar(Var& var)
+void Memory::AddVar(Var var)
 {
 	m_vars.push_back(var);
+}
+
+bool Memory::ChangeVarValue(std::string varName, double value)
+{
+	auto var = FindVar(varName);
+	if (!var.has_value())
+	{
+		return false;
+	}
+	DeleteVar(varName);
+	var->SetValue(value);
+	AddVar(var.value());
+	return true;
 }
 
 OptionalVar Memory::FindVar(std::string name) const
@@ -19,4 +32,13 @@ OptionalVar Memory::FindVar(std::string name) const
 VarsVector Memory::GetVars() const
 {
 	return m_vars;
+}
+
+void Memory::DeleteVar(std::string name)
+{
+	m_vars.erase(
+		std::remove_if(m_vars.begin(), m_vars.end(),
+			[name](const Var& var) {return var.GetName() == name; }),
+		m_vars.end()
+	);
 }

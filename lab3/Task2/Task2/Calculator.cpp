@@ -4,7 +4,7 @@
 
 Var Calculator::GetVars() const
 {
-	Var var = m_memory.GetVars()[0].get();
+	Var var = m_memory.GetVars()[0];
 	return var;
 }
 

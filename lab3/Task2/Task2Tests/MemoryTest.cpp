@@ -45,17 +45,17 @@ SCENARIO("Using variable from memory")
 
 				AND_THEN("Var has x name and NAN value")
 				{
-					CHECK(memVar.value().get().GetName() == "x");
-					CHECK(isnan(memVar.value().get().GetValue()));
+					CHECK(memVar.value().GetName() == "x");
+					CHECK(isnan(memVar->GetValue()));
 				}
 
 				WHEN("I change value of variable")
 				{
-					var.SetValue(10);
+					memory.ChangeVarValue("x", 10);
 
 					THEN("Var from memory change its value too")
 					{
-						CHECK(IsEquals(memVar.value().get().GetValue(), 10));
+						CHECK(IsEquals(memory.FindVar("x")->GetValue(), 10));
 					}
 				}
 			}
