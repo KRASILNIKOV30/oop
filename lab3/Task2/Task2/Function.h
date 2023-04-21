@@ -3,7 +3,6 @@
 #include <optional>
 #include <string>
 #include <vector>
-#include "Lexeme.h"
 #include "Memory.h"
 
 class Function
