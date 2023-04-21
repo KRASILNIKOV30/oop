@@ -22,7 +22,7 @@ public:
 		std::string operation,
 		std::string rightOperandName
 	);
-	VarsVector GetVars() const;
+	Var GetVars() const;
 	FunctionsVector GetFunctions() const;
 	OptionalVar FindVar(std::string name) const;
 	OptionalFunction FindFunction(std::string name) const;

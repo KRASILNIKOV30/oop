@@ -1,44 +1,45 @@
-//#include "../../../external/catch2/catch.hpp"
-//#include "../Task2/Calculator.h"
-//
+#include "../../../external/catch2/catch.hpp"
+#include "../Task2/Calculator.h"
+
 //TEST_CASE("Calculator does not have any variables and functions")
 //{
 //	Calculator calc;
 //	CHECK(calc.GetVars().size() == 0);
 //	CHECK(calc.GetFunctions().size() == 0);
 //}
-//
-//SCENARIO("Variable definition")
-//{
-//	GIVEN("Empty calculator")
-//	{
-//		Calculator calc;
-//
-//		WHEN("I define a variable")
-//		{
-//			CHECK(calc.DefineVar("x"));
-//
-//			THEN("Calculator has one variable")
-//			{
-//				REQUIRE(calc.GetVars().size() == 1);
-//			}
-//
-//			AND_THEN("Var has a name and NAN value")
-//			{
-//				CHECK(calc.GetVars()[0].GetName() == "x");
-//				CHECK(isnan(calc.GetVars()[0].GetValue()));
-//			}
-//
-//			AND_THEN("I can find variable by name")
-//			{
-//				std::optional<Var> var = calc.FindVar("x");
-//				REQUIRE(var.has_value());
-//				CHECK(var.value().GetName() == "x");
-//			}
-//		}	
-//	}
-//}
-//
+
+SCENARIO("Variable definition")
+{
+	GIVEN("Empty calculator")
+	{
+		Calculator calc;
+
+		WHEN("I define a variable")
+		{
+			CHECK(calc.DefineVar("x"));
+
+			/*THEN("Calculator has one variable")
+			{
+				REQUIRE(calc.GetVars().size() == 1);
+			}*/
+
+			AND_THEN("Var has a name and NAN value")
+			{
+				Var var = calc.GetVars();
+				//CHECK(var.GetName() == "x");
+				//CHECK(isnan(calc.GetVars()[0].get().GetValue()));
+			}
+
+			/*AND_THEN("I can find variable by name")
+			{
+				auto var = calc.FindVar("x");
+				REQUIRE(var.has_value());
+				CHECK(var.value().get().GetName() == "x");
+			}*/
+		}	
+	}
+}
+
 //SCENARIO("Function without operations definition")
 //{
 //	GIVEN("Empty calculator")

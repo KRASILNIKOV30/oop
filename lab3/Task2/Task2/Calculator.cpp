@@ -2,9 +2,10 @@
 #include <algorithm>
 #include <iterator>
 
-VarsVector Calculator::GetVars() const
+Var Calculator::GetVars() const
 {
-	return m_memory.GetVars();
+	Var var = m_memory.GetVars()[0].get();
+	return var;
 }
 
 FunctionsVector Calculator::GetFunctions() const
