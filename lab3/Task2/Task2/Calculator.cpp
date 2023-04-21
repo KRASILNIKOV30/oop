@@ -2,28 +2,22 @@
 #include <algorithm>
 #include <iterator>
 
-std::vector<Var> Calculator::GetVars() const
+VarsVector Calculator::GetVars() const
 {
-	return m_vars;
+	return m_memory.GetVars();
 }
 
-std::vector<Function> Calculator::GetFunctions() const
+FunctionsVector Calculator::GetFunctions() const
 {
 	return m_functions;
 }
 
-std::optional<Var> Calculator::FindVar(std::string name) const
+OptionalVar Calculator::FindVar(std::string name) const
 {
-	auto result = std::find_if(begin(m_vars), end(m_vars), [name](Var var) { return var.GetName() == name; });
-	if (result == end(m_vars))
-	{
-		return std::nullopt;
-	}
-
-	return *result;
+	return m_memory.FindVar(name);
 }
 
-std::optional<Function> Calculator::FindFunction(std::string name) const
+OptionalFunction Calculator::FindFunction(std::string name) const
 {
 	auto result = std::find_if(begin(m_functions), end(m_functions), [name](Function fn) { return fn.GetName() == name; });
 	if (result == end(m_functions))
@@ -37,26 +31,23 @@ std::optional<Function> Calculator::FindFunction(std::string name) const
 bool Calculator::DefineVar(std::string name)
 {
 	Var var(name);
-	m_vars.push_back(var);
+	m_memory.AddVar(var);
 	return true;
 }
 
-bool Calculator::DefineFunction
-(
-	std::string name, 
-	std::string leftOperandName,
-	std::optional<Operation> operation,
-	std::optional<std::string> rightOperandName
+bool Calculator::DefineFunction(std::string name, std::string leftOperandName)
+{
+	Function function(name, { leftOperandName }, m_memory);
+	m_functions.push_back(function);
+	return false;
+}
+
+bool Calculator::DefineFunction(
+	std::string name,
+	std::string leftOperandName, 
+	std::string operation,
+	std::string rightOperandName
 )
 {
-	std::optional<Var> leftOperand = FindVar(leftOperandName);
-	if (!leftOperand.has_value())
-	{
-		return false;
-	}
-	Lexeme leftOperandLex(leftOperand.value());
-	std::vector<Lexeme> lexemes = { leftOperandLex };
-	Function function(name, lexemes);
-	m_functions.push_back(function);
-	return true;
+	return false;
 }

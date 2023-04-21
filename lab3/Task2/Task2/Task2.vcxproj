@@ -136,6 +136,7 @@
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Lexeme.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Memory.cpp" />
     <ClCompile Include="Var.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +144,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Lexeme.h" />
+    <ClInclude Include="Memory.h" />
     <ClInclude Include="Var.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

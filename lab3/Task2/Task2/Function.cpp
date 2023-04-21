@@ -4,10 +4,12 @@
 Function::Function
 (
 	std::string name,
-	std::vector<Lexeme> lexemes
+	std::vector<std::string> lexemes,
+	Memory& memory
 )
 	: m_name(name)
 	, m_lexemes(lexemes)
+	, m_memory(memory)
 {}
 
 std::string Function::GetName() const
@@ -15,47 +17,62 @@ std::string Function::GetName() const
 	return m_name;
 }
 
-std::vector<Lexeme> Function::GetLexemes() const
+std::vector<std::string> Function::GetLexemes() const
 {
 	return m_lexemes;
 }
 
-double CalcOperation(double leftOperand, double rightOperand, Operation operation)
+double CalcOperation(double leftOperand, double rightOperand, std::string operation)
 {
-	switch (operation)
+	if (operation == "+")
 	{
-	case Operation::Addition:
 		return leftOperand + rightOperand;
-	case Operation::Subtraction:
-		return leftOperand - rightOperand;
-	case Operation::Multiplication:
-		return leftOperand * rightOperand;
-	case Operation::Division:
-		return leftOperand / rightOperand;
-	default:
-		return NAN;
 	}
+	if (operation == "-")
+	{
+		return leftOperand - rightOperand;
+	}
+	if (operation == "*")
+	{
+		return leftOperand * rightOperand;
+	}
+	if (operation == "/")
+	{
+		return leftOperand / rightOperand;
+	}
+
+	return NAN;
+}
+
+bool isOperation(std::string str)
+{
+	return str == "+" || str == "-" || str == "*" || str == "/";
 }
 
 double Function::GetValue() const
 {
-	Var leftOperand("");
-	Var rightOperand("");
+	double leftOperand;
+	double rightOperand;
 	std::stack<double> stack;
 	for (auto & lexeme : m_lexemes)
 	{
-		if (lexeme.IsOperation())
+		if (isOperation(lexeme))
 		{
-			rightOperand.SetValue(stack.top());
+			rightOperand = stack.top();
 			stack.pop();
-			leftOperand.SetValue(stack.top());
+			leftOperand = stack.top();
 			stack.pop();
-			double value = CalcOperation(leftOperand.GetValue(), rightOperand.GetValue(), lexeme.GetOperation());
+			double value = CalcOperation(leftOperand, rightOperand, lexeme);
 			stack.push(value);
 		}
 		else
 		{
-			stack.push(lexeme.GetVar().GetValue());
+			auto var = m_memory.FindVar(lexeme);
+			if (!var.has_value())
+			{
+				return NAN;
+			}
+			stack.push(var.value().get().GetValue());
 		}
 	}
 

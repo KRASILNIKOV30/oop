@@ -39,6 +39,9 @@
     <ClCompile Include="Common.cpp">
       <Filter>Исходные файлы\Common</Filter>
     </ClCompile>
+    <ClCompile Include="Memory.cpp">
+      <Filter>Исходные файлы\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Var.h">
@@ -54,6 +57,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

@@ -134,12 +134,13 @@
     <ClCompile Include="..\Task2\Calculator.cpp" />
     <ClCompile Include="..\Task2\Common.cpp" />
     <ClCompile Include="..\Task2\Function.cpp" />
-    <ClCompile Include="..\Task2\Lexeme.cpp" />
+    <ClCompile Include="..\Task2\Memory.cpp" />
     <ClCompile Include="..\Task2\Var.cpp" />
     <ClCompile Include="CalculatorTests.cpp" />
     <ClCompile Include="FinctionTests.cpp" />
     <ClCompile Include="LexemeTests.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MemoryTest.cpp" />
     <ClCompile Include="VarTests.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +148,7 @@
     <ClInclude Include="..\Task2\Common.h" />
     <ClInclude Include="..\Task2\Function.h" />
     <ClInclude Include="..\Task2\Lexeme.h" />
+    <ClInclude Include="..\Task2\Memory.h" />
     <ClInclude Include="..\Task2\Var.h" />
   </ItemGroup>
   <ItemGroup>
