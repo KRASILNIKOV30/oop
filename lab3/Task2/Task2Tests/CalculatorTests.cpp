@@ -93,12 +93,3 @@ SCENARIO("Function without operations definition")
 		}
 	}
 }
-//
-//TEST_CASE("I can get value of declared function")
-//{
-//	Calculator calc;
-//	calc.DefineVar("x");
-//	CHECK(calc.DefineFunction("MyFunc", "x"));
-//	Function func = calc.FindFunction("MyFunc").value();
-//	CHECK(isnan(func.GetValue()));
-//}
