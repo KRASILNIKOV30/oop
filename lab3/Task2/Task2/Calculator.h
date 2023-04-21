@@ -22,7 +22,8 @@ public:
 		std::string operation,
 		std::string rightOperandName
 	);
-	Var GetVars() const;
+	bool ChangeVarValue(std::string varName, double value);
+	VarsVector GetVars() const;
 	FunctionsVector GetFunctions() const;
 	OptionalVar FindVar(std::string name) const;
 	OptionalFunction FindFunction(std::string name) const;

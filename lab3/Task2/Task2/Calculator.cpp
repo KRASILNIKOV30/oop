@@ -2,10 +2,9 @@
 #include <algorithm>
 #include <iterator>
 
-Var Calculator::GetVars() const
+VarsVector Calculator::GetVars() const
 {
-	Var var = m_memory.GetVars()[0];
-	return var;
+	return m_memory.GetVars();
 }
 
 FunctionsVector Calculator::GetFunctions() const
@@ -39,7 +38,7 @@ bool Calculator::DefineFunction(std::string name, std::string leftOperandName)
 {
 	Function function(name, { leftOperandName }, m_memory);
 	m_functions.push_back(function);
-	return false;
+	return true;
 }
 
 bool Calculator::DefineFunction(
@@ -50,4 +49,9 @@ bool Calculator::DefineFunction(
 )
 {
 	return false;
+}
+
+bool Calculator::ChangeVarValue(std::string varName, double value)
+{
+	return m_memory.ChangeVarValue(varName, value);
 }
