@@ -1,5 +1,6 @@
 #include "Function.h"
 #include <stack>
+#include "Common.h"
 
 Function::Function
 (
@@ -44,11 +45,6 @@ double CalcOperation(double leftOperand, double rightOperand, std::string operat
 	return NAN;
 }
 
-bool isOperation(std::string str)
-{
-	return str == "+" || str == "-" || str == "*" || str == "/";
-}
-
 double Function::GetValue() const
 {
 	double leftOperand;
@@ -56,7 +52,7 @@ double Function::GetValue() const
 	std::stack<double> stack;
 	for (auto & lexeme : m_lexemes)
 	{
-		if (isOperation(lexeme))
+		if (IsOperation(lexeme))
 		{
 			rightOperand = stack.top();
 			stack.pop();

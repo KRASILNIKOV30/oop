@@ -1,12 +1,6 @@
 #pragma once
+#include <string>
 
 bool IsEquals(double leftValue, double rightValue);
 
-enum Operation
-{
-	Addition,
-	Subtraction,
-	Multiplication,
-	Division,
-	NotOperation
-};
+bool IsOperation(std::string str);

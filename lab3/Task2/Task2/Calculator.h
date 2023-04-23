@@ -31,4 +31,7 @@ public:
 private:
 	Memory m_memory;
 	FunctionsVector m_functions;
+	bool IsFunction(std::string name) const;
+	bool IsVar(std::string name) const;
+	bool AddLexemes(std::vector<std::string>& lexemes, std::string name) const;
 };

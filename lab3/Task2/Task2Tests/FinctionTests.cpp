@@ -61,7 +61,39 @@ SCENARIO("Function can perform a simple arithmetic operation")
 
 				THEN("Functions value changes too")
 				{
-					CHECK(function.GetValue() == 12);
+					CHECK(IsEquals(function.GetValue(), 12));
+				}
+			}
+		}
+	}
+}
+
+SCENARIO("Function with functions definition")
+{
+	Memory memory;
+	memory.AddVar("x");
+	memory.AddVar("y");
+	Function XPlusY("XPlusY", { "x", "y", "+" }, memory);
+	Function XMinusY("XMinusY", { "x", "y", "-" }, memory);
+	Function MultFns("MultFns", { "x", "y", "+", "x", "y", "-", "*" }, memory);
+
+	WHEN("I define variables")
+	{
+		memory.ChangeVarValue("x", 2);
+		memory.ChangeVarValue("y", 1);
+
+		THEN("I can get functions value")
+		{
+			CHECK(IsEquals(MultFns.GetValue(), 3));
+
+			AND_WHEN("I change value of one variable")
+			{
+				memory.ChangeVarValue("x", 10);
+				memory.ChangeVarValue("y", 2);
+
+				THEN("Functions value changes too")
+				{
+					CHECK(IsEquals(MultFns.GetValue(), 96));
 				}
 			}
 		}

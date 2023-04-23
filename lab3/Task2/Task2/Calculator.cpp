@@ -28,6 +28,36 @@ OptionalFunction Calculator::FindFunction(std::string name) const
 	return *result;
 }
 
+bool Calculator::IsFunction(std::string name) const
+{
+	return FindFunction(name).has_value();
+}
+
+bool Calculator::IsVar(std::string name) const
+{
+	return m_memory.FindVar(name).has_value();
+}
+
+bool Calculator::AddLexemes(std::vector<std::string>& lexemes, std::string name) const
+{
+	if (IsVar(name) || IsOperation(name))
+	{
+		lexemes.push_back(name);
+		return true;
+	}
+	if (IsFunction(name))
+	{
+		Function function = FindFunction(name).value();
+		std::vector<std::string> functionsLexemes = function.GetLexemes();
+		for (auto& lexeme : functionsLexemes)
+		{
+			lexemes.push_back(lexeme);
+		}
+		return true;
+	}
+	return false;
+}
+
 bool Calculator::DefineVar(std::string name)
 {
 	m_memory.AddVar(name);
@@ -36,7 +66,12 @@ bool Calculator::DefineVar(std::string name)
 
 bool Calculator::DefineFunction(std::string name, std::string leftOperandName)
 {
-	Function function(name, { leftOperandName }, m_memory);
+	std::vector<std::string> lexemes{};
+	if (!AddLexemes(lexemes, leftOperandName))
+	{
+		return false;
+	}
+	Function function(name, lexemes, m_memory);
 	m_functions.push_back(function);
 	return true;
 }
@@ -48,7 +83,13 @@ bool Calculator::DefineFunction(
 	std::string rightOperandName
 )
 {
-	return false;
+	std::vector<std::string> lexemes{};
+	AddLexemes(lexemes, leftOperandName);
+	AddLexemes(lexemes, rightOperandName);
+	AddLexemes(lexemes, operation);
+	Function function(name, lexemes, m_memory);
+	m_functions.push_back(function);
+	return true;
 }
 
 bool Calculator::ChangeVarValue(std::string varName, double value)
