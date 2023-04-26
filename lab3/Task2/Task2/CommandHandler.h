@@ -12,6 +12,7 @@ private:
 	bool DefineVar(std::istream& args);
 	bool LetVar(std::istream& args);
 	bool ParseLetExpression(std::string exp, std::string& leftOperand, std::string& rightOperand);
+	
 private:
 	using Handler = std::function<bool(std::istream& args)>;
 

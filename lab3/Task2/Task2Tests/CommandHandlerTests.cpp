@@ -53,3 +53,22 @@ SCENARIO_METHOD(CommandHandlerFixture, "Handle variable definition")
 		}
 	}
 }
+
+SCENARIO_METHOD(CommandHandlerFixture, "Change variables value")
+{
+	GIVEN("Two variables x and y")
+	{
+		VerifyCommandHandling("var x");
+		VerifyCommandHandling("var y");
+
+		WHEN("I change x variables value")
+		{
+			VerifyCommandHandling("let x=2.5", "");
+
+			THEN("X variable has value, y has not, variables sorted")
+			{
+				VerifyCommandHandling("printvars", "x:2.5\ny:nan\n");
+			}
+		}
+	}
+}

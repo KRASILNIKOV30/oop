@@ -1,3 +1,4 @@
+#include <compare>
 #include "Var.h"
 
 Var::Var(std::string name)
@@ -18,3 +19,11 @@ void Var::SetValue(double value)
 {
 	m_value = value;
 }
+
+std::strong_ordering Var::operator<=>(const Var& var) const
+{
+	return m_name <=> var.GetName();
+}
+
+
+

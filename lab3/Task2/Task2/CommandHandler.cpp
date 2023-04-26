@@ -46,7 +46,7 @@ bool CommandHandler::LetVar(std::istream& args)
 	std::string leftOperand;
 	std::string rightOperand;
 	ParseLetExpression(expression, leftOperand, rightOperand);
-	m_calc.ChangeVarValue(leftOperand, std::stoi(rightOperand));
+	m_calc.ChangeVarValue(leftOperand, std::stod(rightOperand));
 	return true;
 }
 
@@ -65,6 +65,7 @@ bool CommandHandler::ParseLetExpression(std::string exp, std::string& leftOperan
 bool CommandHandler::PrintVars(std::istream& args)
 {
 	VarsVector vars = m_calc.GetVars();
+	std::sort(vars.begin(), vars.end());
 	for (auto& var : vars)
 	{
 		m_output << var.GetName() << ":" << var.GetValue() << std::endl;
