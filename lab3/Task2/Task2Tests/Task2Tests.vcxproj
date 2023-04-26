@@ -132,11 +132,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Task2\Calculator.cpp" />
+    <ClCompile Include="..\Task2\CommandHandler.cpp" />
     <ClCompile Include="..\Task2\Common.cpp" />
     <ClCompile Include="..\Task2\Function.cpp" />
     <ClCompile Include="..\Task2\Memory.cpp" />
     <ClCompile Include="..\Task2\Var.cpp" />
     <ClCompile Include="CalculatorTests.cpp" />
+    <ClCompile Include="CommandHandlerTests.cpp" />
     <ClCompile Include="FinctionTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MemoryTest.cpp" />
@@ -144,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Task2\Calculator.h" />
+    <ClInclude Include="..\Task2\CommandHandler.h" />
     <ClInclude Include="..\Task2\Common.h" />
     <ClInclude Include="..\Task2\Function.h" />
     <ClInclude Include="..\Task2\Memory.h" />

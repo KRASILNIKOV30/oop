@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Calculator.cpp" />
+    <ClCompile Include="CommandHandler.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -140,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculator.h" />
+    <ClInclude Include="CommandHandler.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Memory.h" />
