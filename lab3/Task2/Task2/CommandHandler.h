@@ -8,16 +8,16 @@ public:
 	CommandHandler(Calculator& calc, std::istream& input, std::ostream& output);
 	bool HandleCommand();
 private:
-	bool PrintVars(std::istream& args);
-	bool PrintFns(std::istream& args);
+	bool PrintVars(std::istream& args) const;
+	bool PrintFns(std::istream& args) const;
 	bool DefineVar(std::istream& args);
 	bool DefiningVarHandle(std::string name);
 	bool DefineFn(std::istream& args);
 	bool LetVar(std::istream& args);
-	bool Print(std::istream& args);
-	bool ParseLetExpression(std::string exp, std::string& leftOperand, std::string& rightOperand);
-	bool ParseFnExpression(std::string exp, std::string& name, std::string& leftOperand, std::string& operation, std::string& rightOperand);
-	bool IsIdentifierValid(std::string ident);
+	bool Print(std::istream& args) const;
+	bool ParseLetExpression(std::string exp, std::string& leftOperand, std::string& rightOperand) const;
+	bool ParseFnExpression(std::string exp, std::string& name, std::string& leftOperand, std::string& operation, std::string& rightOperand) const;
+	bool IsIdentifierValid(std::string ident) const;
 private:
 	using Handler = std::function<bool(std::istream& args)>;
 

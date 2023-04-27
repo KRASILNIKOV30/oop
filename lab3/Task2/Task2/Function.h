@@ -18,8 +18,6 @@ public:
 	std::vector<std::string> GetLexemes() const;
 	double GetValue() const;
 	Function& operator=(const Function&);
-	bool operator<(const Function& fn) const;
-	bool operator>(const Function& fn) const;
 private:
 	std::string m_name;
 	std::vector<std::string> m_lexemes;

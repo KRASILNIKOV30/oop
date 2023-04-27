@@ -100,7 +100,7 @@ bool CommandHandler::LetVar(std::istream& args)
 	}
 }
 
-bool CommandHandler::Print(std::istream& args)
+bool CommandHandler::Print(std::istream& args) const
 {
 	std::string name;
 	m_input >> name;
@@ -122,7 +122,7 @@ bool CommandHandler::Print(std::istream& args)
 	return false;
 }
 
-bool CommandHandler::ParseLetExpression(std::string exp, std::string& leftOperand, std::string& rightOperand)
+bool CommandHandler::ParseLetExpression(std::string exp, std::string& leftOperand, std::string& rightOperand) const
 {
 	const std::regex reg(R"(([\w]+)=([\w.]+))");
 	std::smatch matchResutl;
@@ -142,7 +142,7 @@ bool CommandHandler::ParseFnExpression
 	std::string& leftOperand,
 	std::string& operation, 
 	std::string& rightOperand
-)
+) const
 {
 	const std::regex reg(R"(([\w]+)=([\w]+)(([\+\-\*\/])([\w]+))?)");
 	std::smatch matchResult;
@@ -157,7 +157,7 @@ bool CommandHandler::ParseFnExpression
 	return true;
 }
 
-bool CommandHandler::IsIdentifierValid(std::string ident)
+bool CommandHandler::IsIdentifierValid(std::string ident) const
 {
 	if (std::isdigit(ident[0]))
 	{
@@ -167,7 +167,7 @@ bool CommandHandler::IsIdentifierValid(std::string ident)
 	return std::regex_match(ident, reg);
 }
 
-bool CommandHandler::PrintVars(std::istream& args)
+bool CommandHandler::PrintVars(std::istream& args) const
 {
 	VarsVector vars = m_calc.GetVars();
 	m_output.setf(std::ios::fixed);
@@ -179,7 +179,7 @@ bool CommandHandler::PrintVars(std::istream& args)
 	return true;
 }
 
-bool CommandHandler::PrintFns(std::istream& args)
+bool CommandHandler::PrintFns(std::istream& args) const
 {
 	FunctionsVector fns = m_calc.GetFunctions();
 	m_output.setf(std::ios::fixed);

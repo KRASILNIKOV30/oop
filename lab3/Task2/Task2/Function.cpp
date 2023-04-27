@@ -77,18 +77,7 @@ double Function::GetValue() const
 
 Function& Function::operator=(const Function&)
 {
-	Function fn(m_name, m_lexemes, m_memory);
-	return fn;
-}
-
-bool Function::operator<(const Function& fn) const
-{
-	return m_name < fn.GetName();
-}
-
-bool Function::operator>(const Function& fn) const
-{
-	return m_name > fn.GetName();
+	return *this;
 }
 
 
