@@ -139,7 +139,6 @@ bool CommandHandler::ParseFnExpression
 bool CommandHandler::PrintVars(std::istream& args)
 {
 	VarsVector vars = m_calc.GetVars();
-	std::sort(vars.begin(), vars.end());
 	m_output.setf(std::ios::fixed);
 	m_output.precision(2);
 	for (auto& var : vars)

@@ -3,7 +3,7 @@
 bool Memory::AddVar(std::string name)
 {
 	Var var(name);
-	m_vars.push_back(var);
+	InsertVar(var);
 	return true;
 }
 
@@ -16,7 +16,7 @@ bool Memory::ChangeVarValue(std::string varName, double value)
 	}
 	DeleteVar(varName);
 	var->SetValue(value);
-	m_vars.push_back(var.value());
+	InsertVar(var.value());
 	return true;
 }
 
@@ -43,4 +43,19 @@ void Memory::DeleteVar(std::string name)
 			[name](const Var& var) {return var.GetName() == name; }),
 		m_vars.end()
 	);
+}
+
+void Memory::InsertVar(Var& var)
+{
+	if (m_vars.size() == 0)
+	{
+		m_vars.push_back(var);
+		return;
+	}
+	auto it = m_vars.cbegin();
+	while (it != m_vars.end() && var.GetName() > it->GetName())
+	{
+		it++;
+	}
+	m_vars.insert(it, var);
 }

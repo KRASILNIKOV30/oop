@@ -143,6 +143,26 @@ SCENARIO_METHOD(CommandHandlerFixture, "Change function value")
 			{
 				VerifyCommandHandling("printfns", "XFn:nan\nXPlusY:nan\nXYAvg:nan\n");
 			}
+
+			AND_WHEN("I initialize x")
+			{
+				VerifyCommandHandling("let x=9", "");
+
+				THEN("Only one function has value")
+				{
+					VerifyCommandHandling("printfns", "XFn:9.00\nXPlusY:nan\nXYAvg:nan\n");
+				}
+
+				AND_WHEN("I initialize y")
+				{
+					VerifyCommandHandling("let y=2", "");
+
+					THEN("All functions have value")
+					{
+						VerifyCommandHandling("printfns", "XFn:9.00\nXPlusY:11.00\nXYAvg:5.50\n");
+					}
+				}
+			}
 		}
 	}
 }

@@ -16,5 +16,6 @@ public:
 private:
 	VarsVector m_vars;
 	void DeleteVar(std::string name);
+	void InsertVar(Var& var);
 };
 
