@@ -72,7 +72,7 @@ bool Calculator::DefineFunction(std::string name, std::string leftOperandName)
 		return false;
 	}
 	Function function(name, lexemes, m_memory);
-	m_functions.push_back(function);
+	InsertFunction(function);
 	return true;
 }
 
@@ -88,8 +88,23 @@ bool Calculator::DefineFunction(
 	AddLexemes(lexemes, rightOperandName);
 	AddLexemes(lexemes, operation);
 	Function function(name, lexemes, m_memory);
-	m_functions.push_back(function);
+	InsertFunction(function);
 	return true;
+}
+
+void Calculator::InsertFunction(Function& fn)
+{
+	if (m_functions.size() == 0)
+	{
+		m_functions.push_back(fn);
+		return;
+	}
+	auto it = m_functions.cbegin();
+	while (it != m_functions.end() && fn.GetName() > it->GetName())
+	{
+		it++;
+	}
+	m_functions.insert(it, fn);
 }
 
 bool Calculator::ChangeVarValue(std::string varName, double value)

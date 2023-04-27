@@ -39,17 +39,7 @@ SCENARIO_METHOD(CommandHandlerFixture, "Handle variable definition")
 
 		THEN("Calculator has one variable with nan value")
 		{
-			VerifyCommandHandling("printvars", "x:nan\n");
-		}
-
-		WHEN("I change variables value")
-		{
-			VerifyCommandHandling("let x=1");
-
-			THEN("Variables value change")
-			{
-				VerifyCommandHandling("printvars", "x:1\n");
-			}
+			VerifyCommandHandling("print x", "nan\n");
 		}
 	}
 }
@@ -58,8 +48,9 @@ SCENARIO_METHOD(CommandHandlerFixture, "Change variables value")
 {
 	GIVEN("Two variables x and y")
 	{
-		VerifyCommandHandling("var x");
 		VerifyCommandHandling("var y");
+		VerifyCommandHandling("var x");
+		
 
 		WHEN("I change x variables value")
 		{
@@ -67,7 +58,90 @@ SCENARIO_METHOD(CommandHandlerFixture, "Change variables value")
 
 			THEN("X variable has value, y has not, variables sorted")
 			{
-				VerifyCommandHandling("printvars", "x:2.5\ny:nan\n");
+				VerifyCommandHandling("printvars", "x:2.50\ny:nan\n");
+			}
+
+			AND_WHEN("I assign x to y")
+			{
+				VerifyCommandHandling("let y=x", "");
+
+				THEN("y equals to x")
+				{
+					VerifyCommandHandling("printvars", "x:2.50\ny:2.50\n");
+				}
+
+				AND_WHEN("I change x value")
+				{
+					VerifyCommandHandling("let x=3", "");
+
+					THEN("Y value did not change")
+					{
+						VerifyCommandHandling("printvars", "x:3.00\ny:2.50\n");
+					}
+				}
+			}
+		}
+	}
+}
+
+SCENARIO_METHOD(CommandHandlerFixture, "Handle function definition")
+{
+	VerifyCommandHandling("printfns", "");
+
+	GIVEN("Two variables x and y")
+	{
+		VerifyCommandHandling("var x");
+		VerifyCommandHandling("var y");
+
+		WHEN("I define function depends on variable")
+		{
+			VerifyCommandHandling("fn Fn=x", "");
+
+			THEN("Function is defined")
+			{
+				VerifyCommandHandling("print Fn", "nan\n");
+			}
+		}
+
+		WHEN("I defined function depends on two variables")
+		{
+			VerifyCommandHandling("fn Fn=x+y", "");
+
+			THEN("Function is defined")
+			{
+				VerifyCommandHandling("print Fn", "nan\n");
+			}
+		}
+		
+		WHEN("I defined function depends on another function")
+		{
+			VerifyCommandHandling("fn Fn=x+y", "");
+			VerifyCommandHandling("fn FnPlusX=Fn+x", "");
+
+			THEN("Function is defined")
+			{
+				VerifyCommandHandling("print FnPlusX", "nan\n");
+			}
+		}
+	}
+}
+
+SCENARIO_METHOD(CommandHandlerFixture, "Change function value")
+{
+	GIVEN("Two variables x and y")
+	{
+		VerifyCommandHandling("var x");
+		VerifyCommandHandling("var y");
+
+		WHEN("I defined function depends on one var, on two vars and on another function")
+		{
+			VerifyCommandHandling("fn XPlusY=x+y", "");
+			VerifyCommandHandling("fn XYAvg=XPlusY/y", "");
+			VerifyCommandHandling("fn XFn=x", "");
+			
+			THEN("All functions has a nan value and functions sorted")
+			{
+				VerifyCommandHandling("printfns", "XFn:nan\nXPlusY:nan\nXYAvg:nan\n");
 			}
 		}
 	}

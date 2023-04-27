@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <list>
 
 using FunctionsVector = std::vector<Function>;
 using OptionalFunction = std::optional<Function>;
@@ -34,4 +35,5 @@ private:
 	bool IsFunction(std::string name) const;
 	bool IsVar(std::string name) const;
 	bool AddLexemes(std::vector<std::string>& lexemes, std::string name) const;
+	void InsertFunction(Function& fn);
 };
