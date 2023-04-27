@@ -39,6 +39,15 @@ bool CommandHandler::DefineVar(std::istream& args)
 {
 	std::string name;
 	m_input >> name;
+	return DefiningVarHandle(name);
+}
+
+bool CommandHandler::DefiningVarHandle(std::string name)
+{
+	if (!IsIdentifierValid(name))
+	{
+		return false;
+	}
 	return m_calc.DefineVar(name);
 }
 
@@ -54,6 +63,10 @@ bool CommandHandler::DefineFn(std::istream& args)
 	{
 		return false;
 	}
+	if (!IsIdentifierValid(name))
+	{
+		return false;
+	}
 	return operation == "" 
 		? m_calc.DefineFunction(name, leftOperand)
 		: m_calc.DefineFunction(name, leftOperand, operation, rightOperand);
@@ -66,10 +79,16 @@ bool CommandHandler::LetVar(std::istream& args)
 	std::string leftOperand;
 	std::string rightOperand;
 	ParseLetExpression(expression, leftOperand, rightOperand);
-	auto var = m_calc.FindVar(rightOperand);
-	if(var.has_value())
+	auto leftVar = m_calc.FindVar(rightOperand);
+	if (!leftVar.has_value())
 	{
-		return m_calc.ChangeVarValue(leftOperand, var->GetValue());
+		DefiningVarHandle(leftOperand);
+		leftVar = m_calc.FindVar(leftOperand);
+	}
+	auto rightVar = m_calc.FindVar(rightOperand);
+	if(rightVar.has_value())
+	{
+		return m_calc.ChangeVarValue(leftOperand, rightVar->GetValue());
 	}
 	try
 	{
@@ -87,6 +106,8 @@ bool CommandHandler::Print(std::istream& args)
 	m_input >> name;
 	auto fn = m_calc.FindFunction(name);
 	auto var = m_calc.FindVar(name);
+	m_output.setf(std::ios::fixed);
+	m_output.precision(2);
 	if (fn.has_value())
 	{
 		m_output << fn->GetValue() << std::endl;
@@ -136,6 +157,16 @@ bool CommandHandler::ParseFnExpression
 	return true;
 }
 
+bool CommandHandler::IsIdentifierValid(std::string ident)
+{
+	if (std::isdigit(ident[0]))
+	{
+		return false;
+	}
+	const std::regex reg(R"(\w+)");
+	return std::regex_match(ident, reg);
+}
+
 bool CommandHandler::PrintVars(std::istream& args)
 {
 	VarsVector vars = m_calc.GetVars();
@@ -146,11 +177,6 @@ bool CommandHandler::PrintVars(std::istream& args)
 		m_output << var.GetName() << ":" << var.GetValue() << std::endl;
 	}
 	return true;
-}
-
-bool CompareByNames(const Function& a, const Function& b)
-{
-	return a.GetName() < b.GetName();
 }
 
 bool CommandHandler::PrintFns(std::istream& args)

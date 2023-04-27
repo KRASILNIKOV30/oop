@@ -23,7 +23,10 @@ struct CommandHandlerFixture : CommandHandlerDependencies
 		output = std::stringstream();
 		input = std::stringstream();
 		CHECK(input << command);
-		CHECK(commandHandler.HandleCommand());
+		if (!commandHandler.HandleCommand())
+		{
+			output << "Error!" << std::endl;
+		}
 		CHECK(input.eof());
 		CHECK(output.str() == expectedOutput);
 	}
@@ -33,13 +36,23 @@ SCENARIO_METHOD(CommandHandlerFixture, "Handle variable definition")
 {
 	VerifyCommandHandling("printvars", "");
 
-	WHEN("I define variable")
+	WHEN("I can define variable with var")
 	{
 		VerifyCommandHandling("var x", "");
 
 		THEN("Calculator has one variable with nan value")
 		{
 			VerifyCommandHandling("print x", "nan\n");
+		}
+	}
+
+	WHEN("I can define variable with let")
+	{
+		VerifyCommandHandling("let x=42", "");
+
+		THEN("Calculator has one variable")
+		{
+			VerifyCommandHandling("print x", "42.00\n");
 		}
 	}
 }
@@ -165,4 +178,39 @@ SCENARIO_METHOD(CommandHandlerFixture, "Change function value")
 			}
 		}
 	}
+}
+
+TEST_CASE_METHOD(CommandHandlerFixture, "Can not define variable with invalid identifier")
+{
+	VerifyCommandHandling("var 1var", "Error!\n");
+	VerifyCommandHandling("let var*=42", "Error!\n");
+	VerifyCommandHandling("printvars", "");
+}
+
+TEST_CASE_METHOD(CommandHandlerFixture, "Can not define function with invalid identifier")
+{
+	VerifyCommandHandling("var x", "");
+	VerifyCommandHandling("fn 1fn=x", "Error!\n");
+	VerifyCommandHandling("fn fn<fn=x", "Error!\n");
+	VerifyCommandHandling("printfns", "");
+}
+
+TEST_CASE_METHOD(CommandHandlerFixture, "Can not define function with invalid syntax")
+{
+	VerifyCommandHandling("var x", "");
+	VerifyCommandHandling("fn", "Error!\n");
+	VerifyCommandHandling("fn =x", "Error!\n");
+	VerifyCommandHandling("fn fn", "Error!\n");
+	VerifyCommandHandling("fn fn=", "Error!\n");
+	VerifyCommandHandling("fn fn=5", "Error!\n");
+	VerifyCommandHandling("fn fn=x&x", "Error!\n");
+	VerifyCommandHandling("printfns", "");
+}
+
+TEST_CASE_METHOD(CommandHandlerFixture, "Can not use one identifier twice")
+{
+	VerifyCommandHandling("var x", "");
+	VerifyCommandHandling("fn y=x", "");
+	VerifyCommandHandling("var y", "Error!\n");
+	VerifyCommandHandling("fn x=x", "Error!\n");
 }

@@ -36,4 +36,5 @@ private:
 	bool IsVar(std::string name) const;
 	bool AddLexemes(std::vector<std::string>& lexemes, std::string name) const;
 	void InsertFunction(Function& fn);
+	bool IsIdentifierAlreadyInUse(std::string name) const;
 };

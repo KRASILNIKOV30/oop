@@ -11,11 +11,13 @@ private:
 	bool PrintVars(std::istream& args);
 	bool PrintFns(std::istream& args);
 	bool DefineVar(std::istream& args);
+	bool DefiningVarHandle(std::string name);
 	bool DefineFn(std::istream& args);
 	bool LetVar(std::istream& args);
 	bool Print(std::istream& args);
 	bool ParseLetExpression(std::string exp, std::string& leftOperand, std::string& rightOperand);
 	bool ParseFnExpression(std::string exp, std::string& name, std::string& leftOperand, std::string& operation, std::string& rightOperand);
+	bool IsIdentifierValid(std::string ident);
 private:
 	using Handler = std::function<bool(std::istream& args)>;
 

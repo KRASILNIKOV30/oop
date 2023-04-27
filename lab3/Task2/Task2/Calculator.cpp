@@ -60,12 +60,19 @@ bool Calculator::AddLexemes(std::vector<std::string>& lexemes, std::string name)
 
 bool Calculator::DefineVar(std::string name)
 {
-	m_memory.AddVar(name);
-	return true;
+	if (IsIdentifierAlreadyInUse(name))
+	{
+		return false;
+	}
+	return m_memory.AddVar(name);
 }
 
 bool Calculator::DefineFunction(std::string name, std::string leftOperandName)
 {
+	if (IsIdentifierAlreadyInUse(name))
+	{
+		return false;
+	}
 	std::vector<std::string> lexemes{};
 	if (!AddLexemes(lexemes, leftOperandName))
 	{
@@ -83,6 +90,10 @@ bool Calculator::DefineFunction(
 	std::string rightOperandName
 )
 {
+	if (IsIdentifierAlreadyInUse(name))
+	{
+		return false;
+	}
 	std::vector<std::string> lexemes{};
 	AddLexemes(lexemes, leftOperandName);
 	AddLexemes(lexemes, rightOperandName);
@@ -105,6 +116,11 @@ void Calculator::InsertFunction(Function& fn)
 		it++;
 	}
 	m_functions.insert(it, fn);
+}
+
+bool Calculator::IsIdentifierAlreadyInUse(std::string name) const
+{
+	return FindFunction(name).has_value() || FindVar(name).has_value();
 }
 
 bool Calculator::ChangeVarValue(std::string varName, double value)
