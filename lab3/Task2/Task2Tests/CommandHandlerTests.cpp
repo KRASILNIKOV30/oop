@@ -213,4 +213,6 @@ TEST_CASE_METHOD(CommandHandlerFixture, "Can not use one identifier twice")
 	VerifyCommandHandling("fn y=x", "");
 	VerifyCommandHandling("var y", "Error!\n");
 	VerifyCommandHandling("fn x=x", "Error!\n");
+	VerifyCommandHandling("printfns", "y:nan\n");
+	VerifyCommandHandling("printvars", "x:nan\n");
 }
