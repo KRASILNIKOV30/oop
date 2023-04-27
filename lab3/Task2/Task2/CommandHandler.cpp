@@ -92,7 +92,7 @@ bool CommandHandler::LetVar(std::istream& args)
 	}
 	try
 	{
-		return m_calc.ChangeVarValue(leftOperand, stod(rightOperand));
+		return m_calc.ChangeVarValue(leftOperand, round(stod(rightOperand)*100)/100);
 	}
 	catch (const std::exception&)
 	{
@@ -124,7 +124,7 @@ bool CommandHandler::Print(std::istream& args) const
 
 bool CommandHandler::ParseLetExpression(std::string exp, std::string& leftOperand, std::string& rightOperand) const
 {
-	const std::regex reg(R"(([\w]+)=([\w.]+))");
+	const std::regex reg(R"(([\w]+)=([\w.-]+))");
 	std::smatch matchResutl;
 	if (!std::regex_match(exp, matchResutl, reg)) 
 	{

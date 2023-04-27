@@ -26,7 +26,9 @@ public:
 	bool ChangeVarValue(std::string varName, double value);
 	VarsVector GetVars() const;
 	FunctionsVector GetFunctions() const;
+	//Можно передавать имя по ссылке
 	OptionalVar FindVar(std::string name) const;
+	//Ускорить поиск (map)
 	OptionalFunction FindFunction(std::string name) const;
 
 private:
