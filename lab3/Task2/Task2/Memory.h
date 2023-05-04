@@ -16,6 +16,5 @@ public:
 private:
 	VarsMap m_vars{};
 	void DeleteVar(std::string const& name);
-	void InsertVar(Var& var);
 };
 

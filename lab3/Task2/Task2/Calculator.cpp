@@ -89,7 +89,7 @@ bool Calculator::DefineFunction(std::string const& name, std::string leftOperand
 		return false;
 	}
 	Function function(name, lexemes, m_memory);
-	InsertFunction(function);
+	m_functions.insert({ function.GetName(), function });
 	return true;
 }
 
@@ -109,13 +109,8 @@ bool Calculator::DefineFunction(
 	AddLexemes(lexemes, rightOperandName);
 	AddLexemes(lexemes, operation);
 	Function function(name, lexemes, m_memory);
-	InsertFunction(function);
+	m_functions.insert({ function.GetName(), function });
 	return true;
-}
-
-void Calculator::InsertFunction(Function& fn)
-{
-	m_functions.insert({ fn.GetName(), fn });
 }
 
 bool Calculator::IsIdentifierAlreadyInUse(std::string const& name) const
