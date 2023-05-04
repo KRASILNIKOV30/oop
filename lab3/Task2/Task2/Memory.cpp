@@ -43,5 +43,5 @@ void Memory::DeleteVar(std::string const& name)
 
 void Memory::InsertVar(Var& var)
 {
-	m_vars[var.GetName()] = var;
+	m_vars.insert({ var.GetName(), var });
 }

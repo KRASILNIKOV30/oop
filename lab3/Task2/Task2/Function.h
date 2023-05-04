@@ -14,7 +14,6 @@ public:
 		std::vector<std::string> lexemes,
 		std::shared_ptr<Memory> memory
 	);
-	Function() {};
 	std::string GetName() const;
 	std::vector<std::string> GetLexemes() const;
 	double GetValue() const;

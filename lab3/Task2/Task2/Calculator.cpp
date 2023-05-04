@@ -1,6 +1,5 @@
 #include "Calculator.h"
 #include "Common.h"
-#include <algorithm>
 #include <iterator>
 
 VarsVector Calculator::GetVars() const
@@ -116,7 +115,7 @@ bool Calculator::DefineFunction(
 
 void Calculator::InsertFunction(Function& fn)
 {
-	m_functions[fn.GetName()] = fn;
+	m_functions.insert({ fn.GetName(), fn });
 }
 
 bool Calculator::IsIdentifierAlreadyInUse(std::string const& name) const
