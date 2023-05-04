@@ -1,5 +1,6 @@
 #include "../../../external/catch2/catch.hpp"
 #include "../Task2/Calculator.h"
+#include "Common.h"
 
 TEST_CASE("Calculator does not have any variables and functions after definition")
 {

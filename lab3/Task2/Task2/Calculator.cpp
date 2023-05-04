@@ -1,4 +1,5 @@
 #include "Calculator.h"
+#include "Common.h"
 #include <algorithm>
 #include <iterator>
 
@@ -14,7 +15,12 @@ VarsVector Calculator::GetVars() const
 
 FunctionsVector Calculator::GetFunctions() const
 {
-	return m_functions;
+	FunctionsVector result{};
+	for (auto& item : m_functions)
+	{
+		result.push_back(item.second);
+	}
+	return result;
 }
 
 OptionalVar Calculator::FindVar(std::string const& name) const
@@ -24,13 +30,13 @@ OptionalVar Calculator::FindVar(std::string const& name) const
 
 OptionalFunction Calculator::FindFunction(std::string const& name) const
 {
-	auto result = std::find_if(begin(m_functions), end(m_functions), [name](Function fn) { return fn.GetName() == name; });
+	auto result = m_functions.find(name);
 	if (result == end(m_functions))
 	{
 		return std::nullopt;
 	}
 
-	return *result;
+	return result->second;
 }
 
 bool Calculator::IsFunction(std::string const& name) const
@@ -110,17 +116,7 @@ bool Calculator::DefineFunction(
 
 void Calculator::InsertFunction(Function& fn)
 {
-	if (m_functions.size() == 0)
-	{
-		m_functions.push_back(fn);
-		return;
-	}
-	auto it = m_functions.cbegin();
-	while (it != m_functions.end() && fn.GetName() > it->GetName())
-	{
-		it++;
-	}
-	m_functions.insert(it, fn);
+	m_functions[fn.GetName()] = fn;
 }
 
 bool Calculator::IsIdentifierAlreadyInUse(std::string const& name) const

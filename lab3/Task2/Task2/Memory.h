@@ -1,10 +1,9 @@
 #pragma once
 #include "Var.h"
-#include <vector>
 #include <optional>
 #include <map>
 
-using VarsMap = std::map<std::string, Var>;
+using VarsMap = std::map<std::string, Var, std::less<std::string>>;
 using OptionalVar = std::optional<Var>;
 
 class Memory	

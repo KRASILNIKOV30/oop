@@ -1,11 +1,9 @@
 #pragma once
-#include "Var.h"
 //лишний include (Исправлено)
 #include <string>
 #include <vector>
 #include "Memory.h"
 #include <memory>
-#include <optional>
 
 class Function
 {
@@ -16,6 +14,7 @@ public:
 		std::vector<std::string> lexemes,
 		std::shared_ptr<Memory> memory
 	);
+	Function() {};
 	std::string GetName() const;
 	std::vector<std::string> GetLexemes() const;
 	double GetValue() const;
