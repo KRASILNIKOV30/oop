@@ -4,7 +4,12 @@
 
 VarsVector Calculator::GetVars() const
 {
-	return m_memory.GetVars();
+	VarsVector result{};
+	for (auto& item : m_memory->GetVars())
+	{
+		result.push_back(item.second);
+	}
+	return result;
 }
 
 FunctionsVector Calculator::GetFunctions() const
@@ -12,12 +17,12 @@ FunctionsVector Calculator::GetFunctions() const
 	return m_functions;
 }
 
-OptionalVar Calculator::FindVar(std::string name) const
+OptionalVar Calculator::FindVar(std::string const& name) const
 {
-	return m_memory.FindVar(name);
+	return m_memory->FindVar(name);
 }
 
-OptionalFunction Calculator::FindFunction(std::string name) const
+OptionalFunction Calculator::FindFunction(std::string const& name) const
 {
 	auto result = std::find_if(begin(m_functions), end(m_functions), [name](Function fn) { return fn.GetName() == name; });
 	if (result == end(m_functions))
@@ -28,14 +33,14 @@ OptionalFunction Calculator::FindFunction(std::string name) const
 	return *result;
 }
 
-bool Calculator::IsFunction(std::string name) const
+bool Calculator::IsFunction(std::string const& name) const
 {
 	return FindFunction(name).has_value();
 }
 
-bool Calculator::IsVar(std::string name) const
+bool Calculator::IsVar(std::string const& name) const
 {
-	return m_memory.FindVar(name).has_value();
+	return m_memory->FindVar(name).has_value();
 }
 
 bool Calculator::AddLexemes(std::vector<std::string>& lexemes, std::string name) const
@@ -58,16 +63,16 @@ bool Calculator::AddLexemes(std::vector<std::string>& lexemes, std::string name)
 	return false;
 }
 
-bool Calculator::DefineVar(std::string name)
+bool Calculator::DefineVar(std::string const& name)
 {
 	if (IsIdentifierAlreadyInUse(name))
 	{
 		return false;
 	}
-	return m_memory.AddVar(name);
+	return m_memory->AddVar(name);
 }
 
-bool Calculator::DefineFunction(std::string name, std::string leftOperandName)
+bool Calculator::DefineFunction(std::string const& name, std::string leftOperandName)
 {
 	if (IsIdentifierAlreadyInUse(name))
 	{
@@ -84,10 +89,10 @@ bool Calculator::DefineFunction(std::string name, std::string leftOperandName)
 }
 
 bool Calculator::DefineFunction(
-	std::string name,
-	std::string leftOperandName, 
-	std::string operation,
-	std::string rightOperandName
+	std::string const& name,
+	std::string const& leftOperandName,
+	std::string const& operation,
+	std::string const& rightOperandName
 )
 {
 	if (IsIdentifierAlreadyInUse(name))
@@ -118,12 +123,12 @@ void Calculator::InsertFunction(Function& fn)
 	m_functions.insert(it, fn);
 }
 
-bool Calculator::IsIdentifierAlreadyInUse(std::string name) const
+bool Calculator::IsIdentifierAlreadyInUse(std::string const& name) const
 {
 	return FindFunction(name).has_value() || FindVar(name).has_value();
 }
 
-bool Calculator::ChangeVarValue(std::string varName, double value)
+bool Calculator::ChangeVarValue(std::string const& varName, double value)
 {
-	return m_memory.ChangeVarValue(varName, value);
+	return m_memory->ChangeVarValue(varName, value);
 }

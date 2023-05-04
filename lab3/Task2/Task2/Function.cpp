@@ -6,7 +6,7 @@ Function::Function
 (
 	std::string name,
 	std::vector<std::string> lexemes,
-	Memory& memory
+	std::shared_ptr<Memory> memory
 )
 	: m_name(name)
 	, m_lexemes(lexemes)
@@ -63,7 +63,7 @@ double Function::GetValue() const
 		}
 		else
 		{
-			auto var = m_memory.FindVar(lexeme);
+			auto var = m_memory->FindVar(lexeme);
 			if (!var.has_value())
 			{
 				return NAN;
@@ -73,11 +73,6 @@ double Function::GetValue() const
 	}
 
 	return stack.top();
-}
-
-Function& Function::operator=(const Function&)
-{
-	return *this;
 }
 
 

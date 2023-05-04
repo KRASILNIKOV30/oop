@@ -25,7 +25,7 @@ SCENARIO("Variable definition")
 
 			AND_THEN("Var has a name and NAN value")
 			{
-				auto var = calc.FindVar("t");
+				OptionalVar var = calc.FindVar("t");
 				CHECK(var.has_value());
 				CHECK(calc.GetVars()[0].GetName() == "t");
 				CHECK(isnan(calc.GetVars()[0].GetValue()));

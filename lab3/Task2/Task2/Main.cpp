@@ -3,8 +3,8 @@
 
 int main()
 {
-	Calculator tv;
-	CommandHandler commandHandler(tv, std::cin, std::cout);
+	Calculator calc;
+	CommandHandler commandHandler(calc, std::cin, std::cout);
 
 	while (!std::cin.eof() && !std::cin.fail())
 	{

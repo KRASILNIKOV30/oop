@@ -1,13 +1,13 @@
 #include "Memory.h"
 
-bool Memory::AddVar(std::string name)
+bool Memory::AddVar(std::string const& name)
 {
 	Var var(name);
 	InsertVar(var);
 	return true;
 }
 
-bool Memory::ChangeVarValue(std::string varName, double value)
+bool Memory::ChangeVarValue(std::string const& varName, double value)
 {
 	auto var = FindVar(varName);
 	if (!var.has_value())
@@ -20,42 +20,28 @@ bool Memory::ChangeVarValue(std::string varName, double value)
 	return true;
 }
 
-OptionalVar Memory::FindVar(std::string name) const
+OptionalVar Memory::FindVar(std::string const& name) const
 {
-	auto result = std::find_if(begin(m_vars), end(m_vars), [name](Var var) { return var.GetName() == name; });
-	if (result == end(m_vars))
+	auto result = m_vars.find(name);
+	if (result == m_vars.end())
 	{
 		return std::nullopt;
 	}
 
-	return *result;
+	return result->second;
 }
 
-VarsVector Memory::GetVars() const
+VarsMap Memory::GetVars() const
 {
 	return m_vars;
 }
 
-void Memory::DeleteVar(std::string name)
+void Memory::DeleteVar(std::string const& name)
 {
-	m_vars.erase(
-		std::remove_if(m_vars.begin(), m_vars.end(),
-			[name](const Var& var) {return var.GetName() == name; }),
-		m_vars.end()
-	);
+	m_vars.erase(m_vars.find(name));
 }
 
 void Memory::InsertVar(Var& var)
 {
-	if (m_vars.size() == 0)
-	{
-		m_vars.push_back(var);
-		return;
-	}
-	auto it = m_vars.cbegin();
-	while (it != m_vars.end() && var.GetName() > it->GetName())
-	{
-		it++;
-	}
-	m_vars.insert(it, var);
+	m_vars[var.GetName()] = var;
 }

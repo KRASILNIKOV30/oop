@@ -4,7 +4,8 @@
 class Var
 {	
 public:
-	explicit Var(std::string name);
+	Var(std::string name);
+	Var(){};
 	std::string GetName() const;
 	double GetValue() const;
 	void SetValue(double value);
