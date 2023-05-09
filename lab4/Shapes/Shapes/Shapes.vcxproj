@@ -132,11 +132,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CLineSegment.cpp" />
+    <ClCompile Include="CommandHandler.cpp" />
+    <ClCompile Include="CRectangle.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLineSegment.h" />
+    <ClInclude Include="CommandHandler.h" />
     <ClInclude Include="CPoint.h" />
+    <ClInclude Include="CRectangle.h" />
     <ClInclude Include="IShape.h" />
     <ClInclude Include="ISolidShape.h" />
   </ItemGroup>
