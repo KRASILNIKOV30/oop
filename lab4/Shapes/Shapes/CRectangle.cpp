@@ -1,5 +1,6 @@
 #include "CRectangle.h"
 #include <format>
+#include "Common.h"
 
 double CRectangle::GetArea() const
 {
@@ -13,13 +14,13 @@ double CRectangle::GetPerimeter() const
 
 std::string CRectangle::ToString() const
 {
-	return std::format("rectangle {} {} {} {} {} {}\n", 
+	return std::format("rectangle {} {} {} {} {} {}", 
 		m_leftTop.x,
 		m_leftTop.y,
 		m_width,
 		m_height,
-		m_fillColor,
-		m_outlineColor
+		GetHexStrFromUint32(m_fillColor, COLOR_LEN),
+		GetHexStrFromUint32(m_outlineColor, COLOR_LEN)
 	);
 }
 

@@ -13,9 +13,9 @@ public:
 	void PrintResult();
 
 private:
-	IShape GetMaxAreaShape() const;
-	IShape GetMinPerimeterShape() const;
-	void PrintShape(IShape shape) const;
+	IShape& GetMaxAreaShape();
+	IShape& GetMinPerimeterShape();
+	void PrintShape(IShape& shape) const;
 	bool AddRectangle(std::istream& args);
 	bool AddLine(std::istream& args);
 
@@ -25,6 +25,6 @@ private:
 	std::istream& m_input;
 	std::ostream& m_output;
 	const ActionMap m_actionMap;
-	std::vector<IShape> m_shapes;
+	std::vector<IShape*> m_shapes;
 };
 

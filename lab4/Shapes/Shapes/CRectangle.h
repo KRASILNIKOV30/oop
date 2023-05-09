@@ -5,8 +5,8 @@
 class CRectangle : public ISolidShape
 {
 public:
-	CRectangle(double x, double y, double width, double height, uint32_t fillColor, uint32_t outlineColor)
-		: m_leftTop({x, y})
+	CRectangle(CPoint leftTop, double width, double height, uint32_t fillColor, uint32_t outlineColor)
+		: m_leftTop(leftTop)
 		, m_width(width)
 		, m_height(height)
 		, m_fillColor(fillColor)

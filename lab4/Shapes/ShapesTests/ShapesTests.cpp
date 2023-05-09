@@ -1,20 +1,48 @@
-﻿// ShapesTests.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
+﻿#include "../../../external/catch2/catch.hpp"
+#include <sstream>
+#include "../Shapes/CommandHandler.h"
 
-#include <iostream>
-
-int main()
+struct CommandHandlerDependencies
 {
-    std::cout << "Hello World!\n";
+	std::stringstream input;
+	std::stringstream output;
+};
+
+struct CommandHandlerFixture : CommandHandlerDependencies
+{
+	CommandHandler commandHandler;
+
+	CommandHandlerFixture()
+		: commandHandler(input, output)
+	{
+	}
+
+	void VerifyCommandHandling(const std::string& command)
+	{
+		output = std::stringstream();
+		input = std::stringstream();
+		CHECK(input << command);
+		if (!commandHandler.HandleCommand())
+		{
+			output << "Error!" << std::endl;
+		}
+		CHECK(input.eof());
+	}
+
+	void VerifyResult(const std::string& expectedOutput = "")
+	{
+		commandHandler.PrintResult();
+		CHECK(output.str() == expectedOutput);
+	}
+};
+
+TEST_CASE_METHOD(CommandHandlerFixture, "Printing result without shapes")
+{
+	VerifyResult("Shapes not entered\n");
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.
+TEST_CASE_METHOD(CommandHandlerFixture, "Printing result with one line")
+{
+	VerifyCommandHandling("line 2 3.5 5.0 7.5 111111");
+	VerifyResult("Shape with max area:\nline 2 3.5 5 7.5 111111\narea: 0\nperimeter: 5\n\nShape with min perimeter:\nline 2 3.5 5 7.5 111111\narea: 0\nperimeter: 5\n");
+}

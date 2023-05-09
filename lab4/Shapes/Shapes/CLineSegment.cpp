@@ -22,6 +22,13 @@ CPoint CLineSegment::GetEndPoint() const
     return m_endPoint;
 }
 
+CLineSegment::CLineSegment(CPoint startPoint, CPoint endPoint, uint32_t color)
+    : m_startPoint(startPoint)
+    , m_endPoint(endPoint)
+    , m_color(color)
+{
+}
+
 double CLineSegment::GetArea() const
 {
     return 0;
