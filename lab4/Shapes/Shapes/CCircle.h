@@ -13,9 +13,10 @@ public:
 	uint32_t GetFillColor() const;
 	CPoint GetCenter() const;
 	double GetRadius() const;
+
 private:
-	CPoint center;
-	double radius;
+	CPoint m_center;
+	double m_radius;
 	uint32_t m_outlineColor;
 	uint32_t m_fillColor;
 };

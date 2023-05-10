@@ -131,17 +131,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Shapes\CCircle.cpp" />
     <ClCompile Include="..\Shapes\CLineSegment.cpp" />
     <ClCompile Include="..\Shapes\CommandHandler.cpp" />
     <ClCompile Include="..\Shapes\Common.cpp" />
     <ClCompile Include="..\Shapes\CPoint.cpp" />
     <ClCompile Include="..\Shapes\CRectangle.cpp" />
+    <ClCompile Include="CircleTests.cpp" />
     <ClCompile Include="LineSegmentTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RectangleTests.cpp" />
     <ClCompile Include="ShapesTests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Shapes\CCircle.h" />
     <ClInclude Include="..\Shapes\CLineSegment.h" />
     <ClInclude Include="..\Shapes\CommandHandler.h" />
     <ClInclude Include="..\Shapes\Common.h" />

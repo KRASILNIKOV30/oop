@@ -3,6 +3,7 @@
 
 const int COLOR_LEN = 6;
 const int COLOR_RADIX = 16;
+const double PI = 3.1415;
 
 bool IsEquals(double leftValue, double rightValue);
 

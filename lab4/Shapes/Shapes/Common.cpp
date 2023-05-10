@@ -7,7 +7,7 @@
 
 bool IsEquals(double leftValue, double rightValue)
 {
-	return abs(leftValue - rightValue) <= std::numeric_limits<double>::epsilon();
+	return abs(leftValue - rightValue) <= 1e-7;
 }
 
 bool StringToUint32(std::string const& str, uint32_t& uint32)
