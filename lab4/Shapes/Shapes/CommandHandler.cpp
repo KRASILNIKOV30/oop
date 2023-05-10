@@ -1,6 +1,9 @@
 #include "CommandHandler.h"
 #include <sstream>
 #include "CLineSegment.h"
+#include "CRectangle.h"
+#include "CCircle.h"
+#include "CTriangle.h"
 #include "Common.h"
 
 
@@ -9,7 +12,9 @@ CommandHandler::CommandHandler(std::istream& input, std::ostream& output)
 	, m_output(output)
 	, m_actionMap({
 			{ "rectangle", bind(&CommandHandler::AddRectangle, this, std::placeholders::_1) },
-			{ "line", bind(&CommandHandler::AddLine, this, std::placeholders::_1) }
+			{ "line", bind(&CommandHandler::AddLine, this, std::placeholders::_1) },
+			{ "circle", bind(&CommandHandler::AddCircle, this, std::placeholders::_1) },
+			{ "triangle", bind(&CommandHandler::AddTriangle, this, std::placeholders::_1) },
 		})
 {
 }
@@ -65,7 +70,25 @@ void CommandHandler::PrintShape(IShape& shape) const
 
 bool CommandHandler::AddRectangle(std::istream& args)
 {
-	return false;
+	double x;
+	double y;
+	double width;
+	double height;
+	std::string fillColorStr;
+	std::string outlineColorStr;
+	if (!(m_input >> x && m_input >> y && m_input >> width && m_input >> height && m_input >> fillColorStr && m_input >> outlineColorStr))
+	{
+		return false;
+	}
+	uint32_t fillColor;
+	uint32_t outlineColor;
+	if (!(StringToUint32(fillColorStr, fillColor) && StringToUint32(outlineColorStr, outlineColor)))
+	{
+		return false;
+	}
+	m_shapes.push_back(new CRectangle(CPoint({ x, y }), width, height, fillColor, outlineColor));
+
+	return true;
 }
 
 bool CommandHandler::AddLine(std::istream& args)
@@ -88,3 +111,51 @@ bool CommandHandler::AddLine(std::istream& args)
 
 	return true;
 }
+
+bool CommandHandler::AddCircle(std::istream& args)
+{
+	double x;
+	double y;
+	double radius;
+	std::string fillColorStr;
+	std::string outlineColorStr;
+	if (!(m_input >> x && m_input >> y && m_input >> radius && m_input >> fillColorStr && m_input >> outlineColorStr))
+	{
+		return false;
+	}
+	uint32_t fillColor;
+	uint32_t outlineColor;
+	if (!(StringToUint32(fillColorStr, fillColor) && StringToUint32(outlineColorStr, outlineColor)))
+	{
+		return false;
+	}
+	m_shapes.push_back(new CCircle(CPoint({ x, y }), radius, fillColor, outlineColor));
+
+	return true;
+}
+
+bool CommandHandler::AddTriangle(std::istream& args)
+{
+	double x1;
+	double y1;
+	double x2;
+	double y2;
+	double x3;
+	double y3;
+	std::string fillColorStr;
+	std::string outlineColorStr;
+	if (!(m_input >> x1 && m_input >> y1 && m_input >> x2 && m_input >> y2 && m_input >> x3 && m_input >> y3 && m_input >> fillColorStr && m_input >> outlineColorStr))
+	{
+		return false;
+	}
+	uint32_t fillColor;
+	uint32_t outlineColor;
+	if (!(StringToUint32(fillColorStr, fillColor) && StringToUint32(outlineColorStr, outlineColor)))
+	{
+		return false;
+	}
+	m_shapes.push_back(new CTriangle(CPoint({ x1, y1 }), CPoint({ x2, y2 }), CPoint({ x3, y3 }), fillColor, outlineColor));
+
+	return true;
+}
+

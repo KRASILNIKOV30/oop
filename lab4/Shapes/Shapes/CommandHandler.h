@@ -18,6 +18,8 @@ private:
 	void PrintShape(IShape& shape) const;
 	bool AddRectangle(std::istream& args);
 	bool AddLine(std::istream& args);
+	bool AddCircle(std::istream& args);
+	bool AddTriangle(std::istream& args);
 
 private:
 	using Handler = std::function<bool(std::istream& args)>;
