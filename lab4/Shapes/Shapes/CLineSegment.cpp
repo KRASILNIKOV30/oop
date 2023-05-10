@@ -43,5 +43,5 @@ double CLineSegment::GetArea() const
 
 double CLineSegment::GetPerimeter() const
 {
-    return std::sqrt(std::pow(m_endPoint.x - m_startPoint.x, 2) + std::pow(m_endPoint.y - m_startPoint.y, 2));
+    return GetLineLength(m_startPoint, m_endPoint);
 }

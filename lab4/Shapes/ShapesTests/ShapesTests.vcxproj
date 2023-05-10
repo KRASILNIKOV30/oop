@@ -137,11 +137,13 @@
     <ClCompile Include="..\Shapes\Common.cpp" />
     <ClCompile Include="..\Shapes\CPoint.cpp" />
     <ClCompile Include="..\Shapes\CRectangle.cpp" />
+    <ClCompile Include="..\Shapes\CTriangle.cpp" />
     <ClCompile Include="CircleTests.cpp" />
     <ClCompile Include="LineSegmentTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RectangleTests.cpp" />
     <ClCompile Include="ShapesTests.cpp" />
+    <ClCompile Include="TrinagleTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shapes\CCircle.h" />
@@ -150,6 +152,7 @@
     <ClInclude Include="..\Shapes\Common.h" />
     <ClInclude Include="..\Shapes\CPoint.h" />
     <ClInclude Include="..\Shapes\CRectangle.h" />
+    <ClInclude Include="..\Shapes\CTriangle.h" />
     <ClInclude Include="..\Shapes\IShape.h" />
     <ClInclude Include="..\Shapes\ISolidShape.h" />
   </ItemGroup>
