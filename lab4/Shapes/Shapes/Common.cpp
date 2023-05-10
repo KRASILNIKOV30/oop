@@ -15,7 +15,7 @@ bool StringToUint32(std::string const& str, uint32_t& uint32)
 	int i;
 	try
 	{
-		i = std::stoi(str);
+		i = std::stoi(str, 0, COLOR_RADIX);
 	}
 	catch (const std::exception&)
 	{

@@ -4,7 +4,7 @@
 
 namespace 
 {
-	const uint32_t color = UINT32_MAX;
+	const uint32_t color = 10;
 	const CPoint startPoint = { 1, 3.3 };
 	const CPoint endPoint = { 7, 11.3 };
 	const double expectedPerimeter = 10;
@@ -52,4 +52,14 @@ TEST_CASE_METHOD(LineSegmentFixture, "Line has a perimeter")
 TEST_CASE_METHOD(LineSegmentFixture, "Line has a color")
 {
 	CHECK(line.GetOutlineColor() == color);
+}
+
+TEST_CASE_METHOD(LineSegmentFixture, "Line has info")
+{
+	CHECK(line.ToString() == std::format("line {} {} {} {} 00000a",
+		startPoint.x,
+		startPoint.y,
+		endPoint.x,
+		endPoint.y
+	));
 }

@@ -1,10 +1,17 @@
 #include "CLineSegment.h"
 #include <cmath>
 #include <format>
+#include "Common.h"
 
 std::string CLineSegment::ToString() const
 {
-    return std::format("line {} {} {} {} {}", m_startPoint.x, m_startPoint.y, m_endPoint.x, m_endPoint.y, GetOutlineColor());
+    return std::format("line {} {} {} {} {}",
+        m_startPoint.x,
+        m_startPoint.y,
+        m_endPoint.x, 
+        m_endPoint.y,
+        GetHexStrFromUint32(GetOutlineColor(), COLOR_LEN)
+    );
 }
 
 uint32_t CLineSegment::GetOutlineColor() const

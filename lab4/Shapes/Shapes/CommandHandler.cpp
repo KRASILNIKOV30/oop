@@ -1,6 +1,7 @@
 #include "CommandHandler.h"
 #include <sstream>
 #include "CLineSegment.h"
+#include "Common.h"
 
 
 CommandHandler::CommandHandler(std::istream& input, std::ostream& output)
@@ -73,8 +74,13 @@ bool CommandHandler::AddLine(std::istream& args)
 	double startY;
 	double endX;
 	double endY;
+	std::string colorStr;
+	if (!(m_input >> startX && m_input >> startY && m_input >> endX && m_input >> endY && m_input >> colorStr))
+	{
+		return false;
+	}
 	uint32_t color;
-	if (!(m_input >> startX && m_input >> startY && m_input >> endX && m_input >> endY && m_input >> color))
+	if (!StringToUint32(colorStr, color))
 	{
 		return false;
 	}
