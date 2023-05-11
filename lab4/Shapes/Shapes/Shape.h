@@ -13,6 +13,7 @@ public:
 	virtual double GetPerimeter() const = 0;
 	virtual std::string ToString() const = 0;
 	uint32_t GetOutlineColor() const { return m_outlineColor; }
+	//Добавить виртуальный деструктор
 
 private:
 	uint32_t m_outlineColor;
