@@ -53,12 +53,28 @@ void CommandHandler::PrintResult()
 
 IShape& CommandHandler::GetMaxAreaShape()
 {
-	return *m_shapes[0];
+	IShape* maxAreaShape = m_shapes[0];
+	for (int i = 1; i < m_shapes.size(); i++)
+	{
+		if (m_shapes[i]->GetArea() > maxAreaShape->GetArea())
+		{
+			maxAreaShape = m_shapes[i];
+		}
+	}
+	return *maxAreaShape;
 }
 
 IShape& CommandHandler::GetMinPerimeterShape()
 {
-	return *m_shapes[0];
+	IShape* minPerimeterShape = m_shapes[0];
+	for (int i = 1; i < m_shapes.size(); i++)
+	{
+		if (m_shapes[i]->GetPerimeter() < minPerimeterShape->GetPerimeter())
+		{
+			minPerimeterShape = m_shapes[i];
+		}
+	}
+	return *minPerimeterShape;
 }
 
 void CommandHandler::PrintShape(IShape& shape) const
