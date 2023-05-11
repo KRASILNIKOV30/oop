@@ -19,14 +19,12 @@ double CCircle::GetPerimeter() const
     return 2 * PI * m_radius;
 }
 
-std::string CCircle::ToString() const
+std::string CCircle::GetShapeInfo() const
 {
-    return std::format("circle {} {} {} {} {}",
+    return std::format("circle {} {} {}",
         m_center.x,
         m_center.y,
-        m_radius,
-        GetHexStrFromUint32(GetFillColor(), COLOR_LEN),
-        GetHexStrFromUint32(GetOutlineColor(), COLOR_LEN)
+        m_radius
     );
 }
 

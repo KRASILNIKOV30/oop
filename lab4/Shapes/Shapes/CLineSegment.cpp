@@ -3,17 +3,6 @@
 #include <format>
 #include "Common.h"
 
-std::string CLineSegment::ToString() const
-{
-    return std::format("line {} {} {} {} {}",
-        m_startPoint.x,
-        m_startPoint.y,
-        m_endPoint.x, 
-        m_endPoint.y,
-        GetHexStrFromUint32(GetOutlineColor(), COLOR_LEN)
-    );
-}
-
 CPoint CLineSegment::GetStartPoint() const
 {
     return m_startPoint;
@@ -39,4 +28,14 @@ double CLineSegment::GetArea() const
 double CLineSegment::GetPerimeter() const
 {
     return GetLineLength(m_startPoint, m_endPoint);
+}
+
+std::string CLineSegment::GetShapeInfo() const
+{
+    return std::format("line {} {} {} {}",
+        m_startPoint.x,
+        m_startPoint.y,
+        m_endPoint.x,
+        m_endPoint.y
+    );
 }

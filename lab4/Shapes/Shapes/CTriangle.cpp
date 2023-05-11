@@ -27,17 +27,15 @@ double CTriangle::GetPerimeter() const
     return edge1 + edge2 + edge3;
 }
 
-std::string CTriangle::ToString() const
+std::string CTriangle::GetShapeInfo() const
 {
-    return std::format("triangle {} {} {} {} {} {} {} {}",
+    return std::format("triangle {} {} {} {} {} {}",
         m_vertex1.x,
         m_vertex1.y,
         m_vertex2.x,
         m_vertex2.y,
         m_vertex3.x,
-        m_vertex3.y,
-        GetHexStrFromUint32(GetFillColor(), COLOR_LEN),
-        GetHexStrFromUint32(GetOutlineColor(), COLOR_LEN)
+        m_vertex3.y
     );
 }
 

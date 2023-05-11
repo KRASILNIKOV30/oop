@@ -20,16 +20,14 @@ double CRectangle::GetPerimeter() const
 	return (m_width + m_height) * 2;
 }
 
-std::string CRectangle::ToString() const
+std::string CRectangle::GetShapeInfo() const
 {
-	return std::format("rectangle {} {} {} {} {} {}", 
+	return std::format("rectangle {} {} {} {}", 
 		m_leftTop.x,
 		m_leftTop.y,
 		m_width,
-		m_height,
-		//Паттерн шаблонный метод для утранения дублирования кода
-		GetHexStrFromUint32(GetFillColor(), COLOR_LEN),
-		GetHexStrFromUint32(GetOutlineColor(), COLOR_LEN)
+		m_height
+		//Паттерн шаблонный метод для утранения дублирования кода (Исправлено)
 	);
 }
 

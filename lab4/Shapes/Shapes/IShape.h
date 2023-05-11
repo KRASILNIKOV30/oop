@@ -9,5 +9,6 @@ public:
 	virtual double GetPerimeter() const = 0;
 	virtual std::string ToString() const = 0;
 	virtual uint32_t GetOutlineColor() const = 0;
+	virtual std::string GetShapeInfo() const = 0;
 	virtual ~IShape() = default;
 };
