@@ -12,7 +12,7 @@ public:
 	{}
 	uint32_t GetFillColor() const override { return m_fillColor; }
 	uint32_t GetOutlineColor() const override { return m_outlineColor; }
-	std::string ToString() const override
+	std::string ToString() const final
 	{
 		return std::format("{} {} {}",
 			GetShapeInfo(),
@@ -22,6 +22,7 @@ public:
 	}
 
 private:
+	virtual std::string GetShapeInfo() const = 0;
 	uint32_t m_fillColor, m_outlineColor;
 };
 
