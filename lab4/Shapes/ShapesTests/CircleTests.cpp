@@ -23,7 +23,7 @@ struct CircleFixture
 
 TEST_CASE_METHOD(CircleFixture, "circle is a solid shape")
 {
-	CHECK(static_cast<const ISolidShape*>(&circle));
+	CHECK(static_cast<const SolidShape*>(&circle));
 }
 
 TEST_CASE_METHOD(CircleFixture, "circle has a center")

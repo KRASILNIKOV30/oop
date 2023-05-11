@@ -25,7 +25,7 @@ struct RectangleFixture
 
 TEST_CASE_METHOD(RectangleFixture, "Rect is a solid shape")
 {
-	CHECK(static_cast<const ISolidShape*>(&rect));
+	CHECK(static_cast<const SolidShape*>(&rect));
 }
 
 TEST_CASE_METHOD(RectangleFixture, "Rect has a left top point")

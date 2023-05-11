@@ -3,7 +3,7 @@
 #include "Common.h"
 
 CRectangle::CRectangle(CPoint leftTop, double width, double height, uint32_t fillColor, uint32_t outlineColor)
-	: ISolidShape(fillColor, outlineColor)
+	: SolidShape(fillColor, outlineColor)
 	, m_leftTop(leftTop)
 	, m_width(width)
 	, m_height(height)

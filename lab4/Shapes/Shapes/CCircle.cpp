@@ -3,7 +3,7 @@
 #include <format>
 
 CCircle::CCircle(CPoint center, double radius, uint32_t fillColor, uint32_t outlineColor)
-    : ISolidShape(fillColor, outlineColor)
+    : SolidShape(fillColor, outlineColor)
     , m_center(center)
     , m_radius(radius)
     , m_outlineColor(outlineColor)

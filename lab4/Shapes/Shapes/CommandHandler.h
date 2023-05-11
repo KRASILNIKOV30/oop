@@ -3,7 +3,7 @@
 #include <map>
 #include <istream>
 #include <vector>
-#include "IShape.h"
+#include "Shape.h"
 
 class CommandHandler
 {
@@ -13,9 +13,9 @@ public:
 	void PrintResult();
 
 private:
-	IShape& GetMaxAreaShape();
-	IShape& GetMinPerimeterShape();
-	void PrintShape(IShape& shape) const;
+	Shape& GetMaxAreaShape();
+	Shape& GetMinPerimeterShape();
+	void PrintShape(Shape& shape) const;
 	bool AddRectangle(std::istream& args);
 	bool AddLine(std::istream& args);
 	bool AddCircle(std::istream& args);
@@ -27,6 +27,6 @@ private:
 	std::istream& m_input;
 	std::ostream& m_output;
 	const ActionMap m_actionMap;
-	std::vector<IShape*> m_shapes;
+	std::vector<Shape*> m_shapes;
 };
 

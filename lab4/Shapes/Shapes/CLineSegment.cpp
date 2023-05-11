@@ -3,6 +3,13 @@
 #include <format>
 #include "Common.h"
 
+CLineSegment::CLineSegment(CPoint startPoint, CPoint endPoint, uint32_t color)
+    : Shape(color)
+    , m_startPoint(startPoint)
+    , m_endPoint(endPoint)
+{
+}
+
 std::string CLineSegment::ToString() const
 {
     return std::format("line {} {} {} {} {}",
@@ -22,13 +29,6 @@ CPoint CLineSegment::GetStartPoint() const
 CPoint CLineSegment::GetEndPoint() const
 {
     return m_endPoint;
-}
-
-CLineSegment::CLineSegment(CPoint startPoint, CPoint endPoint, uint32_t color)
-    : IShape(color)
-    , m_startPoint(startPoint)
-    , m_endPoint(endPoint)
-{
 }
 
 double CLineSegment::GetArea() const

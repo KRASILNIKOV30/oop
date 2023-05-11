@@ -51,9 +51,9 @@ void CommandHandler::PrintResult()
 }
 
 
-IShape& CommandHandler::GetMaxAreaShape()
+Shape& CommandHandler::GetMaxAreaShape()
 {
-	IShape* maxAreaShape = m_shapes[0];
+	Shape* maxAreaShape = m_shapes[0];
 	for (int i = 1; i < m_shapes.size(); i++)
 	{
 		if (m_shapes[i]->GetArea() > maxAreaShape->GetArea())
@@ -64,9 +64,9 @@ IShape& CommandHandler::GetMaxAreaShape()
 	return *maxAreaShape;
 }
 
-IShape& CommandHandler::GetMinPerimeterShape()
+Shape& CommandHandler::GetMinPerimeterShape()
 {
-	IShape* minPerimeterShape = m_shapes[0];
+	Shape* minPerimeterShape = m_shapes[0];
 	for (int i = 1; i < m_shapes.size(); i++)
 	{
 		if (m_shapes[i]->GetPerimeter() < minPerimeterShape->GetPerimeter())
@@ -77,7 +77,7 @@ IShape& CommandHandler::GetMinPerimeterShape()
 	return *minPerimeterShape;
 }
 
-void CommandHandler::PrintShape(IShape& shape) const
+void CommandHandler::PrintShape(Shape& shape) const
 {
 	m_output << shape.ToString() << std::endl;
 	m_output << "area: " << shape.GetArea() << std::endl;

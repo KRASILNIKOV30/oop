@@ -1,11 +1,11 @@
 #pragma once
-#include "IShape.h"
+#include "Shape.h"
 
-class ISolidShape : public IShape 
+class SolidShape : public Shape 
 {
 public:
-	ISolidShape(uint32_t fillColor, uint32_t outlineColor)
-		: IShape(outlineColor)
+	SolidShape(uint32_t fillColor, uint32_t outlineColor)
+		: Shape(outlineColor)
 		, m_fillColor(fillColor)
 	{
 	}

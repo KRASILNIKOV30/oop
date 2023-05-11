@@ -22,7 +22,7 @@ struct LineSegmentFixture
 
 TEST_CASE_METHOD(LineSegmentFixture, "Line is a body")
 {
-	CHECK(static_cast<const IShape*>(&line));
+	CHECK(static_cast<const Shape*>(&line));
 }
 
 TEST_CASE_METHOD(LineSegmentFixture, "Line has a start point")

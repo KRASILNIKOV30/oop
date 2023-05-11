@@ -1,8 +1,8 @@
 #pragma once
-#include "ISolidShape.h"
+#include "SolidShape.h"
 #include "CPoint.h"
 
-class CTriangle final : public ISolidShape
+class CTriangle final : public SolidShape
 {
 public:
 	CTriangle(CPoint vertex1, CPoint vertex2, CPoint vertex3, uint32_t fillColor, uint32_t outlineColor);

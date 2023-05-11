@@ -1,8 +1,8 @@
 #pragma once
-#include "IShape.h"
+#include "Shape.h"
 #include "CPoint.h"
 
-class CLineSegment final : public IShape
+class CLineSegment final : public Shape
 {
 public:
 	CLineSegment(CPoint startPoint, CPoint endPoint, uint32_t color);

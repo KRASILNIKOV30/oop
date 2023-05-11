@@ -24,7 +24,7 @@ struct TriangleFixture
 
 TEST_CASE_METHOD(TriangleFixture, "triangle is a solid shape")
 {
-	CHECK(static_cast<const ISolidShape*>(&triangle));
+	CHECK(static_cast<const SolidShape*>(&triangle));
 }
 
 TEST_CASE_METHOD(TriangleFixture, "triangle has three vertexes")

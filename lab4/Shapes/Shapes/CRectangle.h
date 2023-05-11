@@ -1,8 +1,8 @@
 #pragma once
-#include "ISolidShape.h"
+#include "SolidShape.h"
 #include "CPoint.h"
 
-class CRectangle final : public ISolidShape
+class CRectangle final : public SolidShape
 {
 public:
 	CRectangle(CPoint leftTop, double width, double height, uint32_t fillColor, uint32_t outlineColor);

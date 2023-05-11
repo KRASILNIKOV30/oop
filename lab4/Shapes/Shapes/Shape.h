@@ -2,10 +2,10 @@
 #include <cstdint>
 #include <string>
 
-class IShape
+class Shape
 {
 public:
-	IShape(uint32_t outlineColor)
+	Shape(uint32_t outlineColor)
 		:m_outlineColor(outlineColor)
 	{
 	}

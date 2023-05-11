@@ -1,8 +1,8 @@
 #pragma once
-#include "ISolidShape.h"
+#include "SolidShape.h"
 #include "CPoint.h"
 
-class CCircle final : public ISolidShape
+class CCircle final : public SolidShape
 {
 public:
 	CCircle(CPoint center, double radius, uint32_t fillColor, uint32_t outlineColor);
