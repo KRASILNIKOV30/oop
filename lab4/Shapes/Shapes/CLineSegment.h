@@ -6,10 +6,10 @@ class CLineSegment final : public IShape
 {
 public:
 	CLineSegment(CPoint startPoint, CPoint endPoint, uint32_t color);
-	double GetArea() const;
-	double GetPerimeter() const;
-	std::string ToString() const;
-	uint32_t GetOutlineColor() const;
+	double GetArea() const override;
+	double GetPerimeter() const override;
+	std::string ToString() const override;
+	uint32_t GetOutlineColor() const override;
 	CPoint GetStartPoint() const;
 	CPoint GetEndPoint() const;
 private:
