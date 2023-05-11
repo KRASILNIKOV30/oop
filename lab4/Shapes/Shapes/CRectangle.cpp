@@ -2,6 +2,14 @@
 #include <format>
 #include "Common.h"
 
+CRectangle::CRectangle(CPoint leftTop, double width, double height, uint32_t fillColor, uint32_t outlineColor)
+	: ISolidShape(fillColor, outlineColor)
+	, m_leftTop(leftTop)
+	, m_width(width)
+	, m_height(height)
+{
+}
+
 double CRectangle::GetArea() const
 {
 	return m_width * m_height;
@@ -19,19 +27,9 @@ std::string CRectangle::ToString() const
 		m_leftTop.y,
 		m_width,
 		m_height,
-		GetHexStrFromUint32(m_fillColor, COLOR_LEN),
-		GetHexStrFromUint32(m_outlineColor, COLOR_LEN)
+		GetHexStrFromUint32(GetFillColor(), COLOR_LEN),
+		GetHexStrFromUint32(GetOutlineColor(), COLOR_LEN)
 	);
-}
-
-uint32_t CRectangle::GetOutlineColor() const
-{
-	return m_outlineColor;
-}
-
-uint32_t CRectangle::GetFillColor() const
-{
-	return m_fillColor;
 }
 
 CPoint CRectangle::GetLeftTop() const

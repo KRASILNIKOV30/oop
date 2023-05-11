@@ -14,11 +14,6 @@ std::string CLineSegment::ToString() const
     );
 }
 
-uint32_t CLineSegment::GetOutlineColor() const
-{
-    return m_color;
-}
-
 CPoint CLineSegment::GetStartPoint() const
 {
     return m_startPoint;
@@ -30,9 +25,9 @@ CPoint CLineSegment::GetEndPoint() const
 }
 
 CLineSegment::CLineSegment(CPoint startPoint, CPoint endPoint, uint32_t color)
-    : m_startPoint(startPoint)
+    : IShape(color)
+    , m_startPoint(startPoint)
     , m_endPoint(endPoint)
-    , m_color(color)
 {
 }
 
