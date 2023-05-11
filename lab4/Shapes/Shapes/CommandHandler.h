@@ -13,9 +13,10 @@ public:
 	void PrintResult();
 
 private:
-	IShape& GetMaxAreaShape();
-	IShape& GetMinPerimeterShape();
-	void PrintShape(IShape& shape) const;
+	// const у методов (Исправлено)
+	IShape* GetMaxAreaShape() const;
+	IShape* GetMinPerimeterShape() const;
+	void PrintShape(IShape* shape) const;
 	bool AddRectangle(std::istream& args);
 	bool AddLine(std::istream& args);
 	bool AddCircle(std::istream& args);

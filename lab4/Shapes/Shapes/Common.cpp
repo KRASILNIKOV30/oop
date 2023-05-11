@@ -37,5 +37,6 @@ std::string GetHexStrFromUint32(uint32_t const& uint32, int len)
 
 double GetLineLength(CPoint start, CPoint end)
 {
-	return std::sqrt(std::pow(end.x - start.x, 2) + std::pow(end.y - start.y, 2));
+	//использовать std::hypot (Исправлено)
+	return std::hypot((end.x - start.x), (end.y - start.y));
 }

@@ -5,6 +5,7 @@
 #include "CCircle.h"
 #include "CTriangle.h"
 #include "Common.h"
+#include <algorithm>
 
 
 CommandHandler::CommandHandler(std::istream& input, std::ostream& output)
@@ -51,37 +52,28 @@ void CommandHandler::PrintResult()
 }
 
 
-IShape& CommandHandler::GetMaxAreaShape()
+IShape* CommandHandler::GetMaxAreaShape() const
 {
-	IShape* maxAreaShape = m_shapes[0];
-	for (int i = 1; i < m_shapes.size(); i++)
-	{
-		if (m_shapes[i]->GetArea() > maxAreaShape->GetArea())
+	// Использовать алгоритм стандартной библиотеки (Исправлено)
+	return *std::max_element(m_shapes.begin(), m_shapes.end(), [](auto a, auto b)
 		{
-			maxAreaShape = m_shapes[i];
-		}
-	}
-	return *maxAreaShape;
+			return a->GetArea() < b->GetArea();
+		});
 }
 
-IShape& CommandHandler::GetMinPerimeterShape()
+IShape* CommandHandler::GetMinPerimeterShape() const
 {
-	IShape* minPerimeterShape = m_shapes[0];
-	for (int i = 1; i < m_shapes.size(); i++)
-	{
-		if (m_shapes[i]->GetPerimeter() < minPerimeterShape->GetPerimeter())
+	return *std::min_element(m_shapes.begin(), m_shapes.end(), [](auto a, auto b)
 		{
-			minPerimeterShape = m_shapes[i];
-		}
-	}
-	return *minPerimeterShape;
+			return a->GetPerimeter() < b->GetPerimeter();
+		});
 }
 
-void CommandHandler::PrintShape(IShape& shape) const
+void CommandHandler::PrintShape(IShape* shape) const
 {
-	m_output << shape.ToString() << std::endl;
-	m_output << "area: " << shape.GetArea() << std::endl;
-	m_output << "perimeter: " << shape.GetPerimeter() << std::endl;
+	m_output << shape->ToString() << std::endl;
+	m_output << "area: " << shape->GetArea() << std::endl;
+	m_output << "perimeter: " << shape->GetPerimeter() << std::endl;
 }
 
 bool CommandHandler::AddRectangle(std::istream& args)

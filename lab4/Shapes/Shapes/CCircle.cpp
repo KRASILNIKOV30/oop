@@ -3,10 +3,9 @@
 #include <format>
 
 CCircle::CCircle(CPoint center, double radius, uint32_t fillColor, uint32_t outlineColor)
-    : m_center(center)
+    : CSolidShape(fillColor, outlineColor)
+    , m_center(center)
     , m_radius(radius)
-    , m_fillColor(fillColor)
-    , m_outlineColor(outlineColor)
 {
 }
 
@@ -26,19 +25,9 @@ std::string CCircle::ToString() const
         m_center.x,
         m_center.y,
         m_radius,
-        GetHexStrFromUint32(m_fillColor, COLOR_LEN),
-        GetHexStrFromUint32(m_outlineColor, COLOR_LEN)
+        GetHexStrFromUint32(GetFillColor(), COLOR_LEN),
+        GetHexStrFromUint32(GetOutlineColor(), COLOR_LEN)
     );
-}
-
-uint32_t CCircle::GetOutlineColor() const
-{
-    return m_outlineColor;
-}
-
-uint32_t CCircle::GetFillColor() const
-{
-    return m_fillColor;
 }
 
 CPoint CCircle::GetCenter() const

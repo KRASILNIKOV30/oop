@@ -57,7 +57,7 @@
     <ClCompile Include="..\Shapes\CTriangle.cpp">
       <Filter>Исходные файлы\Components</Filter>
     </ClCompile>
-    <ClCompile Include="TrinagleTests.cpp">
+    <ClCompile Include="TriangleTests.cpp">
       <Filter>Исходные файлы\Tests</Filter>
     </ClCompile>
   </ItemGroup>

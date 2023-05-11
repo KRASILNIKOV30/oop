@@ -3,11 +3,10 @@
 #include "Common.h"
 
 CTriangle::CTriangle(CPoint vertex1, CPoint vertex2, CPoint vertex3, uint32_t fillColor, uint32_t outlineColor)
-    : m_vertex1(vertex1)
+    : CSolidShape(fillColor, outlineColor)
+    , m_vertex1(vertex1)
     , m_vertex2(vertex2)
     , m_vertex3(vertex3)
-    , m_fillColor(fillColor)
-    , m_outlineColor(outlineColor)
 {
 }
 
@@ -37,19 +36,9 @@ std::string CTriangle::ToString() const
         m_vertex2.y,
         m_vertex3.x,
         m_vertex3.y,
-        GetHexStrFromUint32(m_fillColor, COLOR_LEN),
-        GetHexStrFromUint32(m_outlineColor, COLOR_LEN)
+        GetHexStrFromUint32(GetFillColor(), COLOR_LEN),
+        GetHexStrFromUint32(GetOutlineColor(), COLOR_LEN)
     );
-}
-
-uint32_t CTriangle::GetOutlineColor() const
-{
-    return m_outlineColor;
-}
-
-uint32_t CTriangle::GetFillColor() const
-{
-    return m_fillColor;
 }
 
 CPoint CTriangle::GetVertex1() const
