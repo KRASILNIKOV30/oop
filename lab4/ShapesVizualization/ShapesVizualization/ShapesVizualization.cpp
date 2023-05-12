@@ -1,11 +1,11 @@
 ﻿#include <SDL2/SDL.h>
 #include <iostream>
-#undef main;
+#undef main
 
 using namespace std;
 
-int SCREEN_WIDTH = 640;
-int SCREEN_HEIGHT = 480;
+int SCREEN_WIDTH = 1040;
+int SCREEN_HEIGHT = 800;
 
 SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;
@@ -19,11 +19,7 @@ public:
 bool init() {
     bool ok = true;
 
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        cout << "Can't init SDL: " << SDL_GetError() << endl;
-    }
-
-    win = SDL_CreateWindow("Примитивы", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    win = SDL_CreateWindow("Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (win == NULL) {
         cout << "Can't create window: " << SDL_GetError() << endl;
         ok = false;
@@ -44,10 +40,11 @@ void quit() {
     SDL_DestroyRenderer(ren);
     ren = NULL;
 
-    SDL_Quit;
+    SDL_Quit();
 }
 
 int main(int arhc, char** argv) {
+
     if (!init()) {
         quit();
         system("pause");
@@ -79,13 +76,6 @@ int main(int arhc, char** argv) {
 
     SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(ren);
-    
-
-    /*SDL_Rect rect1 = { 10, 10, 50, 50 };
-    SDL_RenderFillRect(ren, &rect1);
-
-    SDL_Rect rect2 = { 70, 10, 50, 50 };
-    SDL_RenderDrawRect(ren, &rect2);*/
 
     SDL_RenderGeometry(ren, NULL, triangleVertex, 3, NULL, 0);
 
@@ -96,8 +86,18 @@ int main(int arhc, char** argv) {
     SDL_RenderDrawLine(ren, vertex3.x, vertex3.y, vertex1.x, vertex1.y);
 
     SDL_RenderPresent(ren);
-
-    SDL_Delay(5000);
+    
+    SDL_Event e;
+    while (true)
+    {
+        while (SDL_PollEvent(&e) != 0)
+        {
+            if (e.type == SDL_QUIT)
+            {
+                break;
+            }
+        }
+    }
 
     quit();
     return 0;
