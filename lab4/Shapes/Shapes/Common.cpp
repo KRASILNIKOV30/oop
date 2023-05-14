@@ -47,5 +47,6 @@ void DefineMockCanvasBehavior(fakeit::Mock<ICanvas>& canvas, std::ostream& outpu
 		{
 			output << "Drawing line with color " << color << " from (" << from.x << ", " << from.y << ") to (" << to.x << ", " << to.y << ")";
 		});
+	fakeit::When(Method(canvas, ))
 }
 
