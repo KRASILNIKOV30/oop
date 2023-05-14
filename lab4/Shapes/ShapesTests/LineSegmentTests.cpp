@@ -1,7 +1,7 @@
 #include "../Shapes/CLineSegment.h"
 #include "../../../external/catch2/catch.hpp"
 #include "../Shapes/Common.h"
-
+#include "../../../../vcpkg/packages/fakeit_x86-windows/include/standalone/fakeit.hpp"
 namespace 
 {
 	const uint32_t color = 10;
@@ -14,10 +14,14 @@ namespace
 struct LineSegmentFixture
 {
 	CLineSegment line;
+	fakeit::Mock<ICanvas> mockCanvas;
+	std::stringstream output = std::stringstream();
 	
 	LineSegmentFixture()
 		: line(CLineSegment(startPoint, endPoint, color))
-	{}
+	{
+		DefineMockCanvasBehavior(mockCanvas, output);
+	}
 };
 
 TEST_CASE_METHOD(LineSegmentFixture, "Line is a body")
@@ -57,6 +61,18 @@ TEST_CASE_METHOD(LineSegmentFixture, "Line has a color")
 TEST_CASE_METHOD(LineSegmentFixture, "Line has info")
 {
 	CHECK(line.ToString() == std::format("line {} {} {} {} 00000a",
+		startPoint.x,
+		startPoint.y,
+		endPoint.x,
+		endPoint.y
+	));
+}
+
+TEST_CASE_METHOD(LineSegmentFixture, "Line can be drawn")
+{
+	line.Draw(mockCanvas.get());
+	CHECK(output.str() == std::format("Drawing line with color {} from ({}, {}) to ({}, {})",
+		color,
 		startPoint.x,
 		startPoint.y,
 		endPoint.x,

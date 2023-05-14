@@ -13,6 +13,7 @@ public:
 	CPoint GetRightBottom() const;
 	double GetWidth() const;
 	double GetHeight() const;
+	void Draw(ICanvas& canvas) final;
 
 private:
 	CPoint m_leftTop;

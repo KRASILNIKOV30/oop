@@ -11,6 +11,7 @@ public:
 	std::string GetShapeInfo() const override;
 	CPoint GetCenter() const;
 	double GetRadius() const;
+	void Draw(ICanvas& canvas) final;
 
 private:
 	CPoint m_center;

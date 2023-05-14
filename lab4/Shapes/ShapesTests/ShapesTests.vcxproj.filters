@@ -60,6 +60,9 @@
     <ClCompile Include="TriangleTests.cpp">
       <Filter>Исходные файлы\Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shapes\CCanvas.cpp">
+      <Filter>Исходные файлы\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shapes\CLineSegment.h">
@@ -89,8 +92,15 @@
     <ClInclude Include="..\Shapes\CTriangle.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="..\Shapes\ICanvas.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shapes\CCanvas.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

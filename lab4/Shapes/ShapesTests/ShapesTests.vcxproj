@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Shapes\CCanvas.cpp" />
     <ClCompile Include="..\Shapes\CCircle.cpp" />
     <ClCompile Include="..\Shapes\CLineSegment.cpp" />
     <ClCompile Include="..\Shapes\CommandHandler.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="TriangleTests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Shapes\CCanvas.h" />
     <ClInclude Include="..\Shapes\CCircle.h" />
     <ClInclude Include="..\Shapes\CLineSegment.h" />
     <ClInclude Include="..\Shapes\CommandHandler.h" />
@@ -153,13 +155,22 @@
     <ClInclude Include="..\Shapes\CPoint.h" />
     <ClInclude Include="..\Shapes\CRectangle.h" />
     <ClInclude Include="..\Shapes\CTriangle.h" />
+    <ClInclude Include="..\Shapes\ICanvas.h" />
     <ClInclude Include="..\Shapes\IShape.h" />
     <ClInclude Include="..\Shapes\ISolidShape.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\boost.1.82.0\build\boost.targets" Condition="Exists('..\packages\boost.1.82.0\build\boost.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\boost.1.82.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.82.0\build\boost.targets'))" />
+  </Target>
 </Project>

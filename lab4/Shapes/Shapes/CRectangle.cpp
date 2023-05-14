@@ -50,3 +50,7 @@ double CRectangle::GetHeight() const
 {
 	return m_height;
 }
+
+void CRectangle::Draw(ICanvas& canvas)
+{
+}

@@ -1,9 +1,6 @@
 ﻿#include <iostream>
 #include "CommandHandler.h"
-#include <windows.h>
-#include <glbinding/gl/gl.h>
-#include <glbinding/glbinding.h>
-#include <GLFW/glfw3.h>
+#undef main
 
 int main()
 {
@@ -14,14 +11,18 @@ int main()
 		std::cout << "> ";
 		if (!commandHandler.HandleCommand())
 		{
-			std::cout << "Error!" << std::endl;
+			if (std::cin.eof())
+			{
+				commandHandler.PrintResult();
+				commandHandler.DrawShapes();
+			}
+			else
+			{
+				std::cout << "Error!" << std::endl;
+			}
 		}
 	}
-	if (std::cin.eof())
-	{
-		commandHandler.PrintResult();
-	}
-
+	
 	return 0;
 }
 

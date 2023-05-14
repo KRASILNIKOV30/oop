@@ -11,6 +11,7 @@ public:
 	CommandHandler(std::istream& input, std::ostream& output);
 	bool HandleCommand();
 	void PrintResult();
+	void DrawShapes();
 
 private:
 	// const у методов (Исправлено)

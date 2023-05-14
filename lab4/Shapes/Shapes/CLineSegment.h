@@ -11,6 +11,7 @@ public:
 	std::string GetShapeInfo() const override;
 	CPoint GetStartPoint() const;
 	CPoint GetEndPoint() const;
+	void Draw(ICanvas& canvas) final;
 
 private:
 	CPoint m_startPoint;

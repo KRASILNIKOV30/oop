@@ -13,6 +13,11 @@ CPoint CLineSegment::GetEndPoint() const
     return m_endPoint;
 }
 
+void CLineSegment::Draw(ICanvas& canvas)
+{
+    canvas.DrawLine(m_startPoint, m_endPoint, GetOutlineColor());
+}
+
 CLineSegment::CLineSegment(CPoint startPoint, CPoint endPoint, uint32_t color)
     : CShape(color)
     , m_startPoint(startPoint)

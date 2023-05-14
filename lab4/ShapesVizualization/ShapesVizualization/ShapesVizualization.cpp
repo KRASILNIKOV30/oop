@@ -30,6 +30,7 @@ bool init() {
         cout << "Can't create renderer: " << SDL_GetError() << endl;
         ok = false;
     }
+
     return ok;
 }
 

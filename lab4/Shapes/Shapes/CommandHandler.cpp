@@ -6,6 +6,7 @@
 #include "CTriangle.h"
 #include "Common.h"
 #include <algorithm>
+#include "CCanvas.h"
 
 
 CommandHandler::CommandHandler(std::istream& input, std::ostream& output)
@@ -49,6 +50,16 @@ void CommandHandler::PrintResult()
 	PrintShape(GetMaxAreaShape());
 	m_output << std::endl << "Shape with min perimeter:" << std::endl;
 	PrintShape(GetMinPerimeterShape());
+}
+
+void CommandHandler::DrawShapes()
+{
+	CCanvas canvas;
+	for (auto& shape : m_shapes)
+	{
+		shape->Draw(canvas);
+	}
+	canvas.Render();
 }
 
 
