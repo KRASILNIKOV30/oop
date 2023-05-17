@@ -1,6 +1,7 @@
 #include "CCanvas.h"
 #include <string>
 #include "Common.h"
+#include "../../../external/SDL2_gfx/SDL2_gfxPrimitives.h"
 
 CCanvas::CCanvas()
     : m_window(SDL_CreateWindow("Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN))
@@ -20,6 +21,21 @@ void CCanvas::DrawLine(CPoint from, CPoint to, uint32_t lineColor)
 {
     SetColor(lineColor);
     SDL_RenderDrawLineF(m_renderer, from.x, from.y, to.x, to.y);
+}
+
+void CCanvas::FillPolygon(std::vector<CPoint> points, uint32_t fillColor)
+{
+    const int pointsNumber = points.size();
+    Sint16* xCoords{ new Sint16[pointsNumber] };
+    Sint16* yCoords{ new Sint16[pointsNumber] };
+    for (int i = 0; i < pointsNumber; i++)
+    {
+        xCoords[i] = points[i].x;
+        yCoords[i] = points[i].y;
+    }
+    filledPolygonColor(m_renderer, xCoords, yCoords, pointsNumber, fillColor);
+    delete[] xCoords;
+    delete[] yCoords;
 }
 
 void CCanvas::Render()
