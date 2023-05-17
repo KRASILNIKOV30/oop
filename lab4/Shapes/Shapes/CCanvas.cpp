@@ -18,11 +18,7 @@ CCanvas::~CCanvas()
 
 void CCanvas::DrawLine(CPoint from, CPoint to, uint32_t lineColor)
 {
-    uint32_t red;
-    uint32_t green;
-    uint32_t blue;
-    ParseColor(lineColor, red, green, blue);
-    SDL_SetRenderDrawColor(m_renderer, red, green, blue, 0xFF);
+    SetColor(lineColor);
     SDL_RenderDrawLineF(m_renderer, from.x, from.y, to.x, to.y);
 }
 
@@ -51,6 +47,15 @@ void CCanvas::ParseColor(uint32_t color, uint32_t& red, uint32_t& green, uint32_
     StringToUint32(redStr, red);
     StringToUint32(greenStr, green);
     StringToUint32(blueStr, blue);
+}
+
+void CCanvas::SetColor(uint32_t color)
+{
+    uint32_t red;
+    uint32_t green;
+    uint32_t blue;
+    ParseColor(color, red, green, blue);
+    SDL_SetRenderDrawColor(m_renderer, red, green, blue, 0xFF);
 }
 
 

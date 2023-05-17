@@ -11,7 +11,8 @@ public:
 	void Render() final;
 
 private:
-	void ParseColor(const uint32_t color, uint32_t& red, uint32_t& green, uint32_t& blue);
+	void ParseColor(uint32_t color, uint32_t& red, uint32_t& green, uint32_t& blue);
+	void SetColor(uint32_t color);
 
 private:
 	const int SCREEN_WIDTH = 1040;
