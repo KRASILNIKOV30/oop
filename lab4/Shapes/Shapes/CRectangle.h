@@ -10,7 +10,9 @@ public:
 	double GetPerimeter() const override;
 	std::string GetShapeInfo() const override;
 	CPoint GetLeftTop() const;
+	CPoint GetRightTop() const;
 	CPoint GetRightBottom() const;
+	CPoint GetLeftBottom() const;
 	double GetWidth() const;
 	double GetHeight() const;
 	void Draw(ICanvas& canvas) final;

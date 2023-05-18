@@ -1,5 +1,6 @@
 ﻿#include <SDL2/SDL.h>
 #include <iostream>
+#include <vector>
 #undef main
 
 using namespace std;
@@ -55,36 +56,31 @@ int main(int arhc, char** argv) {
     CPoint vertex1 = { 10, 10 };
     CPoint vertex2 = { 90, 30 };
     CPoint vertex3 = { 10, 90 };
+    std::vector<CPoint> v = { vertex1, vertex2, vertex3 };
 
-    SDL_Vertex triangleVertex[3] =
+    SDL_Vertex* vertexes{ new SDL_Vertex[v.size()] };
+    for (int i = 0; i < v.size(); i++)
     {
-     {
-      { vertex1.x, vertex1.y }, 
-      { 0, 200, 0, 0xFF },
-      { 0.f, 0.f }
-     },
-     {
-      { vertex2.x, vertex2.y },
-      { 0, 200, 0, 0xFF },
-      { 0.f, 0.f }
-     },
-     {
-      { vertex3.x, vertex3.y },
-      { 0, 200, 0, 0xFF },
-      { 0.f, 0.f }
-     }
-    };
+        vertexes[i] =
+        {
+            { (float)v[i].x, (float)v[i].y },
+            { 0xff, 0xff, 0xff}
+        };
+    }
 
-    SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
-    SDL_RenderClear(ren);
 
-    SDL_RenderGeometry(ren, NULL, triangleVertex, 3, NULL, 0);
+   /* SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
+    SDL_RenderClear(ren);*/
 
-    SDL_SetRenderDrawColor(ren, 0xff, 0x00, 0x00, 0xFF);
+    /*SDL_SetRenderDrawColor(ren, 0xff, 0xff, 0xff, 0xff);*/
+
+    SDL_RenderGeometry(ren, NULL, vertexes, v.size(), NULL, 0);
+
+    /*SDL_SetRenderDrawColor(ren, 0xff, 0x00, 0x00, 0xFF);
 
     SDL_RenderDrawLine(ren, vertex1.x, vertex1.y, vertex2.x, vertex2.y);
     SDL_RenderDrawLine(ren, vertex2.x, vertex2.y, vertex3.x, vertex3.y);
-    SDL_RenderDrawLine(ren, vertex3.x, vertex3.y, vertex1.x, vertex1.y);
+    SDL_RenderDrawLine(ren, vertex3.x, vertex3.y, vertex1.x, vertex1.y);*/
 
     SDL_RenderPresent(ren);
     

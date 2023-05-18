@@ -33,9 +33,26 @@ void CCanvas::FillPolygon(std::vector<CPoint> points, uint32_t fillColor)
         xCoords[i] = points[i].x;
         yCoords[i] = points[i].y;
     }
-    filledPolygonColor(m_renderer, xCoords, yCoords, pointsNumber, fillColor);
+    uint32_t red;
+    uint32_t green;
+    uint32_t blue;
+    ParseColor(fillColor, red, green, blue);
+    filledPolygonRGBA(m_renderer, xCoords, yCoords, pointsNumber, red, green, blue, 0xff);
     delete[] xCoords;
     delete[] yCoords;
+}
+
+void CCanvas::FillRect(CPoint topLeft, double width, double height, uint32_t fillColor)
+{
+    SetColor(fillColor);
+    SDL_Rect rect
+    {
+        topLeft.x,
+        topLeft.y,
+        width,
+        height
+    };
+    SDL_RenderFillRect(m_renderer, &rect);
 }
 
 void CCanvas::Render()

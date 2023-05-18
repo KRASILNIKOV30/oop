@@ -45,7 +45,12 @@ void DefineMockCanvasBehavior(fakeit::Mock<ICanvas>& canvas, std::ostream& outpu
 {
 	fakeit::When(Method(canvas, DrawLine)).AlwaysDo([&output](CPoint from, CPoint to, uint32_t color)
 		{
-			output << "Drawing line with color " << color << " from (" << from.x << ", " << from.y << ") to (" << to.x << ", " << to.y << ")";
+			output << "Drawing line with color " << color << " from (" << from.x << ", " << from.y << ") to (" << to.x << ", " << to.y << ")" << std::endl;
 		});
+	fakeit::When(Method(canvas, FillRect)).AlwaysDo([&output](CPoint leftTop, double width, double height, uint32_t fillColor)
+		{
+			output << "Fill rectangle " << width << "*" << height << " from (" << leftTop.x << ", " << leftTop.y << ") with color " << fillColor << std::endl;
+		});
+
 }
 

@@ -71,7 +71,7 @@ TEST_CASE_METHOD(LineSegmentFixture, "Line has info")
 TEST_CASE_METHOD(LineSegmentFixture, "Line can be drawn")
 {
 	line.Draw(mockCanvas.get());
-	CHECK(output.str() == std::format("Drawing line with color {} from ({}, {}) to ({}, {})",
+	CHECK(output.str() == std::format("Drawing line with color {} from ({}, {}) to ({}, {})\n",
 		color,
 		startPoint.x,
 		startPoint.y,
