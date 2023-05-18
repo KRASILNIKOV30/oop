@@ -52,9 +52,9 @@ void CommandHandler::PrintResult()
 	PrintShape(GetMinPerimeterShape());
 }
 
-void CommandHandler::DrawShapes()
+void CommandHandler::DrawShapes(SDL_Window* window)
 {
-	CCanvas canvas;
+	CCanvas canvas(window);
 	for (auto& shape : m_shapes)
 	{
 		shape->Draw(canvas);
@@ -63,24 +63,28 @@ void CommandHandler::DrawShapes()
 }
 
 
-IShape* CommandHandler::GetMaxAreaShape() const
+IShape const* CommandHandler::GetMaxAreaShape() const
 {
 	// Использовать алгоритм стандартной библиотеки (Исправлено)
-	return *std::max_element(m_shapes.begin(), m_shapes.end(), [](auto a, auto b)
+	auto result = std::max_element(m_shapes.begin(), m_shapes.end(), [](auto& a, auto& b)
 		{
 			return a->GetArea() < b->GetArea();
 		});
+
+	return result->get();
 }
 
-IShape* CommandHandler::GetMinPerimeterShape() const
+IShape const* CommandHandler::GetMinPerimeterShape() const
 {
-	return *std::min_element(m_shapes.begin(), m_shapes.end(), [](auto a, auto b)
+	auto result = std::min_element(m_shapes.begin(), m_shapes.end(), [](auto& a, auto& b)
 		{
-			return a->GetPerimeter() < b->GetPerimeter();
+			return a->GetArea() < b->GetArea();
 		});
+
+	return result->get();
 }
 
-void CommandHandler::PrintShape(IShape* shape) const
+void CommandHandler::PrintShape(IShape const* shape) const
 {
 	m_output << shape->ToString() << std::endl;
 	m_output << "area: " << shape->GetArea() << std::endl;
@@ -105,7 +109,7 @@ bool CommandHandler::AddRectangle(std::istream& args)
 	{
 		return false;
 	}
-	m_shapes.push_back(new CRectangle(CPoint({ x, y }), width, height, fillColor, outlineColor));
+	m_shapes.push_back(std::unique_ptr<IShape>(new CRectangle(CPoint({ x, y }), width, height, fillColor, outlineColor)));
 
 	return true;
 }
@@ -126,7 +130,7 @@ bool CommandHandler::AddLine(std::istream& args)
 	{
 		return false;
 	}
-	m_shapes.push_back(new CLineSegment(CPoint({ startX, startY }), CPoint({ endX, endY }), color));
+	m_shapes.push_back(std::unique_ptr<IShape>(new CLineSegment(CPoint({ startX, startY }), CPoint({ endX, endY }), color)));
 
 	return true;
 }
@@ -148,7 +152,7 @@ bool CommandHandler::AddCircle(std::istream& args)
 	{
 		return false;
 	}
-	m_shapes.push_back(new CCircle(CPoint({ x, y }), radius, fillColor, outlineColor));
+	m_shapes.push_back((std::unique_ptr<IShape>(new CCircle(CPoint({ x, y }), radius, fillColor, outlineColor))));
 
 	return true;
 }
@@ -173,7 +177,7 @@ bool CommandHandler::AddTriangle(std::istream& args)
 	{
 		return false;
 	}
-	m_shapes.push_back(new CTriangle(CPoint({ x1, y1 }), CPoint({ x2, y2 }), CPoint({ x3, y3 }), fillColor, outlineColor));
+	m_shapes.push_back(std::unique_ptr<IShape>(new CTriangle(CPoint({ x1, y1 }), CPoint({ x2, y2 }), CPoint({ x3, y3 }), fillColor, outlineColor)));
 
 	return true;
 }

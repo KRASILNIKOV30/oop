@@ -38,7 +38,7 @@ double CCircle::GetRadius() const
     return m_radius;
 }
 
-void CCircle::Draw(ICanvas& canvas)
+void CCircle::Draw(ICanvas& canvas) const
 {
     canvas.FillCircle(GetCenter(), GetRadius(), GetFillColor());
     canvas.DrawCircle(GetCenter(), GetRadius(), GetOutlineColor());
