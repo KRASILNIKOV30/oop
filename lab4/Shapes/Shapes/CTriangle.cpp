@@ -56,4 +56,8 @@ CPoint CTriangle::GetVertex3() const
 
 void CTriangle::Draw(ICanvas& canvas)
 {
+    canvas.FillPolygon({ GetVertex1(), GetVertex2(), GetVertex3() }, GetFillColor());
+    canvas.DrawLine(GetVertex1(), GetVertex2(), GetOutlineColor());
+    canvas.DrawLine(GetVertex2(), GetVertex3(), GetOutlineColor());
+    canvas.DrawLine(GetVertex3(), GetVertex1(), GetOutlineColor());
 }

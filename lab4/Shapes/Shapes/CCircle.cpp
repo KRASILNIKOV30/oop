@@ -40,4 +40,6 @@ double CCircle::GetRadius() const
 
 void CCircle::Draw(ICanvas& canvas)
 {
+    canvas.FillCircle(GetCenter(), GetRadius(), GetFillColor());
+    canvas.DrawCircle(GetCenter(), GetRadius(), GetOutlineColor());
 }

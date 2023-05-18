@@ -55,6 +55,24 @@ void CCanvas::FillRect(CPoint topLeft, double width, double height, uint32_t fil
     SDL_RenderFillRect(m_renderer, &rect);
 }
 
+void CCanvas::FillCircle(CPoint center, double radius, uint32_t fillColor)
+{
+    uint32_t red;
+    uint32_t green;
+    uint32_t blue;
+    ParseColor(fillColor, red, green, blue);
+    filledEllipseRGBA(m_renderer, center.x, center.y, radius, radius, red, green, blue, 0xff);
+}
+
+void CCanvas::DrawCircle(CPoint center, double radius, uint32_t lineColor)
+{
+    uint32_t red;
+    uint32_t green;
+    uint32_t blue;
+    ParseColor(lineColor, red, green, blue);
+    aaellipseRGBA(m_renderer, center.x, center.y, radius, radius, red, green, blue, 0xff);
+}
+
 void CCanvas::Render()
 {
     SDL_RenderPresent(m_renderer);

@@ -10,6 +10,8 @@ public:
 	void DrawLine(CPoint from, CPoint to, uint32_t lineColor) final;
 	void FillPolygon(std::vector<CPoint> points, uint32_t fillColor) final;
 	void FillRect(CPoint topLeft, double width, double height, uint32_t fillColor) final;
+	void FillCircle(CPoint center, double radius, uint32_t fillColor) final;
+	void DrawCircle(CPoint center, double radius, uint32_t lineColor) final;
 	void Render() final;
 
 private:
