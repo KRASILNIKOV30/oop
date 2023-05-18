@@ -68,7 +68,7 @@ int main(int arhc, char** argv) {
         };
     }
 
-    SDL_Vertex triangleVertex[3] =
+    SDL_Vertex triangleVertex[4] =
     {
      {
       { vertex1.x, vertex1.y }, 
@@ -81,6 +81,10 @@ int main(int arhc, char** argv) {
      {
       { vertex3.x, vertex3.y },
       
+     },
+     {
+      { 100, 100 },
+
      }
     };
 
@@ -89,7 +93,7 @@ int main(int arhc, char** argv) {
 
     SDL_SetRenderDrawColor(ren, 0xff, 0xff, 0xff, 0xff);
 
-    SDL_RenderGeometry(ren, NULL, vertexes, v.size(), NULL, 0);
+    SDL_RenderGeometry(ren, NULL, triangleVertex, 4, NULL, 0);
 
     SDL_SetRenderDrawColor(ren, 0xff, 0x00, 0x00, 0xFF);
 

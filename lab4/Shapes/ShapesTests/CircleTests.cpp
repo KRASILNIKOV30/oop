@@ -15,10 +15,14 @@ namespace
 struct CircleFixture
 {
 	CCircle circle;
+	fakeit::Mock<ICanvas> mockCanvas;
+	std::stringstream output = std::stringstream();
 
 	CircleFixture()
 		: circle(CCircle(center, radius, fillColor, outlineColor))
-	{}
+	{
+		DefineMockCanvasBehavior(mockCanvas, output);
+	}
 };
 
 TEST_CASE_METHOD(CircleFixture, "circle is a solid shape")
@@ -60,4 +64,30 @@ TEST_CASE_METHOD(CircleFixture, "circle has info")
 		center.y,
 		radius
 	));
+}
+
+TEST_CASE_METHOD(CircleFixture, "Circle can be drawn")
+{
+	std::string expectedOutput;
+	expectedOutput.append
+	(
+		std::format("Fill circle with color {} in ({}, {}) with radius {}\n",
+			fillColor,
+			center.x,
+			center.y,
+			radius
+		)
+	);
+	expectedOutput.append
+	(
+		std::format("Draw circle with color {} in ({}, {}) with radius {}\n",
+			outlineColor,
+			center.x,
+			center.y,
+			radius
+		)
+	);
+	
+	circle.Draw(mockCanvas.get());
+	CHECK(output.str() == expectedOutput);
 }

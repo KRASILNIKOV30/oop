@@ -1,0 +1,15 @@
+rectangle 200 350 400 400 fff8dc ffffff
+rectangle 500 150 50 200 c24e06 ffffff
+triangle 170 350 400 150 630 350 db4307 ffffff
+rectangle 325 430 150 201 07addb 0033ab
+circle 530 120 25 e1e3e3 ffffff
+circle 550 80 30 e1e3e3 ffffff
+circle 590 40 35 e1e3e3 ffffff
+line 325 500 475 500 ffffff
+line 400 430 400 500 ffffff
+rectangle 375 590 50 40 c24e06 ffffff
+triangle 400 560 380 530 375 540 00d103 018c03
+triangle 400 580 430 550 440 560 00d103 018c03
+rectangle 397 530 6 60 00d103 018c03
+circle 400 530 10 fa34d2 960278
+

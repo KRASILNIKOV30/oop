@@ -87,4 +87,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="TestPicture.txt" />
+  </ItemGroup>
 </Project>
