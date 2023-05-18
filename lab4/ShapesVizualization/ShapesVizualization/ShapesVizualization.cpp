@@ -68,19 +68,34 @@ int main(int arhc, char** argv) {
         };
     }
 
+    SDL_Vertex triangleVertex[3] =
+    {
+     {
+      { vertex1.x, vertex1.y }, 
+        {0xff, 0xff, 0xff}
+     },
+     {
+      { vertex2.x, vertex2.y },
+     
+     },
+     {
+      { vertex3.x, vertex3.y },
+      
+     }
+    };
 
-   /* SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
-    SDL_RenderClear(ren);*/
+    SDL_SetRenderDrawColor(ren, 0x00, 0x00, 0x00, 0x00);
+    SDL_RenderClear(ren);
 
-    /*SDL_SetRenderDrawColor(ren, 0xff, 0xff, 0xff, 0xff);*/
+    SDL_SetRenderDrawColor(ren, 0xff, 0xff, 0xff, 0xff);
 
     SDL_RenderGeometry(ren, NULL, vertexes, v.size(), NULL, 0);
 
-    /*SDL_SetRenderDrawColor(ren, 0xff, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(ren, 0xff, 0x00, 0x00, 0xFF);
 
     SDL_RenderDrawLine(ren, vertex1.x, vertex1.y, vertex2.x, vertex2.y);
     SDL_RenderDrawLine(ren, vertex2.x, vertex2.y, vertex3.x, vertex3.y);
-    SDL_RenderDrawLine(ren, vertex3.x, vertex3.y, vertex1.x, vertex1.y);*/
+    SDL_RenderDrawLine(ren, vertex3.x, vertex3.y, vertex1.x, vertex1.y);
 
     SDL_RenderPresent(ren);
     

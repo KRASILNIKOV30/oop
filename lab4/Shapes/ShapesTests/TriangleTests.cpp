@@ -16,10 +16,14 @@ namespace
 struct TriangleFixture
 {
 	CTriangle triangle;
+	fakeit::Mock<ICanvas> mockCanvas;
+	std::stringstream output = std::stringstream();
 
 	TriangleFixture()
 		: triangle(CTriangle(vertex1, vertex2, vertex3, fillColor, outlineColor))
-	{}
+	{
+		DefineMockCanvasBehavior(mockCanvas, output);
+	}
 };
 
 TEST_CASE_METHOD(TriangleFixture, "triangle is a solid shape")
@@ -73,4 +77,54 @@ TEST_CASE_METHOD(TriangleFixture, "triangle has info")
 		vertex3.x,
 		vertex3.y
 	));
+}
+
+TEST_CASE_METHOD(TriangleFixture, "Triangle can be drawn")
+{
+	std::string expectedOutput;
+	expectedOutput.append
+	(
+		std::format("Fill polygon with color {} in vertexes: ({}, {}) ({}, {}) ({}, {})\n",
+			fillColor,
+			vertex1.x,
+			vertex1.y,
+			vertex2.x,
+			vertex2.y,
+			vertex3.x,
+			vertex3.y
+		)
+	);
+	expectedOutput.append
+	(
+		std::format("Drawing line with color {} from ({}, {}) to ({}, {})\n",
+			outlineColor,
+			vertex1.x,
+			vertex1.y,
+			vertex2.x,
+			vertex2.y
+		)
+	);
+	expectedOutput.append
+	(
+		std::format("Drawing line with color {} from ({}, {}) to ({}, {})\n",
+			outlineColor,
+			vertex2.x,
+			vertex2.y,
+			vertex3.x,
+			vertex3.y
+		)
+	);
+	expectedOutput.append
+	(
+		std::format("Drawing line with color {} from ({}, {}) to ({}, {})\n",
+			outlineColor,
+			vertex3.x,
+			vertex3.y,
+			vertex1.x,
+			vertex1.y
+		)
+	);
+
+	triangle.Draw(mockCanvas.get());
+	CHECK(output.str() == expectedOutput);
 }

@@ -51,6 +51,23 @@ void DefineMockCanvasBehavior(fakeit::Mock<ICanvas>& canvas, std::ostream& outpu
 		{
 			output << "Fill rectangle " << width << "*" << height << " from (" << leftTop.x << ", " << leftTop.y << ") with color " << fillColor << std::endl;
 		});
+	fakeit::When(Method(canvas, FillPolygon)).AlwaysDo([&output](std::vector<CPoint> points, uint32_t fillColor)
+		{
+			output << "Fill polygon with color " << fillColor << " in vertexes:";
+			for (auto& point : points)
+			{
+				output << " (" << point.x << ", " << point.y << ")";
+			}
+			output << std::endl;
+		});
+	fakeit::When(Method(canvas, FillCircle)).AlwaysDo([&output](CPoint center, double radius, uint32_t fillColor)
+		{
+			output << "Fill circle with color " << fillColor << " in (" << center.x << ", " << center.y << ") with radius " << radius << std::endl;
+		});
+	fakeit::When(Method(canvas, DrawCircle)).AlwaysDo([&output](CPoint center, double radius, uint32_t outlineColor)
+		{
+			output << "Draw circle with color " << outlineColor << " in (" << center.x << ", " << center.y << ") with radius " << radius << std::endl;
+		});
 
 }
 
