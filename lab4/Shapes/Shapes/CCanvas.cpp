@@ -12,12 +12,17 @@ CCanvas::CCanvas(SDL_Window* window)
 
 CCanvas::~CCanvas()
 {
-    SDL_DestroyRenderer(m_renderer);
+    if (m_renderer != nullptr)
+    {
+        SDL_DestroyRenderer(m_renderer);
+    }
+    
 }
 
 CCanvas::CCanvas(CCanvas&& canvas)
     :m_renderer(std::move(canvas.m_renderer))
 {
+    canvas.m_renderer = nullptr;
 }
 
 void CCanvas::DrawLine(CPoint from, CPoint to, uint32_t lineColor)
