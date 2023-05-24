@@ -128,6 +128,29 @@ CRational operator/(CRational const left, CRational const right)
 	return CRational(left.GetNumerator() * right.GetDenominator(), left.GetDenominator() * right.GetNumerator());
 }
 
+std::ostream& operator<<(std::ostream& stream, CRational const x)
+{
+	stream << x.GetNumerator() << "/" << x.GetDenominator();
+	
+	return stream;
+}
+
+std::istream& operator>>(std::istream& stream, CRational& x)
+{
+	int numerator;
+	int denominator;
+	if (stream >> numerator && stream.get() == '/' && stream >> denominator)
+	{
+		x = CRational(numerator, denominator);
+	}
+	else
+	{
+		stream.setstate(std::ios_base::failbit | stream.rdstate());
+	}
+
+	return stream;
+}
+
 CRational& CRational::operator+=(CRational const x)
 {
 	int commonDenominator = std::lcm(GetDenominator(), x.GetDenominator());

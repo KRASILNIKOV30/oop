@@ -1,6 +1,7 @@
 ﻿#include "../../../external/catch2/catch.hpp"
 #include "../Rational/CRational.h"
 #include "../Rational/Common.h"
+#include <sstream>
 
 SCENARIO("Rational constructing")
 {
@@ -182,5 +183,18 @@ TEST_CASE("Check operators <, <=, >, >=")
 	CHECK(CRational(1, 2) < 7);
 	CHECK(3 <= CRational(7, 2));
 	CHECK(!(3 >= CRational(8, 2)));
+}
+
+TEST_CASE("Check operator >> and <<")
+{
+	CRational x(7, 15);
+	CRational y;
+	std::stringstream stream = std::stringstream();
+	stream << x;
+	CHECK(stream.str() == "7/15");
+	stream >> y;
+	CHECK(y.GetNumerator() == 7);
+	CHECK(y.GetDenominator() == 15);
+
 }
 

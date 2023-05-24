@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+
 class CRational
 {
 public:
@@ -34,6 +36,8 @@ CRational operator +(CRational const left, CRational const right);
 CRational operator -(CRational const left, CRational const right);
 CRational operator *(CRational const left, CRational const right);
 CRational operator /(CRational const left, CRational const right);
+std::ostream& operator <<(std::ostream& stream, CRational const x);
+std::istream& operator >>(std::istream& stream, CRational& x);
 
 
 
