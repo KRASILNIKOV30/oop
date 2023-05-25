@@ -195,6 +195,21 @@ TEST_CASE("Check operator >> and <<")
 	stream >> y;
 	CHECK(y.GetNumerator() == 7);
 	CHECK(y.GetDenominator() == 15);
+}
 
+TEST_CASE("A fraction can be converted into a compound")
+{
+	CRational x(9, 4);
+	auto compoundFrac = x.ToCompoundFraction();
+	CHECK(compoundFrac.first == 2);
+	CHECK(compoundFrac.second == CRational(1, 4));
+
+	compoundFrac = (-x).ToCompoundFraction();
+	CHECK(compoundFrac.first == -2);
+	CHECK(compoundFrac.second == -CRational(1, 4));
+
+	compoundFrac = CRational(3, 4).ToCompoundFraction();
+	CHECK(compoundFrac.first == 0);
+	CHECK(compoundFrac.second == CRational(3, 4));
 }
 

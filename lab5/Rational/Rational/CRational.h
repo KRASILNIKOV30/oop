@@ -7,9 +7,10 @@ public:
 	CRational() = default;
 	CRational(int value);
 	CRational(int numerator, int denominator);
-	int GetNumerator()const;
-	int GetDenominator()const;
-	double ToDouble()const;
+	int GetNumerator() const;
+	int GetDenominator() const;
+	double ToDouble() const;
+	std::pair<int, CRational> ToCompoundFraction() const;
 
 	CRational operator +() const;
 	CRational operator -() const;
@@ -27,7 +28,6 @@ private:
 };
 
 bool operator ==(CRational const left, CRational const right);
-bool operator !=(CRational const left, CRational const right);
 bool operator <(CRational const left, CRational const right);
 bool operator <=(CRational const left, CRational const right);
 bool operator >(CRational const left, CRational const right);

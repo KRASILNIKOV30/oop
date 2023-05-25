@@ -61,45 +61,24 @@ bool operator ==(CRational const left, CRational const right)
 	return left.GetNumerator() == right.GetNumerator() && left.GetDenominator() == right.GetDenominator();
 }
 
-bool operator !=(CRational const left, CRational const right)
-{
-	return !(left == right);
-}
-
 bool operator<(CRational const left, CRational const right)
 {
-	int commonDenominator = std::lcm(left.GetDenominator(), right.GetDenominator());
-	int leftNumerator = left.GetNumerator() * commonDenominator / left.GetDenominator();
-	int rightNumerator = right.GetNumerator() * commonDenominator / right.GetDenominator();
-
-	return leftNumerator < rightNumerator;
+	return (left.GetNumerator() * right.GetDenominator()) < (right.GetNumerator() * left.GetDenominator());
 }
 
 bool operator<=(CRational const left, CRational const right)
 {
-	int commonDenominator = std::lcm(left.GetDenominator(), right.GetDenominator());
-	int leftNumerator = left.GetNumerator() * commonDenominator / left.GetDenominator();
-	int rightNumerator = right.GetNumerator() * commonDenominator / right.GetDenominator();
-
-	return leftNumerator <= rightNumerator;
+	return left < right || left == right;
 }
 
 bool operator>(CRational const left, CRational const right)
 {
-	int commonDenominator = std::lcm(left.GetDenominator(), right.GetDenominator());
-	int leftNumerator = left.GetNumerator() * commonDenominator / left.GetDenominator();
-	int rightNumerator = right.GetNumerator() * commonDenominator / right.GetDenominator();
-
-	return leftNumerator > rightNumerator;
+	return !(left <= right);
 }
 
 bool operator>=(CRational const left, CRational const right)
 {
-	int commonDenominator = std::lcm(left.GetDenominator(), right.GetDenominator());
-	int leftNumerator = left.GetNumerator() * commonDenominator / left.GetDenominator();
-	int rightNumerator = right.GetNumerator() * commonDenominator / right.GetDenominator();
-
-	return leftNumerator >= rightNumerator;
+	return !(left < right);
 }
 
 CRational operator +(CRational const left, CRational const right)
@@ -112,10 +91,7 @@ CRational operator +(CRational const left, CRational const right)
 
 CRational operator -(CRational const left, CRational const right)
 {
-	int commonDenominator = std::lcm(left.GetDenominator(), right.GetDenominator());
-	int leftNumerator = left.GetNumerator() * commonDenominator / left.GetDenominator();
-	int rightNumerator = right.GetNumerator() * commonDenominator / right.GetDenominator();
-	return CRational(leftNumerator - rightNumerator, commonDenominator);
+	return left + (-right);
 }
 
 CRational operator*(CRational const left, CRational const right)
@@ -153,42 +129,28 @@ std::istream& operator>>(std::istream& stream, CRational& x)
 
 CRational& CRational::operator+=(CRational const x)
 {
-	int commonDenominator = std::lcm(GetDenominator(), x.GetDenominator());
-	int leftNumerator = GetNumerator() * commonDenominator / GetDenominator();
-	int rightNumerator = x.GetNumerator() * commonDenominator / x.GetDenominator();
-	m_numerator = leftNumerator + rightNumerator;
-	m_denominator = commonDenominator;
-	Normalize();
-
-	return *this;
+	return *this = *this + x;
 }
 
 CRational& CRational::operator-=(CRational const x)
 {
-	int commonDenominator = std::lcm(GetDenominator(), x.GetDenominator());
-	int leftNumerator = GetNumerator() * commonDenominator / GetDenominator();
-	int rightNumerator = x.GetNumerator() * commonDenominator / x.GetDenominator();
-	m_numerator = leftNumerator - rightNumerator;
-	m_denominator = commonDenominator;
-	Normalize();
-
-	return *this;
+	return (*this += (-x));
 }
 
 CRational& CRational::operator*=(CRational const x)
 {
-	m_numerator *= x.GetNumerator();
-	m_denominator *= x.GetDenominator();
-	Normalize();
-
-	return *this;
+	return *this = *this * x;
 }
 
 CRational& CRational::operator/=(CRational const x)
 {
-	m_numerator *= x.GetDenominator();
-	m_denominator *= x.GetNumerator();
-	Normalize();
+	return *this = *this / x;
+}
 
-	return *this;
+std::pair<int, CRational> CRational::ToCompoundFraction() const
+{
+	int intPart = (int)ToDouble();
+	CRational fracPart = *this - intPart;
+
+	return std::pair<int, CRational>(intPart, fracPart);
 }
