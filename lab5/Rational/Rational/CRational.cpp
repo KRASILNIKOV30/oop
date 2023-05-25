@@ -56,31 +56,6 @@ CRational CRational::operator-() const
 	return CRational(-m_numerator, m_denominator);
 }
 
-bool operator ==(CRational const left, CRational const right)
-{
-	return left.GetNumerator() == right.GetNumerator() && left.GetDenominator() == right.GetDenominator();
-}
-
-bool operator<(CRational const left, CRational const right)
-{
-	return (left.GetNumerator() * right.GetDenominator()) < (right.GetNumerator() * left.GetDenominator());
-}
-
-bool operator<=(CRational const left, CRational const right)
-{
-	return left < right || left == right;
-}
-
-bool operator>(CRational const left, CRational const right)
-{
-	return !(left <= right);
-}
-
-bool operator>=(CRational const left, CRational const right)
-{
-	return !(left < right);
-}
-
 CRational operator +(CRational const left, CRational const right)
 {
 	int commonDenominator = std::lcm(left.GetDenominator(), right.GetDenominator());
@@ -145,6 +120,11 @@ CRational& CRational::operator*=(CRational const x)
 CRational& CRational::operator/=(CRational const x)
 {
 	return *this = *this / x;
+}
+
+std::strong_ordering CRational::operator<=>(const CRational& rhs) const
+{
+	return (GetNumerator() * rhs.GetDenominator()) <=> (rhs.GetNumerator() * GetDenominator());
 }
 
 std::pair<int, CRational> CRational::ToCompoundFraction() const

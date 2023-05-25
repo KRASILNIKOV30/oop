@@ -88,6 +88,14 @@ SCENARIO("Rational constructing")
 			CHECK(IsEquals(x.ToDouble(), 0.25));
 		}
 	}
+
+	WHEN("Constructing rational with zero denomerator")
+	{
+		THEN("Invalid argument exception is thrown")
+		{
+			CHECK_THROWS_AS(CRational(3, 0), std::invalid_argument);
+		}
+	}
 }
 
 TEST_CASE("Check unary operator +")
@@ -118,12 +126,18 @@ TEST_CASE("Check operator -")
 
 TEST_CASE("Check operator +=")
 {
+	CRational x(1, 2);
+	CRational y(1, 2);
+	CHECK(std::addressof(x += y) == std::addressof(x));
 	CHECK((CRational(1, 2) += CRational(1, 6)) == CRational(2, 3));
 	CHECK((CRational(1, 2) += 1) == CRational(3, 2));
 }
 
 TEST_CASE("Check operator -=")
 {
+	CRational x(1, 2);
+	CRational y(1, 2);
+	CHECK(std::addressof(x -= y) == std::addressof(x));
 	CHECK((CRational(1, 2) -= CRational(1, 6)) == CRational(1, 3));
 	CHECK((CRational(1, 2) -= 1) == -CRational(1, 2));
 }
@@ -144,12 +158,19 @@ TEST_CASE("Check operator /")
 
 TEST_CASE("Check operator *=")
 {
+	//std::addressof(a *= b) == std::adressof(a); (Дополнено)
+	CRational x(1, 2);
+	CRational y(1, 2);
+	CHECK(std::addressof(x *= y) == std::addressof(x));
 	CHECK((CRational(1, 2) *= CRational(2, 3)) == CRational(1, 3));
 	CHECK((CRational(1, 2) *= 3) == CRational(3, 2));
 }
 
 TEST_CASE("Check operator /=")
 {
+	CRational x(1, 2);
+	CRational y(1, 2);
+	CHECK(std::addressof(x /= y) == std::addressof(x));
 	CHECK((CRational(1, 2) /= CRational(2, 3)) == CRational(3, 4));
 	CHECK((CRational(1, 2) /= 3) == CRational(1, 6));
 	CHECK((CRational(3, 4) /= CRational(3, 8)) == 2);
@@ -178,11 +199,23 @@ TEST_CASE("Check operator !=")
 TEST_CASE("Check operators <, <=, >, >=")
 {
 	CHECK(CRational(1, 2) >= CRational(1, 3));
+	CHECK(!(CRational(1, 4) >= CRational(1, 3)));
+
 	CHECK(!(CRational(1, 2) <= CRational(1, 3)));
+	CHECK(CRational(1, 4) <= CRational(1, 3));
+
+	//дополнить тесты(Исправлено)
 	CHECK(CRational(3, 1) > 2);
+	CHECK(!(CRational(3, 5) > 2));
+
 	CHECK(CRational(1, 2) < 7);
+	CHECK(!(CRational(1, 2) < -1));
+
 	CHECK(3 <= CRational(7, 2));
+	CHECK(!(3 <= CRational(7, 3)));
+
 	CHECK(!(3 >= CRational(8, 2)));
+	CHECK(3 >= CRational(8, 3));
 }
 
 TEST_CASE("Check operator >> and <<")

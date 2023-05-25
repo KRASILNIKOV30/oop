@@ -18,7 +18,8 @@ public:
 	CRational& operator -=(CRational const x);
 	CRational& operator *=(CRational const x);
 	CRational& operator /=(CRational const x);
-
+	std::strong_ordering operator<=>(const CRational& rhs) const;
+	bool operator ==(CRational const& right) const = default;
 private:
 	void Normalize();
 
@@ -27,11 +28,6 @@ private:
 	int m_denominator = 1;
 };
 
-bool operator ==(CRational const left, CRational const right);
-bool operator <(CRational const left, CRational const right);
-bool operator <=(CRational const left, CRational const right);
-bool operator >(CRational const left, CRational const right);
-bool operator >=(CRational const left, CRational const right);
 CRational operator +(CRational const left, CRational const right);
 CRational operator -(CRational const left, CRational const right);
 CRational operator *(CRational const left, CRational const right);
