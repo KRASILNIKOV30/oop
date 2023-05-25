@@ -25,6 +25,12 @@ CCanvas::CCanvas(CCanvas&& canvas)
     canvas.m_renderer = nullptr;
 }
 
+CCanvas& CCanvas::operator=(CCanvas&& rhs)
+{
+    m_renderer = std::move(rhs.m_renderer);
+    rhs.m_renderer = nullptr;
+}
+
 void CCanvas::DrawLine(CPoint from, CPoint to, uint32_t lineColor)
 {
     SetColor(lineColor);

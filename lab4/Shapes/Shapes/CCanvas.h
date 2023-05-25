@@ -9,7 +9,7 @@ public:
 	CCanvas(SDL_Window* window);
 	~CCanvas();
 	CCanvas(CCanvas&& canvas);
-	//Дописать оператор перемещающего присваивания (cg-course)
+	//Дописать оператор перемещающего присваивания (cg-course) (Сделано)
 	CCanvas& operator=(CCanvas&& rhs);
 	void DrawLine(CPoint from, CPoint to, uint32_t lineColor) final;
 	void FillPolygon(std::vector<CPoint> points, uint32_t fillColor) final;
