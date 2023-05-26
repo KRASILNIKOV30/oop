@@ -24,4 +24,50 @@ SCENARIO("My string constructing")
 			CHECK(strcmp(str.GetStringData(), "Hello") == 0);
 		}
 	}
+
+	WHEN("Constructing my string by chars array")
+	{
+		CMyString str("Hello world", 5);
+
+		THEN("my string is equal to 'Hello'")
+		{
+			CHECK(str.GetLength() == 5);
+			CHECK(strcmp(str.GetStringData(), "Hello") == 0);
+		}
+	}
+
+	WHEN("Constructing my string by stlString")
+	{
+		std::string stlStr("Hello");
+		CMyString str(stlStr);
+
+		THEN("my string is equal to 'Hello'")
+		{
+			CHECK(str.GetLength() == 5);
+			CHECK(strcmp(str.GetStringData(), "Hello") == 0);
+		}
+	}
+
+	WHEN("Constructing my string by another my string")
+	{
+		CMyString str("Hello");
+		CMyString copy(str);
+
+		THEN("copy is equal to 'Hello'")
+		{
+			CHECK(copy.GetLength() == 5);
+			CHECK(strcmp(copy.GetStringData(), "Hello") == 0);
+		}
+	}
+
+	WHEN("Constructing my string by move constructor")
+	{
+		CMyString str(std::move(CMyString("Hello")));
+
+		THEN("copy is equal to 'Hello'")
+		{
+			CHECK(str.GetLength() == 5);
+			CHECK(strcmp(str.GetStringData(), "Hello") == 0);
+		}
+	}
 }

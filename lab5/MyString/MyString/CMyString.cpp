@@ -1,26 +1,43 @@
 #include "CMyString.h"
 
 CMyString::CMyString(const char* pString)
-    : m_chars(new char[strlen(pString) + 1] {})
+    : m_chars(new char[strlen(pString) + 1])
     , m_length(strlen(pString))
 {
     strcpy_s(m_chars, m_length + 1, pString);
 }
 
 CMyString::CMyString(const char* pString, size_t length)
+    : m_chars(new char[length + 1])
+    , m_length(length)
 {
+    for (size_t i = 0; i < m_length; i++)
+    {
+        m_chars[i] = pString[i];
+    }
+    m_chars[m_length] = '\0';
 }
 
 CMyString::CMyString(CMyString const& other)
+    : m_chars(new char[other.GetLength() + 1])
+    , m_length(other.GetLength())
 {
+    strcpy_s(m_chars, m_length + 1, other.GetStringData());
 }
 
-CMyString::CMyString(CMyString&& other)
+CMyString::CMyString(CMyString&& other) noexcept
+    : m_chars(other.m_chars)
+    , m_length(other.m_length)
 {
+    other.m_chars = nullptr;
+    other.m_length = 0;
 }
 
 CMyString::CMyString(std::string const& stlString)
+    : m_chars(new char[stlString.size() + 1])
+    , m_length(stlString.size())
 {
+    strcpy_s(m_chars, m_length + 1, stlString.c_str());
 }
 
 CMyString::~CMyString()
