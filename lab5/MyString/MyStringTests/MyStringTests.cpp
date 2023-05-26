@@ -10,18 +10,18 @@ SCENARIO("My string constructing")
 		THEN("my string has zero length")
 		{
 			CHECK(str.GetLength() == 0);
-			CHECK(str.GetStringData() == "");
+			CHECK(strcmp(str.GetStringData(), "") == 0);
 		}
 	}
 
-	/*WHEN("Constructing my string by another string")
+	WHEN("Constructing my string by another string")
 	{
 		CMyString str("Hello");
 
 		THEN("my string is equal to 'Hello'")
 		{
 			CHECK(str.GetLength() == 5);
-			CHECK(str.GetStringData() == "Hello");
+			CHECK(strcmp(str.GetStringData(), "Hello") == 0);
 		}
-	}*/
+	}
 }

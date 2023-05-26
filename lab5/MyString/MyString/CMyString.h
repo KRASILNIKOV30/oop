@@ -44,7 +44,7 @@ public:
 	void Clear();
 
 private:
-	const char* m_chars = new char[1] {'\0'};
+	char* m_chars = new char[1] {'\0'};
 	size_t m_length = 0;
 };
 
