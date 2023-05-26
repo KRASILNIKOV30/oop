@@ -71,3 +71,22 @@ SCENARIO("My string constructing")
 		}
 	}
 }
+
+SCENARIO("My string clearing")
+{
+	GIVEN("Not empty string")
+	{
+		CMyString str("Hello");
+
+		WHEN("Clear my string")
+		{
+			str.Clear();
+
+			THEN("My string has zero length")
+			{
+				CHECK(str.GetLength() == 0);
+				CHECK(strcmp(str.GetStringData(), "") == 0);
+			}
+		}
+	}
+}

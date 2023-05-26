@@ -62,4 +62,7 @@ CMyString CMyString::SubString(size_t start, size_t length) const
 
 void CMyString::Clear()
 {
+    delete[] m_chars;
+    m_length = 0;
+    m_chars = new char[1] {'\0'};
 }
