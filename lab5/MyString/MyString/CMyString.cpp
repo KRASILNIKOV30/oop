@@ -22,6 +22,7 @@ CMyString::CMyString(std::string const& stlString)
 
 CMyString::~CMyString()
 {
+    delete[] m_chars;
 }
 
 size_t CMyString::GetLength() const
