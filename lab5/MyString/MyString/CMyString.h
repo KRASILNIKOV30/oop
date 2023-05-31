@@ -43,6 +43,8 @@ public:
 	// очистка строки (строка становится снова нулевой длины)
 	void Clear();
 
+	void operator=(CMyString const& rhs);
+
 private:
 	char* m_chars = new char[1] {'\0'};
 	size_t m_length = 0;

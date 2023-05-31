@@ -75,3 +75,10 @@ void CMyString::Clear()
     m_length = 0;
     m_chars = new char[1] {'\0'};
 }
+
+void CMyString::operator=(CMyString const& rhs)
+{
+    m_length = rhs.GetLength();
+    m_chars = new char[m_length + 1];
+    strcpy_s(m_chars, m_length + 1, rhs.GetStringData());
+}

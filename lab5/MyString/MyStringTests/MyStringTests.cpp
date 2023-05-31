@@ -142,3 +142,12 @@ SCENARIO("Substring getting")
 		}
 	}
 }
+
+TEST_CASE("Check opertor =")
+{
+	CMyString str1;
+	CMyString str2("SomeString");
+
+	str1 = str2;
+	CHECK(strcmp(str1.GetStringData(), "SomeString") == 0);
+}
