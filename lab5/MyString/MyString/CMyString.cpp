@@ -57,7 +57,16 @@ const char* CMyString::GetStringData() const
 
 CMyString CMyString::SubString(size_t start, size_t length) const
 {
-    return CMyString();
+    size_t remainderLength = m_length - start;
+    size_t substrLength = remainderLength < length ? remainderLength : length;
+    char* substr = new char[substrLength + 1];
+    for (size_t i = 0; i < substrLength; i++)
+    {
+        substr[i] = m_chars[start + i];
+    }
+    substr[substrLength] = '\0';
+
+    return CMyString(substr);
 }
 
 void CMyString::Clear()

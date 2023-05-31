@@ -90,3 +90,55 @@ SCENARIO("My string clearing")
 		}
 	}
 }
+
+SCENARIO("Substring getting")
+{
+	GIVEN("My string 'Hello world'")
+	{
+		CMyString str("Hello big world");
+
+		WHEN("Take substring from middle with a length less than the rest of the string")
+		{
+			CMyString substr = str.SubString(6, 8);
+
+			THEN("Get substr from middle")
+			{
+				CHECK(substr.GetLength() == 8);
+				CHECK(strcmp(substr.GetStringData(), "big worl") == 0);
+			}
+		}
+
+		WHEN("Take substring from middle with a length equal to the rest of the string")
+		{
+			CMyString substr = str.SubString(6, 9);
+
+			THEN("Get substr from middle")
+			{
+				CHECK(substr.GetLength() == 9);
+				CHECK(strcmp(substr.GetStringData(), "big world") == 0);
+			}
+		}
+
+		WHEN("Take substring from middle with a length bigger than the rest of the string")
+		{
+			CMyString substr = str.SubString(6, 10);
+
+			THEN("Get substr from middle")
+			{
+				CHECK(substr.GetLength() == 9);
+				CHECK(strcmp(substr.GetStringData(), "big world") == 0);
+			}
+		}
+
+		WHEN("Take substring from middle without length")
+		{
+			CMyString substr = str.SubString(6, 10);
+
+			THEN("Get substr from middle to end of my string")
+			{
+				CHECK(substr.GetLength() == 9);
+				CHECK(strcmp(substr.GetStringData(), "big world") == 0);
+			}
+		}
+	}
+}
