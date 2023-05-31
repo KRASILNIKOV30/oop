@@ -131,11 +131,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Solve4\Common.cpp" />
     <ClCompile Include="..\Solve4\Solve4.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Solve4Tests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Solve4\Common.h" />
     <ClInclude Include="..\Solve4\Solve4.h" />
   </ItemGroup>
   <ItemGroup>
