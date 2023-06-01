@@ -145,9 +145,108 @@ SCENARIO("Substring getting")
 
 TEST_CASE("Check opertor =")
 {
-	CMyString str1;
-	CMyString str2("SomeString");
+	CMyString str;
 
-	str1 = str2;
-	CHECK(strcmp(str1.GetStringData(), "SomeString") == 0);
+	str = CMyString("My string");
+	CHECK(strcmp(str.GetStringData(), "My string") == 0);
+
+	str = "Some chars";
+	CHECK(strcmp(str.GetStringData(), "Some chars") == 0);
+
+	str = std::string("STL string");
+	CHECK(strcmp(str.GetStringData(), "STL string") == 0);
+
+	str = str;
+	CHECK(strcmp(str.GetStringData(), "STL string") == 0);
+
+	str = std::move(str);
+	CHECK(strcmp(str.GetStringData(), "STL string") == 0);
+
+	CMyString strToMove("Move");
+	str = std::move(strToMove);
+	CHECK(strcmp(str.GetStringData(), "Move") == 0);
+}
+
+TEST_CASE("Check operator +")
+{
+	CMyString str("World");
+
+	CMyString result = CMyString("Hello") + str;
+	CHECK(strcmp(result.GetStringData(), "HelloWorld") == 0);
+
+	result = std::string("Hello") + str;
+	CHECK(strcmp(result.GetStringData(), "HelloWorld") == 0);
+
+	result = "Hello" + str;
+	CHECK(strcmp(result.GetStringData(), "HelloWorld") == 0);
+}
+
+TEST_CASE("Check operator +=")
+{
+	CMyString str("Hello");
+	CHECK(std::addressof(str += CMyString("World")) == std::addressof(str));
+	CHECK(strcmp(str.GetStringData(), "HelloWorld") == 0);
+}
+
+TEST_CASE("Check operator ==")
+{
+	CMyString str("Hello");
+	CHECK(str == CMyString("Hello"));
+	CHECK_FALSE(str == CMyString("Helloo"));
+	CHECK_FALSE(str == CMyString("hello"));
+	CHECK(CMyString("") == CMyString(""));
+}
+
+TEST_CASE("Check operator !=")
+{
+	CMyString str("Hello");
+	CHECK_FALSE(str != CMyString("Hello"));
+	CHECK(str != CMyString("Helloo"));
+	CHECK(str != CMyString("hello"));
+	CHECK_FALSE(CMyString("") != CMyString(""));
+}
+
+TEST_CASE("Check operator >, <, >=, <=")
+{
+	CMyString str("Hello");
+
+	CHECK(str > CMyString("Hell"));
+	CHECK_FALSE(str > CMyString("Hello"));
+	
+	CHECK(str < CMyString("World"));
+	CHECK_FALSE(str < CMyString("Apple"));
+
+	CHECK(str >= CMyString("Hello"));
+	CHECK_FALSE(str >= CMyString("World"));
+
+	CHECK(str <= CMyString("Helloa"));
+	CHECK_FALSE(str <= CMyString("Apple"));
+}
+
+TEST_CASE("Check operator []")
+{
+	CMyString str("My string");
+	const CMyString constStr("Const my string");
+
+	CHECK(str[1] == 'y');
+	CHECK(constStr[1] == 'o');
+
+	str[8] = 'k';
+	CHECK(strcmp(str.GetStringData(), "My strink") == 0);
+
+	CHECK_THROWS_AS(str[9], std::out_of_range);
+	CHECK_THROWS_AS(str[10], std::out_of_range);
+	CHECK_THROWS_AS(constStr[15], std::out_of_range);
+	CHECK_THROWS_AS(constStr[16], std::out_of_range);
+}
+
+TEST_CASE("Check operator >> and <<")
+{
+	CMyString strOut("My string");
+	CMyString strIn;
+	std::stringstream stream = std::stringstream();
+	stream << strOut;
+	CHECK(stream.str() == "My string");
+	stream >> strIn;
+	CHECK(strcmp(strIn.GetStringData(), "My") == 0);
 }

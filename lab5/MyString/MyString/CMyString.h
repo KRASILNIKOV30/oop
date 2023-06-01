@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <numeric>
+#include <iostream>
 
 class CMyString
 {
@@ -44,10 +46,19 @@ public:
 	void Clear();
 
 	void operator=(CMyString const& rhs);
+	void operator=(CMyString&& rhs) noexcept;
+	CMyString& operator+=(CMyString const& rhs);
+	std::strong_ordering operator<=>(CMyString const& rhs) const;
+	const char& operator[](size_t index) const;
+	char& operator[](size_t index);
+	friend std::istream& operator>>(std::istream& stream, CMyString& str);
 
 private:
 	char* m_chars = new char[1] {'\0'};
 	size_t m_length = 0;
 };
 
-
+CMyString operator+(CMyString const& lhs, CMyString const& rhs);
+bool operator==(CMyString const& lhs, CMyString const& rhs);
+std::ostream& operator<<(std::ostream& stream, CMyString const& str);
+std::istream& operator>>(std::istream& stream, CMyString& str);
