@@ -4,6 +4,13 @@
 #include <stdexcept>
 #include <vector>
 
+CMyString::CMyString()
+    : m_chars(new char[1])
+    , m_length(0)
+{
+    m_chars[0] = '\0';
+}
+
 CMyString::CMyString(const char* pString)
     : m_chars(new char[strlen(pString) + 1])
     , m_length(strlen(pString))
@@ -29,7 +36,7 @@ CMyString::CMyString(CMyString const& other)
     strcpy_s(m_chars, m_length + 1, other.GetStringData());
 }
 
-CMyString::CMyString(CMyString&& other) noexcept
+CMyString::CMyString(CMyString&& other)
     : m_chars(other.m_chars)
     , m_length(other.m_length)
 {
@@ -49,12 +56,12 @@ CMyString::~CMyString()
     delete[] m_chars;
 }
 
-size_t CMyString::GetLength() const
+size_t CMyString::GetLength() const noexcept
 {
     return m_length;
 }
 
-const char* CMyString::GetStringData() const
+const char* CMyString::GetStringData() const noexcept
 {
     return m_chars;
 }
@@ -80,29 +87,29 @@ void CMyString::Clear()
     m_chars = new char[1] {'\0'};
 }
 
-void CMyString::operator=(CMyString const& rhs)
+CMyString& CMyString::operator=(CMyString const& rhs)
 {
-    if (&rhs == this)
+    if (&rhs != this)
     {
-        return;
+        CMyString copyStr(rhs);
+        m_length = rhs.GetLength();
+        m_chars = new char[m_length + 1];
+        std::swap(m_chars, copyStr.m_chars);
     }
-    Clear();
-    m_length = rhs.GetLength();
-    m_chars = new char[m_length + 1];
-    strcpy_s(m_chars, m_length + 1, rhs.GetStringData());
+    return *this;
 }
 
-void CMyString::operator=(CMyString&& rhs) noexcept
+CMyString& CMyString::operator=(CMyString&& rhs) noexcept
 {
-    if (&rhs == this)
+    if (&rhs != this)
     {
-        return;
+        delete[] m_chars;
+        m_length = rhs.GetLength();
+        m_chars = rhs.m_chars;
+        rhs.m_chars = nullptr;
+        rhs.m_length = 0;
     }
-    Clear();
-    m_length = rhs.GetLength();
-    m_chars = rhs.m_chars;
-    rhs.m_chars = nullptr;
-    rhs.m_length = 0;
+    return *this;
 }
 
 CMyString& CMyString::operator+=(CMyString const& rhs)
@@ -140,21 +147,24 @@ std::ostream& operator<<(std::ostream& stream, CMyString const& str)
 
 std::istream& operator>>(std::istream& stream, CMyString& str)
 {
-    str.Clear();
     std::vector<char> chars;
     char ch;
-    while (stream.get(ch) && ch != ' ' && str.m_length != SIZE_MAX) {
+    while (stream.get(ch) && ch != ' ' && chars.size() < SIZE_MAX) {
         chars.push_back(ch);
     }
-    str.m_length = chars.size();
-    str.m_chars = new char[str.m_length + 1];
-    std::copy(chars.begin(), chars.end(), str.m_chars);
-    str.m_chars[str.m_length] = '\0';
+    char* copyChars = new char[chars.size()];
+    std::copy(chars.begin(), chars.end(), copyChars);
+    copyChars[chars.size()] = '\0';
+    str = std::move(copyChars);
     return stream;
 }
 
 CMyString operator+(CMyString const& lhs, CMyString const& rhs)
 {
+    if (lhs.GetLength() >= SIZE_MAX - rhs.GetLength())
+    {
+        throw std::length_error("String cannot be longer than SIZE_MAX");
+    }
     char* chars = new char[lhs.GetLength() + rhs.GetLength() + 1];
     std::copy(lhs.GetStringData(), lhs.GetStringData() + lhs.GetLength(), chars);
     std::copy(rhs.GetStringData(), rhs.GetStringData() + rhs.GetLength(), chars + lhs.GetLength());
@@ -163,7 +173,7 @@ CMyString operator+(CMyString const& lhs, CMyString const& rhs)
     return CMyString(chars);
 }
 
-bool operator==(CMyString const& lhs, CMyString const& rhs)
+bool operator==(CMyString const& lhs, CMyString const& rhs) noexcept
 {
     if (lhs.GetLength() != rhs.GetLength())
     {
@@ -182,7 +192,7 @@ bool operator==(CMyString const& lhs, CMyString const& rhs)
     return true;
 }
 
-std::strong_ordering CMyString::operator<=>(CMyString const& rhs) const
+std::strong_ordering CMyString::operator<=>(CMyString const& rhs) const noexcept
 {
     size_t length = std::min(m_length, rhs.GetLength());
     auto lArr = GetStringData();
