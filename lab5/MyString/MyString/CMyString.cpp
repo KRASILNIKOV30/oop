@@ -3,6 +3,7 @@
 #include <iterator>
 #include <stdexcept>
 #include <vector>
+#include <cassert>
 
 CMyString::CMyString()
     : m_chars(new char[1])
@@ -21,11 +22,17 @@ CMyString::CMyString(const char* pString)
 CMyString::CMyString(const char* pString, size_t length)
     : m_chars(new char[length + 1])
     , m_length(length)
+{//использовать std::copy (Исправлено)
+    std::copy(pString, pString + length, m_chars);
+    m_chars[m_length] = '\0';
+}
+
+CMyString::CMyString(const char* pString, size_t length, int)
+    : m_chars(new char[length + 1])
+    , m_length(length)
 {
-    for (size_t i = 0; i < m_length; i++)
-    {
-        m_chars[i] = pString[i];
-    }
+    std::copy(pString, pString + length, m_chars);
+    delete[] pString;
     m_chars[m_length] = '\0';
 }
 
@@ -33,10 +40,12 @@ CMyString::CMyString(CMyString const& other)
     : m_chars(new char[other.GetLength() + 1])
     , m_length(other.GetLength())
 {
-    strcpy_s(m_chars, m_length + 1, other.GetStringData());
+    //Написать тест с нулевым символом в середине, исправить (std::copy) (Исправлено)
+    std::copy(other.GetStringData(), other.GetStringData() + m_length, m_chars);
+    m_chars[m_length] = '\0';
 }
 
-CMyString::CMyString(CMyString&& other)
+CMyString::CMyString(CMyString&& other) noexcept
     : m_chars(other.m_chars)
     , m_length(other.m_length)
 {
@@ -48,7 +57,9 @@ CMyString::CMyString(std::string const& stlString)
     : m_chars(new char[stlString.size() + 1])
     , m_length(stlString.size())
 {
-    strcpy_s(m_chars, m_length + 1, stlString.c_str());
+    //std::copy (Исправлено)
+    std::copy(stlString.begin(), stlString.end(), m_chars);
+    m_chars[m_length] = '\0';
 }
 
 CMyString::~CMyString()
@@ -60,9 +71,14 @@ size_t CMyString::GetLength() const noexcept
 {
     return m_length;
 }
-
-const char* CMyString::GetStringData() const noexcept
+char zeroCode[1] = { '\0' };
+const char* CMyString::GetStringData() const
 {
+    // не возвращать nullptr (Исправлено)
+    if (m_chars == nullptr)
+    {
+        return zeroCode;
+    }
     return m_chars;
 }
 
@@ -70,31 +86,27 @@ CMyString CMyString::SubString(size_t start, size_t length) const
 {
     size_t remainderLength = m_length - start;
     size_t substrLength = remainderLength < length ? remainderLength : length;
-    char* substr = new char[substrLength + 1];
-    for (size_t i = 0; i < substrLength; i++)
-    {
-        substr[i] = m_chars[start + i];
-    }
-    substr[substrLength] = '\0';
-
-    return CMyString(substr);
+    //утечка памяти (Исправлено)
+    //использовать конструктор адрес + длина (Исправлено)
+    return CMyString(m_chars + start, substrLength);
 }
 
-void CMyString::Clear()
+void CMyString::Clear() noexcept
 {
+    //возможен double delete (Исправлено)
     delete[] m_chars;
     m_length = 0;
-    m_chars = new char[1] {'\0'};
+    m_chars = nullptr;
 }
 
 CMyString& CMyString::operator=(CMyString const& rhs)
 {
     if (&rhs != this)
     {
+        //утечка памяти (Исправлено)
         CMyString copyStr(rhs);
-        m_length = rhs.GetLength();
-        m_chars = new char[m_length + 1];
         std::swap(m_chars, copyStr.m_chars);
+        std::swap(m_length, copyStr.m_length);
     }
     return *this;
 }
@@ -152,10 +164,13 @@ std::istream& operator>>(std::istream& stream, CMyString& str)
     while (stream.get(ch) && ch != ' ' && chars.size() < SIZE_MAX) {
         chars.push_back(ch);
     }
-    char* copyChars = new char[chars.size()];
+    //утечка памяти (Исправлено)
+    char* copyChars = new char[chars.size() + 1];
     std::copy(chars.begin(), chars.end(), copyChars);
     copyChars[chars.size()] = '\0';
     str = std::move(copyChars);
+    delete[] copyChars;
+    
     return stream;
 }
 
@@ -165,12 +180,16 @@ CMyString operator+(CMyString const& lhs, CMyString const& rhs)
     {
         throw std::length_error("String cannot be longer than SIZE_MAX");
     }
-    char* chars = new char[lhs.GetLength() + rhs.GetLength() + 1];
+    //утечка памяти (Исправлено)
+    size_t lenght = lhs.GetLength() + rhs.GetLength();
+    char* chars = new char[lenght + 1];
     std::copy(lhs.GetStringData(), lhs.GetStringData() + lhs.GetLength(), chars);
     std::copy(rhs.GetStringData(), rhs.GetStringData() + rhs.GetLength(), chars + lhs.GetLength());
-    chars[lhs.GetLength() + rhs.GetLength()] = '\0';
-
-    return CMyString(chars);
+    chars[lenght] = '\0';
+    //явно передавать длину (Исправлено)
+    //Создать приватный конструктор (friend) (Исправлено)
+    int i = 0;
+    return CMyString(chars, lenght, i);
 }
 
 bool operator==(CMyString const& lhs, CMyString const& rhs) noexcept
@@ -181,29 +200,14 @@ bool operator==(CMyString const& lhs, CMyString const& rhs) noexcept
     }
     auto lArr = lhs.GetStringData();
     auto rArr = rhs.GetStringData();
-    for (size_t i = 0; i < lhs.GetLength(); i++)
-    {
-        if (lArr[i] != rArr[i])
-        {
-            return false;
-        }
-    }
-
-    return true;
+    // std::equal (Исправлено)
+    return std::equal(lArr, lArr + lhs.GetLength(), rArr);
 }
 
 std::strong_ordering CMyString::operator<=>(CMyString const& rhs) const noexcept
 {
-    size_t length = std::min(m_length, rhs.GetLength());
     auto lArr = GetStringData();
     auto rArr = rhs.GetStringData();
-    for (size_t i = 0; i < length; i++)
-    {
-        if ((lArr[i] <=> rArr[i]) != 0)
-        {
-            return lArr[i] <=> rArr[i];
-        }
-    }
-
-    return m_length <=> rhs.GetLength();
+    //std::lexicographical_compare_three_way (Исправлено)
+    return std::lexicographical_compare_three_way(lArr, lArr + m_length, rArr, rArr + rhs.m_length);
 }

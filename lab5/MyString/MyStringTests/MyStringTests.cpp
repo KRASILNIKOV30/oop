@@ -34,6 +34,14 @@ SCENARIO("My string constructing")
 			CHECK(str.GetLength() == 5);
 			CHECK(strcmp(str.GetStringData(), "Hello") == 0);
 		}
+
+		CMyString zeroCodeStr("Hello\0World", 11);
+
+		THEN("My string is equal to 'HelloWorld' with zero code char in the middle")
+		{
+			CHECK(zeroCodeStr.GetLength() == 11);
+			CHECK(strcmp(zeroCodeStr.GetStringData(), "Hello\0World") == 0);
+		}
 	}
 
 	WHEN("Constructing my string by stlString")
@@ -46,6 +54,15 @@ SCENARIO("My string constructing")
 			CHECK(str.GetLength() == 5);
 			CHECK(strcmp(str.GetStringData(), "Hello") == 0);
 		}
+
+		std::string zeroCodeStlString("Hello\0World", 11);
+		CMyString zeroCodeStr(zeroCodeStlString);
+
+		THEN("my string is equal to 'HelloWorld' with zero code char in the middle")
+		{
+			CHECK(zeroCodeStr.GetLength() == 11);
+			CHECK(strcmp(zeroCodeStr.GetStringData(), "Hello\0World") == 0);
+		}
 	}
 
 	WHEN("Constructing my string by another my string")
@@ -57,6 +74,14 @@ SCENARIO("My string constructing")
 		{
 			CHECK(copy.GetLength() == 5);
 			CHECK(strcmp(copy.GetStringData(), "Hello") == 0);
+		}
+
+		CMyString zeroCodeStr("Hello\0World", 11);
+		CMyString zeroCodeCopy(zeroCodeStr);
+		THEN("copy is equal to 'HelloWorld' with zero code char in the middle")
+		{
+			CHECK(zeroCodeCopy.GetLength() == 11);
+			CHECK(strcmp(zeroCodeCopy.GetStringData(), "Hello\0World") == 0);
 		}
 	}
 

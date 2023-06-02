@@ -10,14 +10,14 @@ public:
 	CMyString(const char* pString);
 	CMyString(const char* pString, size_t length);
 	CMyString(CMyString const& other);
-	CMyString(CMyString&& other);
+	CMyString(CMyString&& other) noexcept;
 	CMyString(std::string const& stlString);
 	~CMyString();
 
 	size_t GetLength()const noexcept;
-	const char* GetStringData()const noexcept;
+	const char* GetStringData()const;
 	CMyString SubString(size_t start, size_t length = SIZE_MAX) const;
-	void Clear();
+	void Clear() noexcept;
 
 	CMyString& operator=(CMyString const& rhs);
 	CMyString& operator=(CMyString&& rhs) noexcept;
@@ -25,6 +25,11 @@ public:
 	std::strong_ordering operator<=>(CMyString const& rhs) const noexcept;
 	const char& operator[](size_t index) const;
 	char& operator[](size_t index);
+	friend CMyString operator+(CMyString const& lhs, CMyString const& rhs);
+
+
+private:
+	CMyString(const char* pString, size_t length, int);
 
 private:
 	char* m_chars;
