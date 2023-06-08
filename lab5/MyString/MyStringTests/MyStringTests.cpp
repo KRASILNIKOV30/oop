@@ -40,7 +40,7 @@ SCENARIO("My string constructing")
 		THEN("My string is equal to 'HelloWorld' with zero code char in the middle")
 		{
 			CHECK(zeroCodeStr.GetLength() == 11);
-			CHECK(strcmp(zeroCodeStr.GetStringData(), "Hello\0World") == 0);
+			CHECK(std::equal(zeroCodeStr.GetStringData(), zeroCodeStr.GetStringData() + zeroCodeStr.GetLength(), "Hello\0World"));
 		}
 	}
 
@@ -61,7 +61,7 @@ SCENARIO("My string constructing")
 		THEN("my string is equal to 'HelloWorld' with zero code char in the middle")
 		{
 			CHECK(zeroCodeStr.GetLength() == 11);
-			CHECK(strcmp(zeroCodeStr.GetStringData(), "Hello\0World") == 0);
+			CHECK(std::equal(zeroCodeStr.GetStringData(), zeroCodeStr.GetStringData() + zeroCodeStr.GetLength(), "Hello\0World"));
 		}
 	}
 
@@ -81,7 +81,7 @@ SCENARIO("My string constructing")
 		THEN("copy is equal to 'HelloWorld' with zero code char in the middle")
 		{
 			CHECK(zeroCodeCopy.GetLength() == 11);
-			CHECK(strcmp(zeroCodeCopy.GetStringData(), "Hello\0World") == 0);
+			CHECK(std::equal(zeroCodeCopy.GetStringData(), zeroCodeCopy.GetStringData() + zeroCodeCopy.GetLength(), "Hello\0World"));
 		}
 	}
 
@@ -166,6 +166,13 @@ SCENARIO("Substring getting")
 			}
 		}
 	}
+}
+
+TEST_CASE("Getting substring with start index greater than string length")
+{
+	CMyString str("Hello world");
+	CHECK_THROWS_AS(str.SubString(11, 1), std::logic_error);
+	CHECK_THROWS_AS(str.SubString(12, 1), std::logic_error);
 }
 
 TEST_CASE("Check opertor =")

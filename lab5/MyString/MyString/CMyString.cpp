@@ -27,15 +27,13 @@ CMyString::CMyString(const char* pString, size_t length)
     m_chars[m_length] = '\0';
 }
 
-CMyString::CMyString(const char* pString, size_t length, int)
-    : m_chars(new char[length + 1])
+CMyString::CMyString(char* pString, size_t length, int)
+    : m_chars(pString)
     , m_length(length)
 {
-    std::copy(pString, pString + length, m_chars);
-    delete[] pString;
-    m_chars[m_length] = '\0';
 }
 
+//использовать делигирующий конструктор
 CMyString::CMyString(CMyString const& other)
     : m_chars(new char[other.GetLength() + 1])
     , m_length(other.GetLength())
@@ -71,8 +69,9 @@ size_t CMyString::GetLength() const noexcept
 {
     return m_length;
 }
+
 char zeroCode[1] = { '\0' };
-const char* CMyString::GetStringData() const
+const char* CMyString::GetStringData() const noexcept
 {
     // не возвращать nullptr (Исправлено)
     if (m_chars == nullptr)
@@ -84,6 +83,12 @@ const char* CMyString::GetStringData() const
 
 CMyString CMyString::SubString(size_t start, size_t length) const
 {
+    //Проверить, что будет при start > m_length (Исправлено)
+    if (start >= m_length)
+    {
+        //лучше out_of_range
+        throw std::logic_error("Start index of substring can not be greater than string length");
+    }
     size_t remainderLength = m_length - start;
     size_t substrLength = remainderLength < length ? remainderLength : length;
     //утечка памяти (Исправлено)
@@ -181,6 +186,7 @@ CMyString operator+(CMyString const& lhs, CMyString const& rhs)
         throw std::length_error("String cannot be longer than SIZE_MAX");
     }
     //утечка памяти (Исправлено)
+    //опечатка в слове
     size_t lenght = lhs.GetLength() + rhs.GetLength();
     char* chars = new char[lenght + 1];
     std::copy(lhs.GetStringData(), lhs.GetStringData() + lhs.GetLength(), chars);
@@ -188,8 +194,7 @@ CMyString operator+(CMyString const& lhs, CMyString const& rhs)
     chars[lenght] = '\0';
     //явно передавать длину (Исправлено)
     //Создать приватный конструктор (friend) (Исправлено)
-    int i = 0;
-    return CMyString(chars, lenght, i);
+    return CMyString(chars, lenght, int{});
 }
 
 bool operator==(CMyString const& lhs, CMyString const& rhs) noexcept
