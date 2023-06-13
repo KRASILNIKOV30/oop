@@ -86,8 +86,8 @@ CMyString CMyString::SubString(size_t start, size_t length) const
     //Проверить, что будет при start > m_length (Исправлено)
     if (start >= m_length)
     {
-        //лучше out_of_range
-        throw std::logic_error("Start index of substring can not be greater than string length");
+        //лучше out_of_range (ИСправлено)
+        throw std::out_of_range("Start index of substring can not be greater than string length");
     }
     size_t remainderLength = m_length - start;
     size_t substrLength = remainderLength < length ? remainderLength : length;
@@ -186,15 +186,15 @@ CMyString operator+(CMyString const& lhs, CMyString const& rhs)
         throw std::length_error("String cannot be longer than SIZE_MAX");
     }
     //утечка памяти (Исправлено)
-    //опечатка в слове
-    size_t lenght = lhs.GetLength() + rhs.GetLength();
-    char* chars = new char[lenght + 1];
+    //опечатка в слове (Исправлено)
+    size_t length = lhs.GetLength() + rhs.GetLength();
+    char* chars = new char[length + 1];
     std::copy(lhs.GetStringData(), lhs.GetStringData() + lhs.GetLength(), chars);
     std::copy(rhs.GetStringData(), rhs.GetStringData() + rhs.GetLength(), chars + lhs.GetLength());
-    chars[lenght] = '\0';
+    chars[length] = '\0';
     //явно передавать длину (Исправлено)
     //Создать приватный конструктор (friend) (Исправлено)
-    return CMyString(chars, lenght, int{});
+    return CMyString(chars, length, int{});
 }
 
 bool operator==(CMyString const& lhs, CMyString const& rhs) noexcept
