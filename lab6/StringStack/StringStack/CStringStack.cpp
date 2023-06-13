@@ -41,12 +41,17 @@ int CStringStack::GetSize() const
     return m_size;
 }
 
-CStringStack::~CStringStack()
+void CStringStack::Clear()
 {
     while (!IsEmpty())
     {
         Pop();
     }
+}
+
+CStringStack::~CStringStack()
+{
+    Clear();
 }
 
 CStringStack::CStringStack(CStringStack const& other)
@@ -58,7 +63,15 @@ CStringStack::CStringStack(CStringStack const& other)
     while (othersNode->next != nullptr)
     {
         othersNode = othersNode->next;
-        prev->next = new StackNode{ othersNode->value, nullptr };
+        try
+        {
+            prev->next = new StackNode{ othersNode->value, nullptr };
+        }
+        catch (std::exception)
+        {
+            Clear();
+            throw;
+        }
         prev = prev->next;
     }
 }

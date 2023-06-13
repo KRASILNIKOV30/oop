@@ -23,8 +23,11 @@ public:
 	CStringStack& operator=(CStringStack&& other) noexcept;
 
 private:
+	void Clear();
+
+private:
 	StackNode* m_top = nullptr;
-	//добавить размер
+	//добавить размер (исправлено)
 	int m_size = 0;
 };
 
