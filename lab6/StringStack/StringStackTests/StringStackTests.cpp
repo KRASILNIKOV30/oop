@@ -143,3 +143,22 @@ TEST_CASE("Incorrect actions with an empty stack")
 	CHECK_THROWS_AS(stack.GetTop(), std::logic_error);
 	CHECK_THROWS_AS(stack.Pop(), std::logic_error);
 }
+
+TEST_CASE("Stack self-assignment")
+{
+	CStringStack stack;
+	stack.Push("A");
+	stack.Push("B");
+	stack.Push("C");
+
+	stack = stack;
+	stack = std::move(stack);
+
+	CHECK(stack.GetTop() == "C");
+	stack.Pop();
+	CHECK(stack.GetTop() == "B");
+	stack.Pop();
+	CHECK(stack.GetTop() == "A");
+	stack.Pop();
+	CHECK(stack.IsEmpty());
+}

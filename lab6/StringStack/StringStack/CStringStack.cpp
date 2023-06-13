@@ -56,9 +56,9 @@ CStringStack::~CStringStack()
 
 CStringStack::CStringStack(CStringStack const& other)
 {
-    m_size = other.m_size;
     auto othersNode = other.m_top;
     m_top = new StackNode{ othersNode->value, nullptr };
+    m_size++;
     auto prev = m_top;
     while (othersNode->next != nullptr)
     {
@@ -72,6 +72,7 @@ CStringStack::CStringStack(CStringStack const& other)
             Clear();
             throw;
         }
+        m_size++;
         prev = prev->next;
     }
 }
@@ -86,14 +87,21 @@ CStringStack::CStringStack(CStringStack&& other) noexcept
 
 CStringStack& CStringStack::operator=(CStringStack const& other)
 {
-    return *this = std::move(CStringStack(other));
+    if (&other != this)
+    {
+        *this = std::move(CStringStack(other));
+    }
+    return *this;
 }
 
 CStringStack& CStringStack::operator=(CStringStack&& other) noexcept
 {
-    m_top = other.m_top;
-    m_size = other.m_size;
-    other.m_top = nullptr;
-    other.m_size = 0;
+    if (&other != this)
+    {
+        m_top = other.m_top;
+        m_size = other.m_size;
+        other.m_top = nullptr;
+        other.m_size = 0;
+    }
     return *this;
 }
