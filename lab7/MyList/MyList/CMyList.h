@@ -1,4 +1,6 @@
 #include <iterator>
+#include <new>
+#include <memory>
 
 template<typename T>
 struct ListNode
@@ -6,6 +8,28 @@ struct ListNode
 	T value;
 	ListNode* prev;
 	ListNode* next;
+};
+
+template <typename T>
+struct Node
+{
+	template <typename TT>
+	void Construct(TT&& value)
+	{
+		std::construct_at(Get(), std::forward<TT>(value));
+	}
+
+	void Destroy()
+	{
+		std::destroy_at(Get());
+	}
+
+	T* Get()
+	{
+		return reinterpret_cast<T*>(raw);
+	}
+
+	alignas(T) char raw[sizeof(t)];
 };
 
 template<typename T>
@@ -19,6 +43,7 @@ public:
 			: m_pNode(node)
 			, m_isEnd(isEnd)
 		{}
+
 		iterator& operator++() 
 		{
 			if (m_pNode->next == nullptr)
@@ -31,12 +56,14 @@ public:
 			}
 			return *this;
 		}
+
 		iterator operator++(int) 
 		{ 
 			iterator retval = *this;
 			++(*this);
 			return retval;
 		}
+
 		iterator& operator--() 
 		{ 
 			if (m_isEnd)
@@ -49,23 +76,32 @@ public:
 			}
 			return *this;
 		}
+
 		iterator operator--(int)
 		{
 			iterator retval = *this;
 			--(*this);
 			return retval;
 		}
+
 		bool operator==(iterator other) const 
 		{ 
 			return (m_pNode == other.m_pNode) && (m_isEnd == other.m_isEnd);
 		}
+
 		bool operator!=(iterator other) const 
 		{ 
 			return !(*this == other); 
 		}
+
 		T& operator*() const 
 		{ 
 			return m_pNode->value;
+		}
+
+		ListNode<T>* GetNode() const
+		{
+			return m_pNode;
 		}
 
 	private:
@@ -73,6 +109,8 @@ public:
 		bool m_isEnd;
 	};
 
+	//с маленькой буквы
+	//Добавить константные итераторы
 	iterator Begin()
 	{
 		return iterator(m_pFirst);
@@ -83,12 +121,73 @@ public:
 		return iterator(m_pLast, true);
 	}
 
+	std::reverse_iterator<iterator> RBegin()
+	{
+		return std::reverse_iterator<iterator>(End());
+	}
+
+	std::reverse_iterator<iterator> REnd()
+	{
+		return std::reverse_iterator<iterator>(Begin());
+	}
+
 	bool IsEmpty() const;
 	int GetSize() const;
 	void PushBack(T const& value);
 	void PushFront(T const& value);
-	T& GetFirst();
-	T& GetLast();
+	T& GetFirst() const;
+	T& GetLast() const;
+	//const iterator
+	iterator Erase(iterator iter)
+	{
+		ListNode<T>* node = iter.GetNode();
+		ListNode<T>* result = node->next;
+		bool isEnd = false;
+		if (node->prev != nullptr)
+		{
+			node->prev->next = node->next;
+		}
+		else
+		{
+			m_pFirst = node->next;
+		}
+		if (node->next != nullptr)
+		{
+			node->next->prev = node->prev;
+		}
+		else
+		{
+			m_pLast = node->prev;
+			result = node->prev;
+			isEnd = true;
+		}
+		delete node;
+		m_size--;
+
+		return iterator(result, isEnd);
+	}
+
+	//const iterator
+	iterator Insert(iterator iter, T const& value)
+	{
+		if (iter == End())
+		{
+			PushBack(value);
+			return --End();
+		}
+		if (iter == Begin())
+		{
+			PushFront(value);
+			return Begin();
+		}
+		ListNode<T>* node = iter.GetNode();
+		ListNode<T>* newNode = new ListNode<T>{ value, node->prev, node };
+		node->prev->next = newNode;
+		node->prev = newNode;
+		m_size++;
+
+		return iterator(newNode);
+	}
 	
 private:
 	ListNode<T>* m_pFirst = nullptr;
@@ -141,7 +240,7 @@ inline void CMyList<T>::PushFront(T const& value)
 }
 
 template<typename T>
-inline T& CMyList<T>::GetFirst()
+inline T& CMyList<T>::GetFirst() const
 {
 	if (IsEmpty())
 	{
@@ -151,7 +250,7 @@ inline T& CMyList<T>::GetFirst()
 }
 
 template<typename T>
-inline T& CMyList<T>::GetLast()
+inline T& CMyList<T>::GetLast() const
 {
 	if (IsEmpty())
 	{

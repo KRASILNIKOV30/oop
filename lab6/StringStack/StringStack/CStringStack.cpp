@@ -54,18 +54,18 @@ CStringStack::~CStringStack()
     Clear();
 }
 
-CStringStack::CStringStack(CStringStack const& other)
+CStringStack::CStringStack(CStringStack const& source)
 {
-    auto othersNode = other.m_top;
-    m_top = new StackNode{ othersNode->value, nullptr };
+    auto sourcesNode = source.m_top;
+    m_top = new StackNode{ sourcesNode->value, nullptr };
     m_size++;
     auto prev = m_top;
-    while (othersNode->next != nullptr)
+    while (sourcesNode->next != nullptr)
     {
-        othersNode = othersNode->next;
+        sourcesNode = sourcesNode->next;
         try
         {
-            prev->next = new StackNode{ othersNode->value, nullptr };
+            prev->next = new StackNode{ sourcesNode->value, nullptr };
         }
         catch (std::exception)
         {

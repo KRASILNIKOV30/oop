@@ -17,7 +17,7 @@ public:
 	void Pop();
 	int GetSize() const;
 	~CStringStack();
-	CStringStack(CStringStack const& other);
+	CStringStack(CStringStack const& source);
 	CStringStack(CStringStack&& other) noexcept;
 	CStringStack& operator=(CStringStack const& other);
 	CStringStack& operator=(CStringStack&& other) noexcept;
