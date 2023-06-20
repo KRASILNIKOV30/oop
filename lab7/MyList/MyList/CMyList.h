@@ -2,14 +2,6 @@
 #include <new>
 #include <memory>
 
-template<typename T>
-struct ListNode
-{
-	T value;
-	ListNode* prev;
-	ListNode* next;
-};
-
 template <typename T>
 struct Node
 {
@@ -29,31 +21,37 @@ struct Node
 		return reinterpret_cast<T*>(raw);
 	}
 
-	alignas(T) char raw[sizeof(t)];
+	alignas(T) char raw[sizeof(T)];
+};
+
+template<typename T>
+struct ListNode
+{
+	ListNode* prev;
+	ListNode* next;
+	Node<T> value;
 };
 
 template<typename T>
 class CMyList
 {
 public:
-	class iterator : public std::iterator<std::bidirectional_iterator_tag, T, T, const T*, T>
+	class iterator
 	{
 	public:
-		iterator(ListNode<T>* node, bool isEnd = false) 
+		using iterator_category = std::bidirectional_iterator_tag;
+		using value_type = T;
+		using difference_type = T;
+		using pointer = const T*;
+		using reference = T;
+
+		iterator(ListNode<T>* node) 
 			: m_pNode(node)
-			, m_isEnd(isEnd)
 		{}
 
 		iterator& operator++() 
 		{
-			if (m_pNode->next == nullptr)
-			{
-				m_isEnd = true;
-			}
-			else
-			{
-				m_pNode = m_pNode->next;
-			}
+			m_pNode = m_pNode->next;
 			return *this;
 		}
 
@@ -66,14 +64,7 @@ public:
 
 		iterator& operator--() 
 		{ 
-			if (m_isEnd)
-			{
-				m_isEnd = false;
-			}
-			else
-			{
-				m_pNode = m_pNode->prev;
-			}
+			m_pNode = m_pNode->prev;
 			return *this;
 		}
 
@@ -86,7 +77,7 @@ public:
 
 		bool operator==(iterator other) const 
 		{ 
-			return (m_pNode == other.m_pNode) && (m_isEnd == other.m_isEnd);
+			return m_pNode == other.m_pNode;
 		}
 
 		bool operator!=(iterator other) const 
@@ -96,7 +87,7 @@ public:
 
 		T& operator*() const 
 		{ 
-			return m_pNode->value;
+			return *m_pNode->value.Get();
 		}
 
 		ListNode<T>* GetNode() const
@@ -106,29 +97,28 @@ public:
 
 	private:
 		ListNode<T>* m_pNode;
-		bool m_isEnd;
 	};
 
 	//с маленькой буквы
 	//Добавить константные итераторы
-	iterator Begin()
+	iterator begin()
 	{
 		return iterator(m_pFirst);
 	}
 
-	iterator End()
+	iterator end()
 	{
-		return iterator(m_pLast, true);
+		return iterator(m_pSentinel);
 	}
 
-	std::reverse_iterator<iterator> RBegin()
+	std::reverse_iterator<iterator> rbegin()
 	{
-		return std::reverse_iterator<iterator>(End());
+		return std::reverse_iterator<iterator>(end());
 	}
 
-	std::reverse_iterator<iterator> REnd()
+	std::reverse_iterator<iterator> rend()
 	{
-		return std::reverse_iterator<iterator>(Begin());
+		return std::reverse_iterator<iterator>(begin());
 	}
 
 	bool IsEmpty() const;
@@ -142,46 +132,39 @@ public:
 	{
 		ListNode<T>* node = iter.GetNode();
 		ListNode<T>* result = node->next;
-		bool isEnd = false;
 		if (node->prev != nullptr)
 		{
 			node->prev->next = node->next;
-		}
-		else
-		{
-			m_pFirst = node->next;
-		}
-		if (node->next != nullptr)
-		{
 			node->next->prev = node->prev;
 		}
 		else
 		{
-			m_pLast = node->prev;
-			result = node->prev;
-			isEnd = true;
+			m_pFirst = node->next;
+			node->next->prev = nullptr;
 		}
+		node->value.Destroy();
 		delete node;
 		m_size--;
 
-		return iterator(result, isEnd);
+		return iterator(result);
 	}
 
 	//const iterator
 	iterator Insert(iterator iter, T const& value)
 	{
-		if (iter == End())
+		if (iter == end())
 		{
 			PushBack(value);
-			return --End();
+			return --end();
 		}
-		if (iter == Begin())
+		if (iter == begin())
 		{
 			PushFront(value);
-			return Begin();
+			return begin();
 		}
 		ListNode<T>* node = iter.GetNode();
-		ListNode<T>* newNode = new ListNode<T>{ value, node->prev, node };
+		ListNode<T>* newNode = new ListNode<T>{ node->prev, node };
+		newNode->value.Construct(value);
 		node->prev->next = newNode;
 		node->prev = newNode;
 		m_size++;
@@ -190,8 +173,8 @@ public:
 	}
 	
 private:
-	ListNode<T>* m_pFirst = nullptr;
-	ListNode<T>* m_pLast = nullptr;
+	ListNode<T>* m_pSentinel = new ListNode{ m_pSentinel, m_pSentinel };
+	ListNode<T>* m_pFirst = m_pSentinel;
 	int m_size = 0;
 };
 
@@ -210,33 +193,26 @@ inline int CMyList<T>::GetSize() const
 template<typename T>
 inline void CMyList<T>::PushBack(T const& value)
 {
-	ListNode<T>* last = new ListNode<T>{ value, m_pLast, nullptr };
-	m_pLast = last;
+	if (IsEmpty())
+	{
+		PushFront(value);
+		return;
+	}
+	ListNode<T>* last = new ListNode<T>{ m_pSentinel->prev, m_pSentinel };
+	last->value.Construct(value);
+	m_pSentinel->prev->next = last;
+	m_pSentinel->prev = last;
 	m_size++;
-	if (GetSize() == 1)
-	{
-		m_pFirst = m_pLast;
-	}
-	else
-	{
-		m_pLast->prev->next = m_pLast;
-	}
 }
 
 template<typename T>
 inline void CMyList<T>::PushFront(T const& value)
 {
-	ListNode<T>* first = new ListNode<T>{ value, nullptr, m_pFirst };
+	ListNode<T>* first = new ListNode<T>{ nullptr, m_pFirst };
+	first->value.Construct(value);
 	m_pFirst = first;
+	m_pFirst->next->prev = m_pFirst;
 	m_size++;
-	if (GetSize() == 1)
-	{
-		m_pLast = m_pFirst;
-	}
-	else
-	{
-		m_pFirst->next->prev = m_pFirst;
-	}
 }
 
 template<typename T>
@@ -246,7 +222,7 @@ inline T& CMyList<T>::GetFirst() const
 	{
 		throw std::out_of_range("List is empty");
 	}
-	return m_pFirst->value;
+	return *m_pFirst->value.Get();
 }
 
 template<typename T>
@@ -256,5 +232,5 @@ inline T& CMyList<T>::GetLast() const
 	{
 		throw std::out_of_range("List is empty");
 	}
-	return m_pLast->value;
+	return *m_pSentinel->prev->value.Get();
 }

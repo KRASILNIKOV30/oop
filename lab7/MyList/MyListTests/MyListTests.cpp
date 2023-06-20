@@ -58,19 +58,10 @@ SCENARIO("Iterator test")
 		list.PushBack("A");
 		list.PushBack("B");
 		list.PushBack("C");
-		/*std::list<std::string> stlList;
-		stlList.push_back("A");
-		stlList.push_back("B");
-		stlList.push_back("C");
-		auto it = stlList.rbegin();
-		for (it; it != stlList.rend(); it++)
-		{
-			std::cout << *it << std::endl;
-		}*/
 
 		WHEN("Get begin iterator")
 		{
-			auto it = list.Begin();
+			auto it = list.begin();
 
 			THEN("Iterator points to first element")
 			{
@@ -92,7 +83,7 @@ SCENARIO("Iterator test")
 
 		WHEN("Get end iterator")
 		{
-			auto it = list.End();
+			auto it = list.end();
 
 			THEN("Iterator points to element following the last")
 			{
@@ -120,7 +111,7 @@ SCENARIO("Reverce iterator test")
 
 		WHEN("Get reverse iterator to begin")
 		{
-			auto it = list.RBegin();
+			auto it = list.rbegin();
 
 			THEN("Iterator points to first element")
 			{
@@ -142,7 +133,7 @@ SCENARIO("Reverce iterator test")
 
 		WHEN("Get reverse iterator to end")
 		{
-			auto it = list.REnd();
+			auto it = list.rend();
 
 			THEN("Iterator points to element following the last")
 			{
@@ -163,10 +154,10 @@ SCENARIO("Erase element from list")
 
 		WHEN("Erase element from the middle of the list")
 		{
-			auto it = list.Begin();
+			auto it = list.begin();
 			it = list.Erase(++it);
 
-			THEN("Element erased and list contaons two elements")
+			THEN("Element erased and list contains two elements")
 			{
 				CHECK(list.GetSize() == 2);
 				CHECK(list.GetFirst() == "A");
@@ -177,34 +168,34 @@ SCENARIO("Erase element from list")
 
 		WHEN("Erase the first element")
 		{
-			auto it = list.Erase(list.Begin());
+			auto it = list.Erase(list.begin());
 
 			THEN("Element erased and list contaons two elements")
 			{
 				CHECK(list.GetSize() == 2);
 				CHECK(list.GetFirst() == "B");
 				CHECK(list.GetLast() == "C");
-				CHECK(it == list.Begin());
+				CHECK(it == list.begin());
 			}
 		}
 
 		WHEN("Erase the last element")
 		{
-			auto it = list.Erase(list.End());
+			auto it = list.Erase(--list.end());
 
 			THEN("Element erased and list contaons two elements")
 			{
 				CHECK(list.GetSize() == 2);
 				CHECK(list.GetFirst() == "A");
 				CHECK(list.GetLast() == "B");
-				CHECK(it == list.End());
+				CHECK(it == list.end());
 			}
 		}
 
 		WHEN("Erase element from list with size 1")
 		{
-			list.Erase(list.End());
-			auto it = list.Erase(list.Begin());
+			list.Erase(--list.end());
+			auto it = list.Erase(list.begin());
 			CHECK(list.GetSize() == 1);
 			list.Erase(it);
 
@@ -224,19 +215,19 @@ SCENARIO("Insert element to list")
 
 		WHEN("Insert element at the begin")
 		{
-			auto it = list.Insert(list.Begin(), "A");
+			auto it = list.Insert(list.begin(), "A");
 
 			THEN("List contains one element")
 			{
 				CHECK(list.GetSize() == 1);
 				CHECK(list.GetFirst() == "A");
 				CHECK(list.GetLast() == "A");
-				CHECK(it == list.Begin());
+				CHECK(it == list.begin());
 			}
 
 			AND_WHEN("Insert element at the end")
 			{
-				it = list.Insert(list.End(), "C");
+				it = list.Insert(list.end(), "C");
 
 				THEN("List contains two elements")
 				{
