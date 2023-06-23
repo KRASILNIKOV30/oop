@@ -42,6 +42,7 @@ public:
 class ISpeakable
 {
 public:
+    virtual ~ISpeakable() = default;
     virtual void Speak() const = 0;
 };
 
@@ -224,7 +225,7 @@ public:
     {}
     void Speak() const final
     {
-        std::cout << "meow";
+        std::cout << "meow" << std::endl;
     }
     void Draw(ICanvas& canvas) const final
     {
@@ -248,7 +249,7 @@ public:
     {}
     void Speak() const final
     {
-        std::cout << "My name is " << m_name << " and I was born at " << m_birthYear;
+        std::cout << "My name is " << m_name << " and I was born at " << m_birthYear << std::endl;
     }
 private:
     std::string m_name;
@@ -277,7 +278,6 @@ void Draw(std::vector<std::shared_ptr<ICanvasDrawable>> const& drawableObjects, 
 void CopyState(const ISerializable& from, ISerializable& to)
 {
     std::stringstream stream;
-    stream = std::stringstream();
     from.SaveTo(stream);
     to.RestoreFrom(stream);
 }

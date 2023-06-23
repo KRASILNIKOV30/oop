@@ -2,41 +2,15 @@
 //
 
 #include <iostream>
+#include "Test.h"
 #include <string>
-#include <vector>
 
 int main()
 {
-    if constexpr (1 < 2)
-    {
-        std::cout << "1 < 2";
-    }
-    else
-    {
-        std::cout << "1 >= 2";
-    }
-    for (int i = 0; i < 10; i++)
-    {
-    }
-    int i = 0;
-    std::vector<int> nums{ 1, 2, 3 };
-    for (int& num : nums)
-    {
-        num++;
-    }
-    
-    for (std::string line; std::getline(std::cin, line);)
-    {
-
-    }
-    switch (i)
-    {
-    case 0:
-        std::cout << '0';
-        [[fallthrough]];
-    case 1:
-        std::cout << '1';
-    }
+    std::cout << max("hello", "world");
+    Foo<std::string>();
+    F(5, 5.5);
+    return 0;
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
