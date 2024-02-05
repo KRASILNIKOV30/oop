@@ -127,6 +127,7 @@ TEST_CASE("Check operator -")
 TEST_CASE("Check operator +=")
 {
 	CRational x(1, 2);
+
 	CRational y(1, 2);
 	CHECK(std::addressof(x += y) == std::addressof(x));
 	CHECK((CRational(1, 2) += CRational(1, 6)) == CRational(2, 3));
