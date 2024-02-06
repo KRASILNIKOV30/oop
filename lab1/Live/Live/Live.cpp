@@ -39,7 +39,6 @@ optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-//поменять название: не ожидпется вывод
 bool IsInputOpen(ifstream& input)
 {
 
@@ -189,6 +188,7 @@ void ReadMatrix(ifstream& input, char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], in
 	fieldHeight = coords.x;
 }
 
+// Вынести в структуру Field
 void WriteMatrix(ostream& output, const char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], int fieldWidth, int fieldHeight)
 {
 	Coordinates coords = { 0, 0 };

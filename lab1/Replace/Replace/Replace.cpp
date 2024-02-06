@@ -26,7 +26,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-std::string Replace(std::string_view str, std::string const& searchStr, std::string const& replaceStr)
+std::string ReplaceString(std::string_view str, std::string const& searchStr, std::string const& replaceStr)
 {
 	size_t searchStrLength = searchStr.size();
 	size_t strLength = str.size();
@@ -34,25 +34,25 @@ std::string Replace(std::string_view str, std::string const& searchStr, std::str
 	size_t pos = 0;
 	while (pos < strLength)
 	{
-		size_t searchStrPos = str.find(searchStr, pos);
-		if (searchStrPos == std::string_view::npos)
+		size_t foundPos = str.find(searchStr, pos);
+		if (foundPos == std::string_view::npos)
 		{
 			return result.append(str, pos);
 		}
-		result.append(str, pos, searchStrPos - pos);
+		result.append(str, pos, foundPos - pos);
 		result.append(replaceStr);
-		pos = searchStrPos + searchStrLength;
+		pos = foundPos + searchStrLength;
 	}
 
 	return result;
 }
 
-bool HandleStreams(std::istream& input, std::ostream& output, std::string const& searchStr, std::string const& replaceStr)
+bool CopyStreamWithReplacement(std::istream& input, std::ostream& output, std::string const& searchStr, std::string const& replaceStr)
 {
 	std::string line;
 	while (std::getline(input, line))
 	{
-		if (!(output << Replace(line, searchStr, replaceStr) << std::endl))
+		if (!(output << ReplaceString(line, searchStr, replaceStr) << std::endl))
 		{
 			std::cout << "Failed to save data on disk" << std::endl;
 			return false;
@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 	}
 
 
-	if (!HandleStreams(input, output, args->searchStr, args->replaceStr))
+	if (!CopyStreamWithReplacement(input, output, args->searchStr, args->replaceStr))
 	{
 		return 1;
 	}
