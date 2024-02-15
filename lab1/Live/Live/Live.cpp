@@ -4,8 +4,6 @@
 #include <optional>
 #include <string>
 
-using namespace std;
-
 namespace {
 	const char LIVE_CELL = '#';
 	const char BOUND = '*';
@@ -14,20 +12,27 @@ namespace {
 	struct Coordinates {
 		int x;
 		int y;
+	}; 
+
+	struct Field
+	{
+		char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE];
+		size_t width;
+		size_t height;
 	};
 }
 
 struct Args
 {
-	string inputFileName;
-	string outputFileName;
+	std::string inputFileName;
+	std::string outputFileName;
 };
 
-optional<Args> ParseArgs(int argc, char* argv[])
+std::optional<Args> ParseArgs(int argc, char* argv[])
 {
 	if (argc != 3 && argc != 2)
 	{
-		return nullopt;
+		return std::nullopt;
 	}
 
 	Args args;
@@ -39,40 +44,40 @@ optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-bool IsInputOpen(ifstream& input)
+bool IsInputOpen(std::ifstream& input)
 {
 
 	if (!input.is_open())
 	{
-		cout << "Failed to open file for reading" << endl;
+		std::cout << "Failed to open file for reading" << std::endl;
 		return false;
 	}
 	
 	return true;
 }
 
-bool SaveErrorHandling(ostream& output)
+bool SaveErrorHandling(std::ostream& output)
 {
 	if (!output.flush())
 	{
-		cout << "Failed to save data on disk" << endl;
+		std::cout << "Failed to save data on disk" << std::endl;
 		return false;
 	}
 	return true;
 }
 
-bool ProcessArgError(const optional<Args>& args)
+bool ProcessArgError(const std::optional<Args>& args)
 {
 	if (!args.has_value())
 	{
-		cout << "Invalid arguments count" << endl;
-		cout << "Usage: live.exe <input file> <output file>" << endl;
+		std::cout << "Invalid arguments count" << std::endl;
+		std::cout << "Usage: live.exe <input file> <output file>" << std::endl;
 		return false;
 	}
 	return true;
 }
 
-int GetCellNeighboursNumber(char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], Coordinates coords)
+int GetCellNeighboursNumber(char const matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], Coordinates coords)
 {
 	int result = 0;
 	for (int x = coords.x - 1; x <= coords.x + 1; x++)
@@ -113,34 +118,29 @@ char GetDeadCellNextState(int neighboursNumber)
 	}
 }
 
-#if 0
-Generation GenerateNext(const Generation& generation)
+void GenerateNextGeneration(Field const& inField, Field& outField)
 {
-
-}
-#endif
-
-void GenerateNextGeneration(char inMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], char outMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], size_t fieldWidth, size_t fieldHeight)
-{
-	for (int x = 0; x < fieldHeight; x++)
+	outField.width = inField.width;
+	outField.height = inField.height;
+	for (int x = 0; x < inField.height; x++)
 	{
-		for (int y = 0; y < fieldWidth; y++)
+		for (int y = 0; y < inField.width; y++)
 		{
 			
-			int neighboursNumber = GetCellNeighboursNumber(inMatrix, { x, y });
-			switch (inMatrix[x][y])
+			int neighboursNumber = GetCellNeighboursNumber(inField.matrix, { x, y });
+			switch (inField.matrix[x][y])
 			{
 				case BOUND:
-					outMatrix[x][y] = BOUND;
+					outField.matrix[x][y] = BOUND;
 					break;
 				case LIVE_CELL:
-					outMatrix[x][y] = GetLiveCellNextState(neighboursNumber);
+					outField.matrix[x][y] = GetLiveCellNextState(neighboursNumber);
 					break;
 				case DEAD_CELL:
-					outMatrix[x][y] = GetDeadCellNextState(neighboursNumber);
+					outField.matrix[x][y] = GetDeadCellNextState(neighboursNumber);
 					break;
 				default:
-					outMatrix[x][y] = DEAD_CELL;
+					outField.matrix[x][y] = DEAD_CELL;
 					break;
 			}
 		}	
@@ -156,50 +156,63 @@ int GetFieldWidth(size_t rowLength)
 	return MAX_FIELD_SIZE;
 }
 
-//можно не выделять в функцию
-bool NoFieldInRow(char firstRowElement)
+//поменять x y (Исправлено)
+void ReadMatrix(std::istream& input, Field& field)
 {
-	return firstRowElement != BOUND;
-}
-
-//поменять x y
-void ReadMatrix(ifstream& input, char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], int& fieldWidth, int& fieldHeight)
-{
-	string str;
+	std::string str;
 	Coordinates coords = { 0, 0 };
-	while (getline(input, str))
+	while (std::getline(input, str))
 	{
-		if (NoFieldInRow(str[0]))
+		if (str[0] != BOUND)
 		{
 			break;
 		}
-		fieldWidth = GetFieldWidth(str.length());
+		field.width = GetFieldWidth(str.length());
 		for (coords.y = 0; coords.y < str.length() && coords.y < MAX_FIELD_SIZE; coords.y++)
 		{
-			matrix[coords.x][coords.y] = str[coords.y];
+			field.matrix[coords.x][coords.y] = str[coords.y];
 		}
 		coords.x++;
 		if (coords.x == MAX_FIELD_SIZE)
 		{
-			fieldHeight = MAX_FIELD_SIZE;
+			field.height = MAX_FIELD_SIZE;
 			return;
 		}
 	}
-	fieldHeight = coords.x;
+	field.height = coords.x;
 }
 
-// Вынести в структуру Field
-void WriteMatrix(ostream& output, const char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], int fieldWidth, int fieldHeight)
+// Вынести в структуру Field (Исправлено)
+void WriteMatrix(std::ostream& output, Field const& field)
 {
 	Coordinates coords = { 0, 0 };
-	for (coords.x; coords.x < fieldHeight; coords.x++)
+	for (coords.x; coords.x < field.height; coords.x++)
 	{
-		for (coords.y = 0; coords.y < fieldWidth; coords.y++)
+		for (coords.y = 0; coords.y < field.width; coords.y++)
 		{
-			output << matrix[coords.x][coords.y];
+			output << field.matrix[coords.x][coords.y];
 		}
-		output << endl;
+		output << std::endl;
 	}
+}
+
+bool WriteResult(std::string outputFileName, Field const& outField)
+{
+	if (outputFileName == "")
+	{
+		WriteMatrix(std::cout, outField);
+	}
+	else
+	{
+		std::ofstream output(outputFileName);
+		WriteMatrix(output, outField);
+		if (!SaveErrorHandling(output))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 int main(int argc, char* argv[])
@@ -211,33 +224,22 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	ifstream input(args->inputFileName, ios::in);
+	std::ifstream input(args->inputFileName);
 	
-	if (!IsInputOpen(input))
+	/*if (!IsInputOpen(input))
 	{
 		return 1;
-	}
+	}*/
 
-	char inMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE];
-	char outMatrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE];
-	int fieldWidth = 0;
-	int fieldHeight = 0;
+	Field inField;
+	Field outField;
 
-	ReadMatrix(input, inMatrix, fieldWidth, fieldHeight);
-	GenerateNextGeneration(inMatrix, outMatrix, fieldWidth, fieldHeight);
+	ReadMatrix(input, inField);
+	GenerateNextGeneration(inField, outField);
 
-	if (args->outputFileName == "")
+	if (!WriteResult(args->outputFileName, outField))
 	{
-		WriteMatrix(cout, outMatrix, fieldWidth, fieldHeight);
-	}
-	else
-	{
-		ofstream output(args->outputFileName, ios::out);
-		WriteMatrix(output, outMatrix, fieldWidth, fieldHeight);
-		if (!SaveErrorHandling(output))
-		{
-			return 1;
-		}
+		return 1;
 	}
 
 	return 0;

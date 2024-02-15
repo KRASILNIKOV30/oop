@@ -2,9 +2,12 @@
 #include <optional>
 #include <fstream>
 #include <iomanip>
+#include <array>
 
 constexpr double EPSILON = 1e-7;
 constexpr int PRECISION = 3;
+
+using Mat3x3 = std::array<std::array<double, 3>, 3>;
 
 struct Args
 {
@@ -26,6 +29,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
     return args;
 }
 
+// E,hfnm aeyrwb.
 bool OpenStreamsErrorHandling(std::ifstream& input, std::ofstream& output)
 {
 
@@ -42,8 +46,10 @@ bool OpenStreamsErrorHandling(std::ifstream& input, std::ofstream& output)
     return true;
 }
 
+// Вернуть матрицу или выбросить исключение
 bool ReadMatrix(std::istream& input, double matrix[3][3])
 {
+    // Считывать в элемент массива
     double inValue;
     for (int i = 0; i < 3; i++)
     {
@@ -72,6 +78,7 @@ double SetPrecision(double i, int p)
 
 void WriteMatrix(std::ostream& output, double matrix[3][3])
 {
+    // использовать setw и fixed
     output << std::setprecision(PRECISION);
     for (int i = 0; i < 3; i++)
     {
@@ -107,12 +114,14 @@ double GetMinorDeterminant(int i, int j, double matrix[3][3])
     return matrix[i1][j1] * matrix[i2][j2] - matrix[i1][j2] * matrix[i2][j1];
 }
 
+// Возвращать optional<Mat3x3>
 bool InvertMatrix(double matrix[3][3], double invertMatrix[3][3])
 {
     double det = GetDeterminant(matrix);
 
     if (std::abs(det) < EPSILON)
     {
+        // Убрать вывод
         std::cout << "Determinant is equal to zero" << std::endl;
         return false;
     }
@@ -138,6 +147,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    // Вывод в std::cout
     std::ifstream inMatrixStream(args->inputMatrixFile);
     std::ofstream outMatrixStream(args->outputMatrixFile);
 
@@ -147,6 +157,7 @@ int main(int argc, char* argv[])
     }
 
     double matrix[3][3];
+    // принимать имя файла
     if (!ReadMatrix(inMatrixStream, matrix))
     {
         return 1;
