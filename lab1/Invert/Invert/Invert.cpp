@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <array>
 
-constexpr double EPSILON = 1e-7;
+constexpr double EPSILON = 1e-3;
 constexpr int PRECISION = 3;
 
 using Mat3x3 = std::array<std::array<double, 3>, 3>;
@@ -12,85 +12,61 @@ using Mat3x3 = std::array<std::array<double, 3>, 3>;
 struct Args
 {
     std::string inputMatrixFile;
-    std::string outputMatrixFile;
 };
 
 std::optional<Args> ParseArgs(int argc, char* argv[])
 {
-    if (argc != 3)
+    if (argc != 2)
     {
-        std::cout << "Invalid arguments count\n";
-        std::cout << "Usage: invert.exe <input matrix file> <output matrix file>\n";
+        std::cout << "Invalid arguments count" << std::endl;
+        std::cout << "Usage: invert.exe <input matrix file>" << std::endl;
         return std::nullopt;
     };
     Args args;
     args.inputMatrixFile = argv[1];
-    args.outputMatrixFile = argv[2];
     return args;
 }
 
-// E,hfnm aeyrwb.
-bool OpenStreamsErrorHandling(std::ifstream& input, std::ofstream& output)
+// Вернуть матрицу или выбросить исключение (Исправлено)
+Mat3x3 ReadMatrix(std::string const& inputFileName)
 {
-
+    std::ifstream input(inputFileName);
     if (!input.is_open())
     {
-        std::cout << "Failed to open file for reading\n";
-        return false;
+        throw std::invalid_argument("Failed to open file for reading");
     }
-    if (!output.is_open())
-    {
-        std::cout << "Failed to open file for writing\n";
-        return false;
-    }
-    return true;
-}
 
-// Вернуть матрицу или выбросить исключение
-bool ReadMatrix(std::istream& input, double matrix[3][3])
-{
-    // Считывать в элемент массива
-    double inValue;
+    Mat3x3 matrix;
+    // Считывать в элемент массива (Исправлено)
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            if (input >> inValue)
+            if (!(input >> matrix[i][j]))
             {
-                matrix[i][j] = inValue;
-            }
-            else
-            {
-                std::cout << "Invalid input matrix\n";
-                return false;
+                throw std::invalid_argument("Invalid input matrix");
             }
         }
     }
-    return true;
+    return matrix;
 }
 
-double SetPrecision(double i, int p)
+void WriteMatrix(std::ostream& output, Mat3x3 const& matrix)
 {
-    double coef = std::pow(10, p);
-    double result = std::round(i * coef) / coef;
-    return result == -0 ? 0 : result;
-}
-
-void WriteMatrix(std::ostream& output, double matrix[3][3])
-{
-    // использовать setw и fixed
-    output << std::setprecision(PRECISION);
+    // использовать setw и fixed (Исправлено)
+    std::cout << std::setprecision(PRECISION) << std::fixed;
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            output << SetPrecision(matrix[i][j], PRECISION) << " ";
+            double el = matrix[i][j];
+            output << std::setw(PRECISION * 2) << ((std::abs(el) < EPSILON) ? 0 : el) << " ";
         }
         output << std::endl;
     }
 }
 
-double GetDeterminant(const double matrix[3][3])
+double GetDeterminant(Mat3x3 const& matrix)
 {
     double positiveTriangle1 = matrix[0][1] * matrix[1][2] * matrix[2][0];
     double positiveTriangle2 = matrix[1][0] * matrix[2][1] * matrix[0][2];
@@ -104,7 +80,7 @@ double GetDeterminant(const double matrix[3][3])
         - negativeTriangle1 - negativeTriangle2 - negativeDiagonal;
 }
 
-double GetMinorDeterminant(int i, int j, double matrix[3][3])
+double GetMinorDeterminant(int i, int j, Mat3x3 const& matrix)
 {
     int i1 = i == 0 ? 1 : 0;
     int i2 = i == 2 ? 1 : 2;
@@ -114,28 +90,28 @@ double GetMinorDeterminant(int i, int j, double matrix[3][3])
     return matrix[i1][j1] * matrix[i2][j2] - matrix[i1][j2] * matrix[i2][j1];
 }
 
-// Возвращать optional<Mat3x3>
-bool InvertMatrix(double matrix[3][3], double invertMatrix[3][3])
+// Возвращать optional<Mat3x3> (Исправлено)
+std::optional<Mat3x3> InvertMatrix(Mat3x3 const& matrix)
 {
     double det = GetDeterminant(matrix);
 
     if (std::abs(det) < EPSILON)
     {
-        // Убрать вывод
-        std::cout << "Determinant is equal to zero" << std::endl;
-        return false;
+        // Убрать вывод (Исправлено)
+        return std::nullopt;
     }
 
+    Mat3x3 result;
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            invertMatrix[i][j] = GetMinorDeterminant(j, i, matrix) / det;
-            invertMatrix[i][j] *= ((i + j) % 2) ? -1 : 1;
+            result[i][j] = GetMinorDeterminant(j, i, matrix) / det;
+            result[i][j] *= ((i + j) % 2) ? -1 : 1;
         }
     }
 
-    return true;
+    return result;
 }
 
 int main(int argc, char* argv[])
@@ -147,28 +123,25 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // Вывод в std::cout
-    std::ifstream inMatrixStream(args->inputMatrixFile);
-    std::ofstream outMatrixStream(args->outputMatrixFile);
-
-    if (!OpenStreamsErrorHandling(inMatrixStream, outMatrixStream))
+    // Вывод в std::cout (Исправлено)
+    // принимать имя файла (Исправлено)
+    Mat3x3 matrix;
+    try
     {
+        matrix = ReadMatrix(args->inputMatrixFile);
+    }
+    catch (std::exception& e)
+    {
+        std::cout << e.what() << std::endl;
         return 1;
     }
 
-    double matrix[3][3];
-    // принимать имя файла
-    if (!ReadMatrix(inMatrixStream, matrix))
+    auto invertedMatrix = InvertMatrix(matrix);
+    if (!invertedMatrix.has_value())
     {
+        std::cout << "Inverted matrix does not exist" << std::endl;
         return 1;
     }
 
-    double resultMatrix[3][3];
-
-    if (!InvertMatrix(matrix, resultMatrix))
-    {
-        return 1;
-    }
-
-    WriteMatrix(outMatrixStream, resultMatrix);
+    WriteMatrix(std::cout, invertedMatrix.value());
 }
