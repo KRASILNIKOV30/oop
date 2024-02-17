@@ -3,35 +3,42 @@
 #include <vector>
 #include <optional>
 #include <string>
+#include <array>
 
-namespace {
+namespace 
+{
 	const char LIVE_CELL = '#';
 	const char BOUND = '*';
 	const char DEAD_CELL = ' ';
 	const int MAX_FIELD_SIZE = 20;
+
 	struct Coordinates {
 		int x;
 		int y;
-	}; 
+	};
+
+	using FieldMatrix = std::array<std::array<char, MAX_FIELD_SIZE>, MAX_FIELD_SIZE>;
 
 	struct Field
 	{
-		char matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE];
-		size_t width;
-		size_t height;
+		int width;
+		int height;
+		FieldMatrix matrix;
+	};
+
+	struct Args
+	{
+		std::string inputFileName;
+		std::optional<std::string> outputFileName = std::nullopt;
 	};
 }
-
-struct Args
-{
-	std::string inputFileName;
-	std::string outputFileName;
-};
 
 std::optional<Args> ParseArgs(int argc, char* argv[])
 {
 	if (argc != 3 && argc != 2)
 	{
+		std::cout << "Invalid arguments count" << std::endl;
+		std::cout << "Usage: live.exe <input file> [<output file>]" << std::endl;
 		return std::nullopt;
 	}
 
@@ -42,56 +49,6 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	}
 
 	return args;
-}
-
-bool IsInputOpen(std::ifstream& input)
-{
-
-	if (!input.is_open())
-	{
-		std::cout << "Failed to open file for reading" << std::endl;
-		return false;
-	}
-	
-	return true;
-}
-
-bool SaveErrorHandling(std::ostream& output)
-{
-	if (!output.flush())
-	{
-		std::cout << "Failed to save data on disk" << std::endl;
-		return false;
-	}
-	return true;
-}
-
-bool ProcessArgError(const std::optional<Args>& args)
-{
-	if (!args.has_value())
-	{
-		std::cout << "Invalid arguments count" << std::endl;
-		std::cout << "Usage: live.exe <input file> <output file>" << std::endl;
-		return false;
-	}
-	return true;
-}
-
-int GetCellNeighboursNumber(char const matrix[MAX_FIELD_SIZE][MAX_FIELD_SIZE], Coordinates coords)
-{
-	int result = 0;
-	for (int x = coords.x - 1; x <= coords.x + 1; x++)
-	{
-		for (int y = coords.y - 1; y <= coords.y + 1; y++)
-		{
-			if (!(x == coords.x && y == coords.y) && matrix[x][y] == LIVE_CELL)
-			{
-				result++;
-			}
-		}
-	}
-
-	return result;
 }
 
 char GetLiveCellNextState(int neighboursNumber)
@@ -118,36 +75,7 @@ char GetDeadCellNextState(int neighboursNumber)
 	}
 }
 
-void GenerateNextGeneration(Field const& inField, Field& outField)
-{
-	outField.width = inField.width;
-	outField.height = inField.height;
-	for (int x = 0; x < inField.height; x++)
-	{
-		for (int y = 0; y < inField.width; y++)
-		{
-			
-			int neighboursNumber = GetCellNeighboursNumber(inField.matrix, { x, y });
-			switch (inField.matrix[x][y])
-			{
-				case BOUND:
-					outField.matrix[x][y] = BOUND;
-					break;
-				case LIVE_CELL:
-					outField.matrix[x][y] = GetLiveCellNextState(neighboursNumber);
-					break;
-				case DEAD_CELL:
-					outField.matrix[x][y] = GetDeadCellNextState(neighboursNumber);
-					break;
-				default:
-					outField.matrix[x][y] = DEAD_CELL;
-					break;
-			}
-		}	
-	}
-}
-
-int GetFieldWidth(size_t rowLength)
+int GetFieldWidth(int rowLength)
 {
 	if (rowLength < MAX_FIELD_SIZE)
 	{
@@ -157,8 +85,14 @@ int GetFieldWidth(size_t rowLength)
 }
 
 //поменять x y (Исправлено)
-void ReadMatrix(std::istream& input, Field& field)
+Field ReadField(std::string const& inputFileName)
 {
+	std::ifstream input(inputFileName);
+	if (!input.is_open())
+	{
+		throw std::invalid_argument("Failed to open file for reading");
+	}
+	Field field{};
 	std::string str;
 	Coordinates coords = { 0, 0 };
 	while (std::getline(input, str))
@@ -167,7 +101,7 @@ void ReadMatrix(std::istream& input, Field& field)
 		{
 			break;
 		}
-		field.width = GetFieldWidth(str.length());
+		field.width = GetFieldWidth(static_cast<int>(str.length()));
 		for (coords.y = 0; coords.y < str.length() && coords.y < MAX_FIELD_SIZE; coords.y++)
 		{
 			field.matrix[coords.x][coords.y] = str[coords.y];
@@ -176,10 +110,75 @@ void ReadMatrix(std::istream& input, Field& field)
 		if (coords.x == MAX_FIELD_SIZE)
 		{
 			field.height = MAX_FIELD_SIZE;
-			return;
+			return field;
 		}
 	}
 	field.height = coords.x;
+
+	return field;
+}
+
+bool Verify()
+{
+	return true;
+}
+
+template<typename T, typename... Args>
+bool Verify(T n, Args... args)
+{
+	return n >= 0 && n < MAX_FIELD_SIZE && Verify(args...);
+}
+
+int GetCellNeighboursNumber(FieldMatrix const& matrix, Coordinates coords)
+{
+	int result = 0;
+	for (int x = coords.x - 1; x <= coords.x + 1; x++)
+	{
+		for (int y = coords.y - 1; y <= coords.y + 1; y++)
+		{
+			if ((x == coords.x && y == coords.y) || !Verify(x, y))
+			{
+				continue;
+			}
+			if (!(x == coords.x && y == coords.y) && matrix[x][y] == LIVE_CELL)
+			{
+				result++;
+			}
+		}
+	}
+
+	return result;
+}
+
+Field GenerateNextGeneration(std::string const& inputFileName)
+{
+	Field field = ReadField(inputFileName);
+	Field result = { field.width, field.height };
+
+	for (int x = 0; x < field.height; x++)
+	{
+		for (int y = 0; y < field.width; y++)
+		{
+			int neighboursNumber = GetCellNeighboursNumber(field.matrix, { x, y });
+			switch (field.matrix[x][y])
+			{
+				case BOUND:
+					result.matrix[x][y] = BOUND;
+					break;
+				case LIVE_CELL:
+					result.matrix[x][y] = GetLiveCellNextState(neighboursNumber);
+					break;
+				case DEAD_CELL:
+					result.matrix[x][y] = GetDeadCellNextState(neighboursNumber);
+					break;
+				default:
+					result.matrix[x][y] = DEAD_CELL;
+					break;
+			}
+		}	
+	}
+
+	return result;
 }
 
 // Вынести в структуру Field (Исправлено)
@@ -194,51 +193,45 @@ void WriteMatrix(std::ostream& output, Field const& field)
 		}
 		output << std::endl;
 	}
+
+	if (!output.flush())
+	{
+		throw std::runtime_error("Failed to save data on disk");
+	}
 }
 
-bool WriteResult(std::string outputFileName, Field const& outField)
+void WriteResult(std::optional<std::string> outputFileName, Field const& outField)
 {
-	if (outputFileName == "")
+	if (!outputFileName.has_value())
 	{
 		WriteMatrix(std::cout, outField);
+		return;
 	}
-	else
+	std::ofstream output(outputFileName.value());
+	if (!output.is_open())
 	{
-		std::ofstream output(outputFileName);
-		WriteMatrix(output, outField);
-		if (!SaveErrorHandling(output))
-		{
-			return false;
-		}
+		throw std::invalid_argument("Failed to open file for writing");
 	}
-
-	return true;
+	WriteMatrix(output, outField);
 }
 
 int main(int argc, char* argv[])
 {
 	auto args = ParseArgs(argc, argv);
 
-	if (!ProcessArgError(args))
+	if (!args.has_value())
 	{
 		return 1;
 	}
 
-	std::ifstream input(args->inputFileName);
-	
-	/*if (!IsInputOpen(input))
+	try
 	{
-		return 1;
-	}*/
-
-	Field inField;
-	Field outField;
-
-	ReadMatrix(input, inField);
-	GenerateNextGeneration(inField, outField);
-
-	if (!WriteResult(args->outputFileName, outField))
+		Field result = GenerateNextGeneration(args->inputFileName);
+		WriteResult(args->outputFileName, result);
+	}
+	catch (std::exception& e)
 	{
+		std::cout << e.what() << std::endl;
 		return 1;
 	}
 
