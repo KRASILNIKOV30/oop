@@ -44,7 +44,7 @@ Mat3x3 ReadMatrix(std::string const& inputFileName)
         {
             if (!(input >> matrix[i][j]))
             {
-                throw std::invalid_argument("Invalid input matrix");
+                throw std::runtime_error("Error while reading input file");
             }
         }
     }
@@ -129,19 +129,18 @@ int main(int argc, char* argv[])
     try
     {
         matrix = ReadMatrix(args->inputMatrixFile);
+        auto invertedMatrix = InvertMatrix(matrix);
+        if (!invertedMatrix.has_value())
+        {
+            std::cout << "Inverted matrix does not exist" << std::endl;
+            return 1;
+        }
+
+        WriteMatrix(std::cout, invertedMatrix.value());
     }
-    catch (std::exception& e)
+    catch (std::exception const& e)
     {
         std::cout << e.what() << std::endl;
         return 1;
     }
-
-    auto invertedMatrix = InvertMatrix(matrix);
-    if (!invertedMatrix.has_value())
-    {
-        std::cout << "Inverted matrix does not exist" << std::endl;
-        return 1;
-    }
-
-    WriteMatrix(std::cout, invertedMatrix.value());
 }

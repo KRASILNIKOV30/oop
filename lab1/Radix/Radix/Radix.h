@@ -1,4 +1,5 @@
 #pragma once
 #include <string>
 
-std::string Radix(std::string const& srcNotation, std::string const& dstNotation, std::string const& value);
+std::string ChangeNotation(int srcNotation, int dstNotation, std::string const& value);
+int StringToInt(std::string const& str, int radix);

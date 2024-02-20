@@ -52,6 +52,11 @@ bool FlushFile(std::ofstream& output)
 }
 std::string ReplaceString(std::string_view str, std::string const& searchStr, std::string const& replaceStr)
 {
+	if (searchStr.empty())
+	{
+		return std::string(str);
+	}
+
 	size_t searchStrLength = searchStr.size();
 	size_t strLength = str.size();
 	std::string result;
@@ -87,9 +92,15 @@ void CopyStreamsWithReplacement(std::string const& inputFileName, std::string co
 		}
 	}
 
+	if (!input.eof())
+	{
+		throw std::runtime_error("Error while reading input file");
+	}
+
 	FlushFile(output);
 }
 
+// Обработать ситуацию, когда поисковая строка пустая
 int main(int argc, char* argv[])
 {
 	// Занести вывод инструкций в ParseArgs (Исправлено)

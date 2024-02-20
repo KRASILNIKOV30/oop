@@ -6,6 +6,12 @@ rem %~1 - значение первого аргумента командной строки bat-файла с удалением обра
 rem Переменная PROGRAM будет хранить первый аргумент командной строки заключённый в кавычки
 set PROGRAM="%~1"
 
+rem программа должна скопировать входной файл без изменений, если поисковая строка пустая
+%PROGRAM% searchStr.txt %TEMP%\output.txt "" replaceStr
+if ERRORLEVEL 1 goto err
+fc.exe %TEMP%\output.txt searchStr.txt
+if ERRORLEVEL 1 goto err
+
 rem проверяем обработку пустого файла (копируем его во временную папку текущего пользователя)
 %PROGRAM% empty.txt %TEMP%\empty.txt 1 1
 if ERRORLEVEL 1 goto err

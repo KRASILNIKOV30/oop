@@ -84,7 +84,17 @@ int GetFieldWidth(int rowLength)
 	return MAX_FIELD_SIZE;
 }
 
-//поменять x y (Исправлено)
+char GetCell(Coordinates coords, Field const& field)
+{
+	if (coords.x < 0 || coords.x >= MAX_FIELD_SIZE || coords.y < 0 || coords.y >= MAX_FIELD_SIZE)
+	{
+		return DEAD_CELL;
+	}
+
+	return field.matrix[coords.x][coords.y];
+}
+
+// поменять x y (Исправлено)
 Field ReadField(std::string const& inputFileName)
 {
 	std::ifstream input(inputFileName);
@@ -113,34 +123,23 @@ Field ReadField(std::string const& inputFileName)
 			return field;
 		}
 	}
+	if (!input.eof())
+	{
+		throw std::runtime_error("Error while reading input file");
+	}
 	field.height = coords.x;
 
 	return field;
 }
 
-bool Verify()
-{
-	return true;
-}
-
-template<typename T, typename... Args>
-bool Verify(T n, Args... args)
-{
-	return n >= 0 && n < MAX_FIELD_SIZE && Verify(args...);
-}
-
-int GetCellNeighboursNumber(FieldMatrix const& matrix, Coordinates coords)
+int GetCellNeighboursNumber(Coordinates coords, Field const& field)
 {
 	int result = 0;
 	for (int x = coords.x - 1; x <= coords.x + 1; x++)
 	{
 		for (int y = coords.y - 1; y <= coords.y + 1; y++)
 		{
-			if ((x == coords.x && y == coords.y) || !Verify(x, y))
-			{
-				continue;
-			}
-			if (!(x == coords.x && y == coords.y) && matrix[x][y] == LIVE_CELL)
+			if (!(x == coords.x && y == coords.y) && GetCell({ x, y }, field) == LIVE_CELL)
 			{
 				result++;
 			}
@@ -150,16 +149,17 @@ int GetCellNeighboursNumber(FieldMatrix const& matrix, Coordinates coords)
 	return result;
 }
 
-Field GenerateNextGeneration(std::string const& inputFileName)
+// Добавить функцию, которая принимает координаты и поле и вернет клетку (Сделано)
+// Вынести чтение (Исправлено)
+Field GenerateNextGeneration(Field const& field)
 {
-	Field field = ReadField(inputFileName);
 	Field result = { field.width, field.height };
 
 	for (int x = 0; x < field.height; x++)
 	{
 		for (int y = 0; y < field.width; y++)
 		{
-			int neighboursNumber = GetCellNeighboursNumber(field.matrix, { x, y });
+			int neighboursNumber = GetCellNeighboursNumber({ x, y }, field);
 			switch (field.matrix[x][y])
 			{
 				case BOUND:
@@ -226,10 +226,11 @@ int main(int argc, char* argv[])
 
 	try
 	{
-		Field result = GenerateNextGeneration(args->inputFileName);
+		Field field = ReadField(args->inputFileName);
+		Field result = GenerateNextGeneration(field);
 		WriteResult(args->outputFileName, result);
 	}
-	catch (std::exception& e)
+	catch (std::exception const& e)
 	{
 		std::cout << e.what() << std::endl;
 		return 1;

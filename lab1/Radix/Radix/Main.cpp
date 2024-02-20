@@ -7,8 +7,8 @@ constexpr int DECIMAL = 10;
 
 struct Args
 {
-    std::string srcNotation;
-    std::string dstNotation;
+    std::string srcNotationStr;
+    std::string dstNotationStr;
     std::string value;
 };
 
@@ -21,8 +21,8 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
         return std::nullopt;
     };
     Args args;
-    args.srcNotation = argv[1];
-    args.dstNotation = argv[2];
+    args.srcNotationStr = argv[1];
+    args.dstNotationStr = argv[2];
     args.value = argv[3];
     return args;
 }
@@ -38,9 +38,11 @@ int main(int argc, char* argv[])
 
     try
     {
-        std::cout << Radix(args->srcNotation, args->dstNotation, args->value) << std::endl;
+        int srcNotation = StringToInt(args->srcNotationStr, DECIMAL);
+        int dstNotation = StringToInt(args->dstNotationStr, DECIMAL);
+        std::cout << ChangeNotation(srcNotation, dstNotation, args->value) << std::endl;
     }
-    catch (std::exception& e)
+    catch (std::exception const& e)
     {
         std::cout << e.what() << std::endl;
         return 1;
