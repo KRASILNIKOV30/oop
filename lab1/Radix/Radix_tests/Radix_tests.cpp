@@ -13,7 +13,7 @@ TEST_CASE("Radix positive tests")
 	CHECK(ChangeNotation(10, 16, "2147483647") == "7FFFFFFF");
 	CHECK(ChangeNotation(32, 10, "1VVVVVV") == "2147483647");
 	CHECK(ChangeNotation(2, 10, "1111111111111111111111111111111") == "2147483647");
-	//CHECK(ChangeNotation(2, 36, "0") == "0");
+	CHECK(ChangeNotation(2, 36, "0") == "0");
 	CHECK(ChangeNotation(2, 10, "-101") == "-5");
 	CHECK(ChangeNotation(32, 10, "-2000000") == "-2147483648");
 }

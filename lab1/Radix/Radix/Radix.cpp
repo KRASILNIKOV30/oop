@@ -29,11 +29,11 @@ char DecimalToChar(int n)
     n = std::abs(n);
     if (n < DECIMAL)
     {
-        return '0' + n;
+        return static_cast<char>('0' + n);
     }
     if (n < MAX_RADIX)
     {
-        return 'A' + n - DECIMAL;
+        return static_cast<char>('A' + n - DECIMAL);
     }
 
     throw std::invalid_argument("Can not convert to char int " + std::to_string(n));
@@ -68,46 +68,56 @@ int StringToInt(std::string const& str, int radix)
     return result;
 }
 
+std::string ConvertUsingDivision(int n, int radix)
+{
+    std::string result;
+    while (n != 0) {
+        int rem = n % radix;
+        result += DecimalToChar(rem);
+        n /= radix;
+    }
+
+    return result;
+}
+
 // Упростить функцию (Исправлено)
 std::string IntToString(int n, int radix)
 {
-    bool isNegative = false;
-    std::string str;
-    int number = n;
-
-    while (number != 0) {
-        int rem = number % radix;
-        str += DecimalToChar(rem);
-        number /= radix;
-    }
+    bool isNegative = n < 0;
+    std::string result = ConvertUsingDivision(n, radix);
 
     // Убрать \0 костыль (Исправлено)
-    if (n < 0)
+    if (isNegative)
     {
-        str += '-';
+        result += '-';
     }
 
-    std::ranges::reverse(str);
-    return str;
+    std::ranges::reverse(result);
+    return result.empty() ? "0" : result;
 }
 
-void VerifyNotations(int srcNotation, int dstNotation)
+bool IsNotationsValid(int srcNotation, int dstNotation)
 {
     const bool isSrcNotationValid = srcNotation >= MIN_RADIX && srcNotation <= MAX_RADIX;
     const bool isDstNotationValid = dstNotation >= MIN_RADIX && dstNotation <= MAX_RADIX;
-    if (!isSrcNotationValid || !isDstNotationValid)
+    return isSrcNotationValid && isDstNotationValid;
+}
+
+bool IsNotationValid(int notation)
+{
+    return notation >= MIN_RADIX && notation <= MAX_RADIX;
+}
+
+//Переименовать (Исправлено)
+// Передавать основания с.с. интами (Исправлено)
+// Добавить проверку оснований с.с. (Исправлено)
+//
+std::string ChangeNotation(int srcNotation, int dstNotation, std::string const& value)
+{
+    if (!(IsNotationValid(srcNotation) && IsNotationValid(dstNotation)))
     {
         throw std::invalid_argument(std::format("source and destination notations must be between {} and {}", MIN_RADIX, MAX_RADIX));
     }
-}
-
-//Переименовать
-// Передавать основания с.с. интами 
-// Добавить проверку оснований с.с.
-// 
-std::string ChangeNotation(int srcNotation, int dstNotation, std::string const& value)
-{
-    VerifyNotations(srcNotation, dstNotation);
     int n = StringToInt(value, srcNotation);
     return IntToString(n, dstNotation);
 }
