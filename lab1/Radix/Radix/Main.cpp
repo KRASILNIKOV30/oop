@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
 
     try
     {
+        // перенести в парс аргс + проверку значений
         int srcNotation = StringToInt(args->srcNotationStr, DECIMAL);
         int dstNotation = StringToInt(args->dstNotationStr, DECIMAL);
         std::cout << ChangeNotation(srcNotation, dstNotation, args->value) << std::endl;

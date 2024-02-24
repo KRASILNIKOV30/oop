@@ -59,8 +59,8 @@ void WriteMatrix(std::ostream& output, Mat3x3 const& matrix)
     {
         for (int j = 0; j < 3; j++)
         {
-            double el = matrix[i][j];
-            output << std::setw(PRECISION * 2) << ((std::abs(el) < EPSILON) ? 0 : el) << " ";
+            double element = std::abs(matrix[i][j]) < EPSILON ? 0 : matrix[i][j];
+            output << element << " ";
         }
         output << std::endl;
     }
@@ -107,7 +107,8 @@ std::optional<Mat3x3> InvertMatrix(Mat3x3 const& matrix)
         for (int j = 0; j < 3; j++)
         {
             result[i][j] = GetMinorDeterminant(j, i, matrix) / det;
-            result[i][j] *= ((i + j) % 2) ? -1 : 1;
+            double degree = ((i + j) % 2) ? -1 : 1;
+            result[i][j] *= degree;
         }
     }
 
@@ -125,10 +126,9 @@ int main(int argc, char* argv[])
 
     // Вывод в std::cout (Исправлено)
     // принимать имя файла (Исправлено)
-    Mat3x3 matrix;
     try
     {
-        matrix = ReadMatrix(args->inputMatrixFile);
+        Mat3x3 matrix = ReadMatrix(args->inputMatrixFile);
         auto invertedMatrix = InvertMatrix(matrix);
         if (!invertedMatrix.has_value())
         {

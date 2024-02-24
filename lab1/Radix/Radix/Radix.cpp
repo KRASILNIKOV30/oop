@@ -24,8 +24,10 @@ int CharToDecimal(char ch)
     throw std::invalid_argument("Can not convert to int char: " + ch);
 }
 
+// Сделать DigitToChar
 char DecimalToChar(int n)
 {
+    // Убрать abs наверх
     n = std::abs(n);
     if (n < DECIMAL)
     {
@@ -39,6 +41,7 @@ char DecimalToChar(int n)
     throw std::invalid_argument("Can not convert to char int " + std::to_string(n));
 }
 
+// Переименовать
 bool IsSumOverflowInt(int a, int b, int radix)
 {
     bool moreThanMaxInt = a > 0 && b > MAXINT - a * radix;
@@ -71,7 +74,9 @@ int StringToInt(std::string const& str, int radix)
 std::string ConvertUsingDivision(int n, int radix)
 {
     std::string result;
-    while (n != 0) {
+    // Сделать do while
+    while (n != 0) 
+    {
         int rem = n % radix;
         result += DecimalToChar(rem);
         n /= radix;
@@ -93,6 +98,7 @@ std::string IntToString(int n, int radix)
     }
 
     std::ranges::reverse(result);
+    // Обра
     return result.empty() ? "0" : result;
 }
 
