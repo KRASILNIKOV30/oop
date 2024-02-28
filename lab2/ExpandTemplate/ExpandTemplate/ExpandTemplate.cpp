@@ -2,6 +2,8 @@
 #include "ExpandTemplate.h"
 #include "ExpandTemplate.h"
 #include <vector>
+#include <map>
+#include <optional>
 
 namespace
 {
@@ -9,33 +11,17 @@ namespace
 
 	struct BohrVertex
 	{
-		int next[UCHAR_MAX + 1]; // 256 значений символов
-		int parent;
-		int suffixLink;
-		int suffixGoodLink;
-		int autoMove[UCHAR_MAX + 1];
+		std::map<char, int> next;
+		std::optional<int> parent = std::nullopt;
+		std::optional<int> suffixLink = std::nullopt;
+		std::optional<int> suffixGoodLink = std::nullopt;
+		std::map<char, int> autoMove;
 		char symbol;
-		bool leaf;
+		bool leaf = false;
 		std::string fullString;
 	};
+
 	using Bohr = std::vector<BohrVertex>;
-
-	BohrVertex GetNewVertex()
-	{
-		BohrVertex vertex;
-		// std::fill
-		memset(vertex.next, 255, sizeof vertex.next);
-		memset(vertex.autoMove, 255, sizeof vertex.autoMove);
-		vertex.parent = vertex.suffixLink = vertex.suffixGoodLink = voidLink;
-		vertex.leaf = false;
-
-		return vertex;
-	}
-
-	void InitBohr(Bohr& bohr)
-	{
-		bohr.push_back(GetNewVertex());
-	}
 
 	void AddStringInBohr(Bohr& bohr, std::string const& stringToAdd)
 	{
@@ -43,9 +29,9 @@ namespace
 		for (size_t i = 0; i < stringToAdd.length(); i++)
 		{
 			char symbol = stringToAdd[i];
-			if (bohr[currentVertexPos].next[symbol] == voidLink)
+			if (!bohr[currentVertexPos].next.contains(symbol))
 			{
-				BohrVertex newVertex = GetNewVertex();
+				BohrVertex newVertex;
 				newVertex.parent = currentVertexPos;
 				newVertex.symbol = symbol;
 				bohr[currentVertexPos].next[symbol] = bohr.size();
@@ -61,7 +47,7 @@ namespace
 
 	int GetSuffixLink(Bohr& bohr, int vertexPos)
 	{
-		if (bohr[vertexPos].suffixLink == voidLink)
+		if (!bohr[vertexPos].suffixLink.has_value())
 		{
 			if (vertexPos == 0 || bohr[vertexPos].parent == 0)
 			{
@@ -69,16 +55,16 @@ namespace
 			}
 			else
 			{
-				bohr[vertexPos].suffixLink = GetAutoMove(bohr, GetSuffixLink(bohr, bohr[vertexPos].parent), bohr[vertexPos].symbol);
+				bohr[vertexPos].suffixLink = GetAutoMove(bohr, GetSuffixLink(bohr, bohr[vertexPos].parent.value()), bohr[vertexPos].symbol);
 			}
 		}
 
-		return bohr[vertexPos].suffixLink;
+		return bohr[vertexPos].suffixLink.value();
 	}
 
 	int GetSuffixGoodLink(Bohr& bohr, int vertexPos)
 	{
-		if (bohr[vertexPos].suffixGoodLink == voidLink) {
+		if (!bohr[vertexPos].suffixGoodLink.has_value()) {
 			int vertexPosOnSuffixLink = GetSuffixLink(bohr, vertexPos);
 			if (vertexPosOnSuffixLink == 0)
 			{
@@ -91,14 +77,14 @@ namespace
 					: GetSuffixGoodLink(bohr, vertexPosOnSuffixLink);
 			}
 		}
-		return bohr[vertexPos].suffixGoodLink;
+		return bohr[vertexPos].suffixGoodLink.value();
 	}
 
 	int GetAutoMove(Bohr& bohr, int vertexPos, char symbol)
 	{
-		if (bohr[vertexPos].autoMove[symbol] == voidLink)
+		if (!bohr[vertexPos].autoMove.contains(symbol))
 		{
-			if (bohr[vertexPos].next[symbol] != voidLink)
+			if (bohr[vertexPos].next.contains(symbol))
 			{
 				bohr[vertexPos].autoMove[symbol] = bohr[vertexPos].next[symbol];
 			}
@@ -149,11 +135,6 @@ namespace
 			isParamEnded = !CheckIfFound(bohr, currentVertexPos) || isStringEnd || isNewParamStarted;
 		}
 		stringIndex--;
-		while (!CheckIfFound(bohr, currentVertexPos)) // возможно цикл не нужен
-		{
-			currentVertexPos = bohr[currentVertexPos].parent;
-			stringIndex--;
-		}
 	}
 
 	std::string GetStringToAdd(std::string const& tpl, TemplateParams const& params, std::string const& foundString, int lastCopiedPos, int currentPosition)
@@ -167,9 +148,8 @@ namespace
 
 std::string ExpandTemplate(std::string const& tpl, TemplateParams const& params)
 {
-	Bohr bohr;
+	Bohr bohr = { BohrVertex() };
 	std::string resultString;
-	InitBohr(bohr);
 	AddParamsInBohr(bohr, params);
 
 	int vertexPos = 0;
