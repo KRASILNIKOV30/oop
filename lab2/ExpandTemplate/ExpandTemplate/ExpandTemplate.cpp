@@ -7,16 +7,21 @@
 
 namespace
 {
-	const int voidLink = -1;
-
+	// Посмотреть покрытие тестами
 	struct BohrVertex
 	{
-		std::map<char, int> next;
-		std::optional<int> parent = std::nullopt;
-		std::optional<int> suffixLink = std::nullopt;
-		std::optional<int> suffixGoodLink = std::nullopt;
-		std::map<char, int> autoMove;
+		// Сравнить скорость с unordered
+		std::map<char, size_t> next;
+		// Избавиться от optional (Исправлено)
+		// parentVertexIndex (Исправлено)
+		size_t parentVertexIndex = std::string::npos;
+		//SuffixLinkVertex (Исправлено)
+		size_t suffixLinkVertex = std::string::npos;
+		size_t suffixGoodLinkVertex = std::string::npos;
+		// Хранить отдельно, чтобы не менять бор
+		std::map<char, size_t> autoMove;
 		char symbol;
+		
 		bool leaf = false;
 		std::string fullString;
 	};
@@ -25,14 +30,14 @@ namespace
 
 	void AddStringInBohr(Bohr& bohr, std::string const& stringToAdd)
 	{
-		int currentVertexPos = 0;
-		for (size_t i = 0; i < stringToAdd.length(); i++)
+		size_t currentVertexPos = 0;
+		for (auto it = stringToAdd.begin(); it != stringToAdd.end(); ++it)
 		{
-			char symbol = stringToAdd[i];
+			char symbol = *it;
 			if (!bohr[currentVertexPos].next.contains(symbol))
 			{
 				BohrVertex newVertex;
-				newVertex.parent = currentVertexPos;
+				newVertex.parentVertexIndex = currentVertexPos;
 				newVertex.symbol = symbol;
 				bohr[currentVertexPos].next[symbol] = bohr.size();
 				bohr.push_back(newVertex);
@@ -43,45 +48,47 @@ namespace
 		bohr[currentVertexPos].leaf = true;
 	}
 
-	int GetAutoMove(Bohr& bohr, int vertexPos, char symbol);
+	size_t GetAutoMove(Bohr& bohr, size_t vertexPos, char symbol);
 
-	int GetSuffixLink(Bohr& bohr, int vertexPos)
+	size_t GetSuffixLink(Bohr& bohr, size_t vertexPos)
 	{
-		if (!bohr[vertexPos].suffixLink.has_value())
+		if (bohr[vertexPos].suffixLinkVertex == std::string::npos)
 		{
-			if (vertexPos == 0 || bohr[vertexPos].parent == 0)
+			if (vertexPos == 0 || bohr[vertexPos].parentVertexIndex == 0)
 			{
-				bohr[vertexPos].suffixLink = 0;
+				bohr[vertexPos].suffixLinkVertex = 0;
 			}
 			else
 			{
-				bohr[vertexPos].suffixLink = GetAutoMove(bohr, GetSuffixLink(bohr, bohr[vertexPos].parent.value()), bohr[vertexPos].symbol);
+				bohr[vertexPos].suffixLinkVertex = GetAutoMove(bohr, GetSuffixLink(bohr, bohr[vertexPos].parentVertexIndex), bohr[vertexPos].symbol);
 			}
 		}
 
-		return bohr[vertexPos].suffixLink.value();
+		return bohr[vertexPos].suffixLinkVertex;
 	}
 
-	int GetSuffixGoodLink(Bohr& bohr, int vertexPos)
+	size_t GetSuffixGoodLink(Bohr& bohr, size_t vertexPos)
 	{
-		if (!bohr[vertexPos].suffixGoodLink.has_value()) {
-			int vertexPosOnSuffixLink = GetSuffixLink(bohr, vertexPos);
+		if (bohr[vertexPos].suffixGoodLinkVertex == std::string::npos) {
+			size_t vertexPosOnSuffixLink = GetSuffixLink(bohr, vertexPos);
 			if (vertexPosOnSuffixLink == 0)
 			{
-				bohr[vertexPos].suffixGoodLink = 0;
+				bohr[vertexPos].suffixGoodLinkVertex = 0;
 			}
 			else
 			{
-				bohr[vertexPos].suffixGoodLink = (bohr[vertexPosOnSuffixLink].leaf)
+				bohr[vertexPos].suffixGoodLinkVertex = (bohr[vertexPosOnSuffixLink].leaf)
 					? vertexPosOnSuffixLink
 					: GetSuffixGoodLink(bohr, vertexPosOnSuffixLink);
 			}
 		}
-		return bohr[vertexPos].suffixGoodLink.value();
+
+		return bohr[vertexPos].suffixGoodLinkVertex;
 	}
 
-	int GetAutoMove(Bohr& bohr, int vertexPos, char symbol)
+	size_t GetAutoMove(Bohr& bohr, size_t vertexPos, char symbol)
 	{
+		// Сохранить ссылку на элемент, а не искать 
 		if (!bohr[vertexPos].autoMove.contains(symbol))
 		{
 			if (bohr[vertexPos].next.contains(symbol))
@@ -90,7 +97,7 @@ namespace
 			}
 			else
 			{
-				bohr[vertexPos].autoMove[symbol] = vertexPos == 0
+				bohr[vertexPos].autoMove[symbol] = (vertexPos == 0)
 					? 0
 					: GetAutoMove(bohr, GetSuffixLink(bohr, vertexPos), symbol);
 			}
@@ -99,9 +106,9 @@ namespace
 		return bohr[vertexPos].autoMove[symbol];
 	}
 
-	bool CheckIfFound(Bohr& bohr, int vertexPos)
+	bool CheckIfFound(Bohr& bohr, size_t vertexPos)
 	{
-		for (; vertexPos != 0; vertexPos = GetSuffixLink(bohr, vertexPos))
+		for (; vertexPos != 0; vertexPos = GetSuffixGoodLink(bohr, vertexPos))
 		{
 			if (bohr[vertexPos].leaf)
 			{
@@ -120,27 +127,35 @@ namespace
 		}
 	}
 
-	void ReadUntilIsParam(Bohr& bohr, int& currentVertexPos, std::string const& tpl, int& stringIndex)
+	// Переименовать
+	size_t ReadUntilIsParam(Bohr& bohr, size_t currentVertexPos, std::string const& tpl, std::string::const_iterator& it)
 	{
-		int newVertexPos = currentVertexPos;
-		bool isParamEnded = false;
+		size_t newVertexPos = currentVertexPos;
+		bool isParamEnded = it + 1 == tpl.cend();
+
+		if (isParamEnded)
+		{
+			return currentVertexPos;
+		}
 
 		while (!isParamEnded)
 		{
 			currentVertexPos = newVertexPos;
-			stringIndex++;
-			newVertexPos = GetAutoMove(bohr, newVertexPos, tpl[stringIndex]);
-			bool isStringEnd = stringIndex >= tpl.length();
-			bool isNewParamStarted = bohr[newVertexPos].parent != currentVertexPos;
+			newVertexPos = GetAutoMove(bohr, newVertexPos, *(++it));
+			bool isStringEnd = it + 1 == tpl.cend();
+			bool isNewParamStarted = bohr[newVertexPos].parentVertexIndex != currentVertexPos;
 			isParamEnded = !CheckIfFound(bohr, currentVertexPos) || isStringEnd || isNewParamStarted;
 		}
-		stringIndex--;
+		it--;
+
+		return currentVertexPos;
 	}
 
-	std::string GetStringToAdd(std::string const& tpl, TemplateParams const& params, std::string const& foundString, int lastCopiedPos, int currentPosition)
+	std::string GetStringToAdd(TemplateParams const& params, std::string const& foundString, 
+		std::string::const_iterator lastCopiedPos, std::string::const_iterator currentPosition)
 	{
-		int uncopiedStringLength = currentPosition - lastCopiedPos - foundString.length() + 1; 
-		std::string beforeFoundString = tpl.substr(lastCopiedPos, uncopiedStringLength);
+		size_t uncopiedStringLength = currentPosition - lastCopiedPos - foundString.length() + 1; 
+		std::string beforeFoundString = std::string(lastCopiedPos, lastCopiedPos + uncopiedStringLength);
 		std::string stringToReplaceWith = params.find(foundString)->second;
 		return beforeFoundString + stringToReplaceWith;
 	}
@@ -152,21 +167,21 @@ std::string ExpandTemplate(std::string const& tpl, TemplateParams const& params)
 	std::string resultString;
 	AddParamsInBohr(bohr, params);
 
-	int vertexPos = 0;
-	int lastCopiedPos = 0;
-	for (int i = 0; i < tpl.length(); i++)
+	size_t vertexPos = 0;
+	auto lastCopiedPos = tpl.begin();
+	for (auto it = tpl.begin(); it != tpl.end(); ++it)
 	{
-		vertexPos = GetAutoMove(bohr, vertexPos, tpl[i]);
+		vertexPos = GetAutoMove(bohr, vertexPos, *it);
 
 		if (CheckIfFound(bohr, vertexPos))
 		{
-			ReadUntilIsParam(bohr, vertexPos, tpl, i);
-			resultString += GetStringToAdd(tpl, params, bohr[vertexPos].fullString, lastCopiedPos, i);
+			vertexPos = ReadUntilIsParam(bohr, vertexPos, tpl, it);
+			resultString += GetStringToAdd(params, bohr[vertexPos].fullString, lastCopiedPos, it);
 			vertexPos = 0;
-			lastCopiedPos = i + 1;
+			lastCopiedPos = it + 1;
 		}
 	}
-	resultString += tpl.substr(lastCopiedPos);
+	resultString += std::string(lastCopiedPos, tpl.end());
 
 	return resultString;
 }

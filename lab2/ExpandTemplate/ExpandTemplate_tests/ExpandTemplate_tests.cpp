@@ -51,6 +51,36 @@ SCENARIO("Expand template tests")
 		}
 	}
 
+	GIVEN("Empty template param keys")
+	{
+		std::string tpl = "Hello, world!";
+		TemplateParams params = {
+			{"", "Hello"},
+			{"", " "},
+			{"", ""}
+		};
+
+		THEN("Expanded template is equal to initial template")
+		{
+			CHECK(ExpandTemplate(tpl, params) == tpl);
+		}
+	}
+
+	GIVEN("Empty template param values")
+	{
+		std::string tpl = "Hello, world!";
+		TemplateParams params = {
+			{"world", ""},
+			{"!", ""},
+			{" ", ""}
+		};
+
+		THEN("Words in template params values was deleted")
+		{
+			CHECK(ExpandTemplate(tpl, params) == "Hello,");
+		}
+	}
+
 	GIVEN("Template consists only of parameters")
 	{
 		std::string tpl = "%NAME%%NAME%%DATE%";
