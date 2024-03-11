@@ -8,7 +8,11 @@ double Var::GetValue() const
 
 void Var::SetValue(double value)
 {
-	m_value = value;
+	if (value != m_value)
+	{
+		m_value = value;
+		NotifyObservers();
+	}
 }
 
 Token Var::RegisterObserver(Observer& observer)
