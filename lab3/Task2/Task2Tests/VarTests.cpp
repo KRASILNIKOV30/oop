@@ -6,11 +6,10 @@ SCENARIO("Variable declaration")
 {
 	GIVEN("Variable named x")
 	{
-		Var var("x");
+		Var var;
 
 		THEN("Recently declared variable must have a name and must have NAN value")
 		{
-			CHECK(var.GetName() == "x");
 			CHECK(isnan(var.GetValue()));
 		}	
 	}
@@ -20,7 +19,7 @@ SCENARIO("Assign a value to a variable")
 {
 	GIVEN("Variable named x")
 	{
-		Var var("x");
+		Var var;
 
 		WHEN("Assigning a value to a variable")
 		{

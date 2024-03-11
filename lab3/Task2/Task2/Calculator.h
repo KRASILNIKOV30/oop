@@ -26,7 +26,7 @@ public:
 		std::string const& rightOperandName
 	);
 	bool ChangeVarValue(std::string const& varName, double value);
-	VarsVector GetVars() const;
+	VarsMap GetVars() const;
 	FunctionsVector GetFunctions() const;
 	//Можно передавать имя по ссылке (Исправлено)
 	OptionalVar FindVar(std::string const& name) const;

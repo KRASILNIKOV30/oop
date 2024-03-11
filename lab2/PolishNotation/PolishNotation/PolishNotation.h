@@ -1,4 +1,4 @@
 #pragma once
-#include <istream>
+#include <string>
 
-double CalculatePolish(std::istream& input);
+double CalculatePolish(std::string& input);

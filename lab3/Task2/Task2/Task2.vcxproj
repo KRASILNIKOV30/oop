@@ -144,6 +144,7 @@
     <ClInclude Include="CommandHandler.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="IObservable.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Var.h" />
   </ItemGroup>

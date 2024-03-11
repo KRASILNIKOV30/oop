@@ -100,7 +100,6 @@ void CopyStreamsWithReplacement(std::string const& inputFileName, std::string co
 	FlushFile(output);
 }
 
-// Обработать ситуацию, когда поисковая строка пустая
 int main(int argc, char* argv[])
 {
 	// Занести вывод инструкций в ParseArgs (Исправлено)

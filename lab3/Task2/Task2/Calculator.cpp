@@ -2,14 +2,9 @@
 #include "Common.h"
 #include <iterator>
 
-VarsVector Calculator::GetVars() const
+VarsMap Calculator::GetVars() const
 {
-	VarsVector result{};
-	for (auto& item : m_memory->GetVars())
-	{
-		result.push_back(item.second);
-	}
-	return result;
+	return m_memory->GetVars();
 }
 
 FunctionsVector Calculator::GetFunctions() const

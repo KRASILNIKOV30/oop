@@ -2,8 +2,8 @@
 
 bool Memory::AddVar(std::string const& name)
 {
-	Var var(name);
-	m_vars.insert({ var.GetName(), var });
+	Var var;
+	m_vars.insert({ name, var });
 	return true;
 }
 
@@ -16,7 +16,7 @@ bool Memory::ChangeVarValue(std::string const& varName, double value)
 	}
 	DeleteVar(varName);
 	var->SetValue(value);
-	m_vars.insert({ var->GetName(), var.value()});
+	m_vars.insert({ varName, var.value()});
 	return true;
 }
 

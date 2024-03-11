@@ -169,12 +169,12 @@ bool CommandHandler::IsIdentifierValid(std::string ident) const
 
 bool CommandHandler::PrintVars(std::istream& args) const
 {
-	VarsVector vars = m_calc.GetVars();
+	VarsMap vars = m_calc.GetVars();
 	m_output.setf(std::ios::fixed);
 	m_output.precision(2);
-	for (auto& var : vars)
+	for (auto& [name, var] : vars)
 	{
-		m_output << var.GetName() << ":" << var.GetValue() << std::endl;
+		m_output << name << ":" << var.GetValue() << std::endl;
 	}
 	return true;
 }

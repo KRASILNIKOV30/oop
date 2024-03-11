@@ -6,7 +6,7 @@
 using VarsMap = std::map<std::string, Var, std::less<std::string>>;
 using OptionalVar = std::optional<Var>;
 
-class Memory	
+class Memory
 {
 public:
 	bool AddVar(std::string const& name);
